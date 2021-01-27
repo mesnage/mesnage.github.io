@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Robin Mesnage</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
+.w3-bar,h1,button {font-family: "Montserrat", sans-serif}
+.fa-anchor,.fa-coffee {font-size:200px}
+  
+   .myface { 
+                width:auto; 
+                text-align:center; 
+            } 
+    img { 
+                max-width:100%; 
+                        height:auto; 
+            } 
+  
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-red w3-card w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="https://mesnage.github.io/" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+    <a href="https://mesnage.github.io/publications.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Publications</a>
+    <a href="https://mesnage.github.io/research.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Research</a>
+    <a href="https://mesnage.github.io/consulting.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Consulting</a>
+     <a href="https://github.com/mesnage" target="_blank" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Github</a>
+  </div>
+
+  <!-- Navbar on small screens -->
+  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+    <a href="https://mesnage.github.io/publications.html" class="w3-bar-item w3-button w3-padding-large">Publications</a>
+    <a href="https://mesnage.github.io/research.html" class="w3-bar-item w3-button w3-padding-large">Research</a>
+    <a href="https://mesnage.github.io/consulting.html" class="w3-bar-item w3-button w3-padding-large">Consulting</a>
+    <a href="https://github.com/mesnage" target="_blank" class="w3-bar-item w3-button w3-padding-large">Github</a>
+  </div>
+</div>
+
+
+<!-- Header -->
+<header class="w3-container w3-black w3-center" style="padding:60px 16px">
+  <h2 class="w3-margin w3-jumbo">Robin Mesnage</h2>
+  <p class="w3-xlarge">  Use of shotgun metagenomics and metabolomics to evaluate the impact of glyphosate or Roundup MON 52276 on the gut microbiota and serum metabolome of Sprague-Dawley rats.  </p>
+</header>
+  
+<!-- First Grid -->
+<div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+  <div class="w3-content">
+  
+  
+<h2 style="padding: 10px">What is this study?</h2>
+
+<h6>The new study describes the effects of glyphosate and a Roundup formulation (MON 52276, representing the EU market) on the gut microbiome and serum metabolome in Sprague-Dawley rats using shotgun metagenomics and metabolomics. It was made by an international team of scientists based in London, France, Italy, and the Netherlands, led by the group of Dr. Michael Antoniou at King's College London. The study is published in Environmental Health Perspectives (EHP), a leading scientific journal. EHP is a monthly journal of environmental health research and news published with support from the US National Institute of Environmental Health Sciences. EHP ranks 1st among Toxicology journals that publish original research according to Clarivate Journal Impact Factor.</h6>
+
+<h2 style="padding: 10px">Why did we do this study?</h2>
+
+<h6>Our gut is home to trillions of bacteria which are critical to good health. Because the once-in-a-century herbicide glyphosate can kill bacteria in a petri dish, the notion that glyphosate acts as an antibiotic in the human gut, and as a result is causing human disease, has gained prominence. However, whether and how glyphosate affects the gut microbiome is still an open question, and what prompted me a few years ago to switch my research focus to the study of the effect of glyphosate on the gut microbiome.</h6>
+
+<h2 style="padding: 10px">What is shotgun metagenomics?</h2>
+
+<h6>Shotgun metagenomics entails the study of the genetic material sampled from, or recovered from environmental samples. In the case of this study, the environmental sample explored was the contents of the large intestine from glyphosate-treated rats, referred to as “ceca” in the paper. The “genetic material” picked up by this method included rat DNA, the DNA from microorganisms inhabiting the rat gut, as well as DNA in the food the rats consumed. One of the tricky challenges we had to tackle was separating out the rat-DNA and the DNA in the food fed to the rats from microbial DNA. The sequences of microbial DNA were used to identify and quantify the different species of microorganisms composing the gut microbiome. </h6>
+
+<h2 style="padding: 10px">What is metabolomics?</h2>
+
+<h6>It is the study of small molecules called metabolites. Metabolites are studied in cells, biofluids like blood and urine, organs, and tissues. They are products of chemical reactions occurring during the life cycle of an living organism. However, the metabolomics method is very powerful and does not discriminate between small molecules from different sources. It measures biological molecules from an animal’s body, food components, and even foreign compounds (AKA xenobiotics) like drugs or pollutants. The presence and mix of metabolites gave us important insights into the metabolic processes that took place in the microorganisms in the rat gut </h6>
+
+<h2 style="padding: 10px">Why did we deploy both shotgun metagenomics and metabolomics?</h2>
+
+<h6>Because we understood that both composition and function of the gut microbiome are important. The depth and sophistication of the sequencing in this study is unprecedented. We looked at approximately 20,000,000 DNA sequences covering every gene from the microorganisms in the rat gut. The DNA code contains 4 letters. The quantity of DNA analyzed for each rat gut microbiome sample represented approximately 5 billions of letters.</h6>
+
+<h6>The metabolomics allowed us to evaluate for the first time in details the alterations in function of the gut microbiome caused by glyphosate. This was accomplished by measuring the levels of ~700 small molecules. Plus, this was done in both ceca and blood, giving us a more comprehensive picture of the consequences of the gut microbiome alterations caused by exposure to glyphosate.</h6>
+
+
+<h2 style="padding: 10px">Did glyphosate act as an antibiotic?</h2>
+
+<h6>The short answer is no. In order for glyphosate to act as an antibiotic, it needs to cause a significant shortage in the production of compounds in bacteria called aromatic amino acids. This is how glyphosate kills plants. More specifically, it interrupts a series of chemical reactions within the shikimate pathway. </h6>
+
+<h6>We reveal for the first time that glyphosate does inhibit the shikimate pathway in the rat gut microbiome. However, glyphosate likely did not kill bacteria via its impact on the shikimate pathway, because bacteria do not need the shikimate pathway to get the aromatic amino acids they need. Like us, they get them from the food we eat.</h6>
+
+<h2 style="padding: 10px">So why did the composition of the gut microbiome change in the rat study?</h2>
+
+<h6>Glyphosate’s impact on the shikimate pathway had other consequences. A multitude of small molecules (metabolites) accumulated, or were depleted in the rat gut. The bacterial composition of the gut microbiome also changed, with some bacteria present at higher levels in the glyphosate exposed animals.  We have an explanation for this: the glyphosate molecule contains one atom of phosphorus, and it is very likely that this phosphorus was used as a source of energy by some bacteria to proliferate in the rat gut. Although it is not clear whether the changes caused by glyphosate in the gut were pathological, they are a reflection of impacts that can serve as a biomarker to detect whether glyphosate is having an effect on the gut microbiome in humans.</h6>
+
+<h2 style="padding: 10px">did glyphosate’s impact in the gut stay in the gut? </h2>
+
+<h6>We evaluated this by measuring if the changes in gut microbiome chemistry caused changes in blood composition. The compounds altered as a consequence of the interruption of the shikimate pathway by glyphosate in the gut were mostly unchanged in blood. However, other chemicals had their levels disrupted by glyphosate, with some indicating that glyphosate caused oxidative stress. This oxidative stress was even more pronounced when we tested a commercial herbicide containing glyphosate called Roundup Bioflow (also known as MON 52276, the representative glyphosate herbicide in the EU).</h6> 
+
+<h2 style="padding: 10px">What are the possible health implications? </h2>
+
+<h6>Oxidative stress is produced when free radicals are created in such quantities that the body’s defense mechanisms are overwhelmed and cannot prevent damage to cells and DNA -- the building blocks of our bodies. It is not fully clear if this oxidative stress is due to the action of glyphosate in the gut microbiome, and whether the changes caused by glyphosate in the gut were pathological. This study is a first step, we are currently conducting follow-up studies on the tissues from these animals, and we hope that our new findings will be used as a foundation by other scientists to make new studies. To be continued!</h6> 
+  
+    
+<h2 style="padding: 10px">Reference</h2>
+    
+<h6 style="padding: 10px"> <strong>Mesnage R</strong>, Teixeira M, Mandrioli D, Falcioni L, Ducarmon QR, Zwittink RD, Mazzacuva F, Caldwell A, Halket J, Amiel C, Panoff J, Belpoggi F,  Antoniou MN (2021). 
+  Use of shotgun metagenomics and metabolomics to evaluate the impact of glyphosate or Roundup MON 52276 on the gut microbiota and serum metabolome of Sprague-Dawley rats. 
+  <i>Environmental Health Perspectives. In Press: <a href="https://ehp.niehs.nih.gov">DOI 10.1289/EHP6990.</a></i></h6>
+
+
+
+   </div>
+</div>
+
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-64 w3-center w3-opacity">  
+  <div class="w3-xlarge w3-padding-32">
+<h6 class="w3-text-grey"> CONTACT: Robin Mesnage, King's College London, London SE1 9RT, UK. </h6>
+<h6 class="w3-text-grey"> EMAIL: robinmes[at]gmail.com </h6>
+ </div>
+</footer>
+
+<script>
+// Used to toggle the menu on small screens when clicking on the menu button
+function myFunction() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+</script>
+
+</body>
+</html>
