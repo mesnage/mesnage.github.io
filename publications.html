@@ -106,6 +106,16 @@
             font-size: 14px;
             color: #1a73e8;
         }
+
+        .accordion-label::after {
+            content: " \25BC";
+            float: right;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-label.w3-show::after {
+            transform: rotate(-180deg);
+        }
     </style>
 </head>
 <body>
@@ -188,7 +198,7 @@
 </div>
     
 <div class="w3-content">
-    <button onclick="toggleAccordion('2023 (15 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2023 (15 articles)</button>
+    <button onclick="toggleAccordion('2023 (15 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2023 (15 articles)</button>
         <div id="2023 (15 articles)" class="w3-hide">
 
     <div class="tile">
@@ -299,7 +309,7 @@
         </div>
     
 <div class="w3-content">
-    <button onclick="toggleAccordion('2022 (15 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2022 (15 articles)</button>
+    <button onclick="toggleAccordion('2022 (15 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2022 (15 articles)</button>
         <div id="2022 (15 articles)" class="w3-hide">
 
     <div class="tile">
@@ -410,7 +420,7 @@
     </div>
     
 <div class="w3-content">
-    <button onclick="toggleAccordion('2021 (20 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2021 (20 articles)</button>
+    <button onclick="toggleAccordion('2021 (20 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2021 (20 articles)</button>
         <div id="2021 (20 articles)" class="w3-hide">
 
     <div class="tile">
@@ -551,7 +561,7 @@
     </div>
     
 <div class="w3-content">
-    <button onclick="toggleAccordion('2020 (8 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2020 (8 articles)</button>
+    <button onclick="toggleAccordion('2020 (8 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2020 (8 articles)</button>
         <div id="2020 (8 articles)" class="w3-hide">
 
     <div class="tile">
@@ -613,7 +623,7 @@
     </div>
     
  <div class="w3-content">
-    <button onclick="toggleAccordion('2019 (8 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2019 (8 articles)</button>
+    <button onclick="toggleAccordion('2019 (8 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2019 (8 articles)</button>
         <div id="2019 (8 articles)" class="w3-hide">
 
     <div class="tile">
@@ -675,7 +685,7 @@
     </div>
     
     <div class="w3-content">
-    <button onclick="toggleAccordion('2018 (8 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2018 (8 articles)</button>
+    <button onclick="toggleAccordion('2018 (8 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2018 (8 articles)</button>
         <div id="2018 (8 articles)" class="w3-hide">
 
     <div class="tile">
@@ -737,7 +747,7 @@
     </div>
     
 <div class="w3-content">
-    <button onclick="toggleAccordion('2017 (9 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2017 (9 articles)</button>
+    <button onclick="toggleAccordion('2017 (9 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2017 (9 articles)</button>
         <div id="2017 (9 articles)" class="w3-hide">
 
     <div class="tile">
@@ -806,7 +816,7 @@
     </div>
     
     <div class="w3-content">
-    <button onclick="toggleAccordion('2016 (4 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2016 (4 articles)</button>
+    <button onclick="toggleAccordion('2016 (4 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2016 (4 articles)</button>
         <div id="2016 (4 articles)" class="w3-hide">
 
     <div class="tile">
@@ -840,7 +850,7 @@
     </div>
     
 <div class="w3-content">
-    <button onclick="toggleAccordion('2015 (3 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2015 (3 articles)</button>
+    <button onclick="toggleAccordion('2015 (3 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2015 (3 articles)</button>
         <div id="2015 (3 articles)" class="w3-hide">
 
     <div class="tile">
@@ -867,7 +877,7 @@
     </div>
     
   <div class="w3-content">
-    <button onclick="toggleAccordion('2014 (6 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2014 (6 articles)</button>
+    <button onclick="toggleAccordion('2014 (6 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2014 (6 articles)</button>
         <div id="2014 (6 articles)" class="w3-hide">
 
     <div class="tile">
@@ -915,7 +925,7 @@
     </div>
     
   <div class="w3-content">
-    <button onclick="toggleAccordion('2013 (4 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2013 (4 articles)</button>
+    <button onclick="toggleAccordion('2013 (4 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2013 (4 articles)</button>
         <div id="2013 (4 articles)" class="w3-hide">
 
     <div class="tile">
@@ -948,7 +958,7 @@
     </div>
     
    <div class="w3-content">
-    <button onclick="toggleAccordion('2012 (4 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2012 (4 articles)</button>
+    <button onclick="toggleAccordion('2012 (4 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2012 (4 articles)</button>
         <div id="2012 (4 articles)" class="w3-hide">
 
     <div class="tile">
@@ -981,7 +991,7 @@
     </div>
     
  <div class="w3-content">
-    <button onclick="toggleAccordion('2011 (2 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2011 (2 articles)</button>
+    <button onclick="toggleAccordion('2011 (2 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2011 (2 articles)</button>
         <div id="2011 (2 articles)" class="w3-hide">
 
     <div class="tile">
@@ -1001,7 +1011,7 @@
     </div>
 
     <div class="w3-content">
-    <button onclick="toggleAccordion('2010 (5 articles)')" class="w3-button w3-block w3-light-grey w3-left-align">2010 (5 articles)</button>
+    <button onclick="toggleAccordion('2010 (5 articles)')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">2010 (5 articles)</button>
     <div id="2010 (5 articles)" class="w3-hide">
         <div class="tile">
             <div class="publication-title">Roundup in Genetically modified crops: Regulation and toxicity in mammals</div>
@@ -1075,3 +1085,4 @@ function toggleAccordion(id) {
 
 </body>
 </html>
+
