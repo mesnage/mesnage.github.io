@@ -87,6 +87,7 @@
             margin: 10px;
             background-color: #f1f1f1;
             border-radius: 5px;
+            color: #333333; /* Tile content color */
         }
 
         .publication-title {
@@ -105,6 +106,15 @@
         .publication-doi {
             font-size: 14px;
             color: #1a73e8;
+        }
+
+        .accordion-label::after {
+            content: "\25BC"; /* Down arrow */
+            float: right;
+        }
+
+        .accordion-label.w3-show::after {
+            content: "\25B2"; /* Up arrow */
         }
     </style>
 </head>
@@ -144,7 +154,7 @@
 
 <!-- Sections -->
 <div class="w3-content">
-    <button onclick="toggleAccordion('gutmicrobe')" class="w3-button w3-block w3-light-grey w3-left-align">Effects of pesticides on the gut microbiome</button>
+    <button onclick="toggleAccordion('gutmicrobe')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Effects of pesticides on the gut microbiome</button>
     <div id="gutmicrobe" class="w3-hide">
       <div class="myface">
       <img src="images/microbiome.jpg" class="myface" alt="">
@@ -163,7 +173,7 @@
         </div>
     </div>
 
-    <button onclick="toggleAccordion('human')" class="w3-button w3-block w3-light-grey w3-left-align">Beneficial effects of organic food consumption and toxic effects of pesticides in the human population</button>
+    <button onclick="toggleAccordion('human')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Beneficial effects of organic food consumption and toxic effects of pesticides in the human population</button>
     <div id="human" class="w3-hide">
               <div class="myface">
       <img src="images/organic.jpg" class="myface" alt="">
@@ -179,7 +189,7 @@
         </div>
     </div>
 
-    <button onclick="toggleAccordion('genotox')" class="w3-button w3-block w3-light-grey w3-left-align">Carcinogenic effects of glyphosate and its formulated herbicides</button>
+    <button onclick="toggleAccordion('genotox')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Carcinogenic effects of glyphosate and its formulated herbicides</button>
     <div id="genotox" class="w3-hide">
               <div class="myface">
       <img src="images/chromosomes.jpg" class="myface" alt="">
@@ -195,7 +205,7 @@
         </div>
     </div>
 
-    <button onclick="toggleAccordion('cocktail')" class="w3-button w3-block w3-light-grey w3-left-align">Cocktail effects: understanding combined effects of pesticide mixtures</button>
+    <button onclick="toggleAccordion('cocktail')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Cocktail effects: understanding combined effects of pesticide mixtures</button>
     <div id="cocktail" class="w3-hide">
               <div class="myface">
       <img src="images/cocktailssmall.jpg" class="myface" alt="">
@@ -210,7 +220,7 @@
         </div>
     </div>
 
-    <button onclick="toggleAccordion('nafld')" class="w3-button w3-block w3-light-grey w3-left-align">Molecular signatures of non-alcoholic fatty liver disease</button>
+    <button onclick="toggleAccordion('nafld')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Molecular signatures of non-alcoholic fatty liver disease</button>
     <div id="nafld" class="w3-hide">
               <div class="myface">
       <img src="images/liver.png" class="myface" alt="">
@@ -224,7 +234,7 @@
         </div>
     </div>
 
-    <button onclick="toggleAccordion('edc')" class="w3-button w3-block w3-light-grey w3-left-align">Endocrine disrupting effects of pesticides</button>
+    <button onclick="toggleAccordion('edc')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Endocrine disrupting effects of pesticides</button>
     <div id="edc" class="w3-hide">
               <div class="myface">
       <img src="images/experiment.jpg" class="myface" alt="">
@@ -239,7 +249,7 @@
         </div>
     </div>
 
-    <button onclick="toggleAccordion('formulant')" class="w3-button w3-block w3-light-grey w3-left-align">Toxic effects of pesticide co-formulants</button>
+    <button onclick="toggleAccordion('formulant')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Toxic effects of pesticide co-formulants</button>
     <div id="formulant" class="w3-hide">
               <div class="myface">
       <img src="images/pesticidespray.jpg" class="myface" alt="">
@@ -354,14 +364,16 @@ function myFunction() {
 // Function to toggle accordion sections
 function toggleAccordion(id) {
     var x = document.getElementById(id);
+    var btn = document.querySelector(`button[onclick="toggleAccordion('${id}')"]`);
     if (x.className.indexOf("w3-show") == -1) {
         x.className += " w3-show";
+        btn.classList.add("w3-show");
     } else { 
         x.className = x.className.replace(" w3-show", "");
+        btn.classList.remove("w3-show");
     }
 }
 </script>
 
 </body>
 </html>
-
