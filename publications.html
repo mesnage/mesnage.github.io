@@ -8,9 +8,37 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
-        .w3-bar,h1,button {font-family: "Montserrat", sans-serif}
+  <style>
+        /* Define the base font size for the body */
+        body {
+            font-family: "Lato", sans-serif;
+            font-size: 16px; /* You can adjust this size */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Lato", sans-serif;
+        }
+
+        .w3-bar, button {
+            font-family: "Lato", sans-serif;
+        }
+
+        /* Ensure the tiles and text have the same font and size */
+        .tile, .publication-title, .publication-authors, .publication-journal, .publication-doi {
+            font-family: "Lato", sans-serif;
+            font-size: 16px; /* Ensure the font size matches the body font size */
+        }
+
+        .dropdown .dropbtn {
+            font-family: "Lato", sans-serif;
+            font-size: 16px; /* Ensure the font size matches the body font size */
+        }
+
+        .dropdown-content a {
+            font-family: "Lato", sans-serif;
+            font-size: 16px; /* Ensure the font size matches the body font size */
+        }
+
         .fa-bar-chart, .fa-flask, .fa-balance-scale {font-size:200px}
         
         .myface { 
@@ -25,17 +53,6 @@
         .dropdown {
             float: left;
             overflow: hidden;
-        }
-
-        .dropdown .dropbtn {
-            font-size: 17px;    
-            border: none;
-            outline: none;
-            color: white;
-            padding: 14px 16px;
-            background-color: inherit;
-            font-family: inherit;
-            margin: 0;
         }
 
         .dropdown-content {
@@ -71,16 +88,20 @@
             background-color: #f1f1f1;
             border-radius: 5px;
         }
+
         .publication-title {
             font-weight: bold;
             font-size: 18px;
         }
+
         .publication-authors {
             font-size: 14px;
         }
+
         .publication-journal {
             font-style: italic;
         }
+
         .publication-doi {
             font-size: 14px;
             color: #1a73e8;
