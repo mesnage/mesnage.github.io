@@ -8,11 +8,13 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
      <style>
         /* Define the base font size for the body */
         body {
             font-family: "Lato", sans-serif;
             font-size: 16px; /* You can adjust this size */
+            scroll-behavior: smooth;
         }
 
         h1, h2, h3, h4, h5, h6 {
@@ -116,30 +118,59 @@
         .accordion-label.w3-show::after {
             content: "\25B2"; /* Up arrow */
         }
+
+        .sticky {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .sticky + .content {
+            padding-top: 70px;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+        }
+
+        .slide-in {
+            transform: translateX(-100%);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide-in.visible {
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body>
 
 <!-- Navbar -->
-<div class="w3-top">
+<div class="w3-top w3-bar-container" id="navbar">
     <div class="w3-bar w3-blue w3-card w3-left-align w3-large">
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-        <a href="https://mesnage.github.io/" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
-        <a href="https://mesnage.github.io/publications.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Publications</a>
-        <a href="https://mesnage.github.io/research.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Research</a>
+        <a href="#home" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+        <a href="#publications" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Publications</a>
+        <a href="#research" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Research</a>
         <a href="https://github.com/mesnage" target="_blank" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Github</a>
     </div>
   
     <!-- Navbar on small screens -->
     <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
-        <a href="https://mesnage.github.io/publications.html" class="w3-bar-item w3-button w3-padding-large">Publications</a>
-        <a href="https://mesnage.github.io/research.html" class="w3-bar-item w3-button w3-padding-large">Research</a>
+        <a href="#publications" class="w3-bar-item w3-button w3-padding-large">Publications</a>
+        <a href="#research" class="w3-bar-item w3-button w3-padding-large">Research</a>
         <a href="https://github.com/mesnage" target="_blank" class="w3-bar-item w3-button w3-padding-large">Github</a>
     </div>
 </div>
 
 <!-- Header -->
-<header class="w3-container w3-black w3-center" style="padding:60px 16px">
+<header id="home" class="w3-container w3-black w3-center animate__animated animate__fadeIn" style="padding:60px 16px">
     <h1 class="w3-margin w3-jumbo">Robin Mesnage</h1>
     <p class="w3-xlarge"> My research </p>
 </header>
@@ -153,7 +184,7 @@
   </div>
 
 <!-- Sections -->
-<div class="w3-content">
+<div class="w3-content fade-in">
     <button onclick="toggleAccordion('gutmicrobe')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Effects of pesticides on the gut microbiome</button>
     <div id="gutmicrobe" class="w3-hide">
       <div class="myface">
@@ -373,6 +404,30 @@ function toggleAccordion(id) {
         btn.classList.remove("w3-show");
     }
 }
+
+// Sticky navbar
+window.onscroll = function() {myStickyFunction()};
+
+var navbar = document.getElementById("navbar");
+var sticky = navbar.offsetTop;
+
+function myStickyFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
+
+// Fade-in effect
+document.addEventListener("DOMContentLoaded", function() {
+    var fadeIns = document.querySelectorAll(".fade-in");
+    fadeIns.forEach(function(element) {
+        setTimeout(function() {
+            element.classList.add("visible");
+        }, 500);
+    });
+});
 </script>
 
 </body>
