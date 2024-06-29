@@ -1,39 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Robin Mesnage</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dr. Robin Mesnage - Research Portfolio</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body, h1, h2, h3, h4, h5, h6 {
             font-family: "Lato", sans-serif;
-            line-height: 1.8;
         }
         body {
             font-size: 18px;
+            line-height: 1.8;
         }
         .w3-bar, button {
             font-family: "Lato", sans-serif;
         }
-        .fa-flask, .fa-microscope, .fa-dna {
-            font-size: 50px;
-            margin-bottom: 15px;
+        .fa-bar-chart, .fa-flask, .fa-balance-scale {font-size:200px}
+        .myface { 
+            width:auto; 
+            text-align:center; 
+        } 
+        img { 
+            max-width:100%; 
+            height:auto; 
         }
-        .research-card {
+        .accordion-label {
+            position: relative;
+            padding-right: 30px;
+        }
+        .accordion-label::after {
+            content: '\002B';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+        .accordion-label.w3-show::after {
+            content: '\2212';
+        }
+        .tile {
+            padding: 20px;
+            margin: 10px 0;
+            background-color: #f1f1f1;
+            border-radius: 5px;
             transition: all 0.3s ease;
         }
-        .research-card:hover {
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-            transform: translateY(-5px);
-        }
-        .sticky {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 100;
+        .tile:hover {
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
         }
         #back-to-top {
             display: none;
@@ -43,146 +62,161 @@
             z-index: 99;
             border: none;
             outline: none;
-            background-color: #4CAF50;
+            background-color: #2196F3;
             color: white;
             cursor: pointer;
             padding: 15px;
             border-radius: 50%;
         }
         #back-to-top:hover {
-            background-color: #45a049;
+            background-color: #0b7dda;
         }
     </style>
 </head>
 <body>
 
 <!-- Navbar -->
-<div class="w3-top" id="navbar">
+<div class="w3-top">
     <div class="w3-bar w3-blue w3-card w3-left-align w3-large">
         <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue" href="javascript:void(0);" onclick="toggleMenu()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-        <a href="#home" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
         <a href="#research" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Research</a>
         <a href="#publications" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Publications</a>
-        <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Contact</a>
+        <a href="https://github.com/mesnage" target="_blank" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Github</a>
     </div>
 
     <!-- Navbar on small screens -->
     <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
         <a href="#research" class="w3-bar-item w3-button w3-padding-large" onclick="toggleMenu()">Research</a>
         <a href="#publications" class="w3-bar-item w3-button w3-padding-large" onclick="toggleMenu()">Publications</a>
-        <a href="#contact" class="w3-bar-item w3-button w3-padding-large" onclick="toggleMenu()">Contact</a>
+        <a href="https://github.com/mesnage" target="_blank" class="w3-bar-item w3-button w3-padding-large" onclick="toggleMenu()">Github</a>
     </div>
 </div>
 
 <!-- Header -->
-<header class="w3-container w3-blue w3-center" style="padding:128px 16px" id="home">
-    <h1 class="w3-margin w3-jumbo">Dr. Robin Mesnage</h1>
-    <p class="w3-xlarge">Toxicologist & Environmental Health Researcher</p>
-    <button class="w3-button w3-white w3-padding-large w3-large w3-margin-top">Learn More</button>
+<header class="w3-container w3-blue w3-center" style="padding:128px 16px">
+    <h1 class="w3-margin w3-jumbo">Robin Mesnage</h1>
+    <p class="w3-xlarge">My research</p>
 </header>
 
 <!-- Research Section -->
-<div class="w3-row-padding w3-padding-64 w3-container" id="research">
+<div class="w3-row-padding w3-light-grey w3-padding-64 w3-container" id="research">
     <div class="w3-content">
-        <h2>Research Areas</h2>
-        <div class="w3-row-padding w3-center">
-            <div class="w3-third">
-                <div class="w3-card w3-container research-card" style="min-height:460px">
-                    <h3>Pesticide Toxicity</h3><br>
-                    <i class="fas fa-flask w3-margin-bottom w3-text-theme"></i>
-                    <p>Investigating the health effects of pesticides, with a focus on glyphosate and its formulations.</p>
-                    <button class="w3-button w3-blue">Learn More</button>
-                </div>
+        <h2>Health effects of pesticides</h2>
+        <p>My research focus for about 10 years has been on the safety evaluation of pesticides, publishing around 80 scientific articles. The main objective was to identify gaps in the evaluation of pesticide toxicity, and to propose solutions to better predict their effects in human populations.</p>
+        
+        <!-- Accordion sections -->
+        <div class="w3-accordion">
+            <button onclick="toggleAccordion('gutmicrobe')" class="w3-button w3-block w3-left-align accordion-label">Effects of pesticides on the gut microbiome</button>
+            <div id="gutmicrobe" class="w3-hide w3-container">
+                <!-- Content for gut microbiome section -->
             </div>
 
-            <div class="w3-third">
-                <div class="w3-card w3-container research-card" style="min-height:460px">
-                    <h3>GM Crop Safety</h3><br>
-                    <i class="fas fa-dna w3-margin-bottom w3-text-theme"></i>
-                    <p>Evaluating the safety and potential health impacts of genetically modified crops.</p>
-                    <button class="w3-button w3-blue">Learn More</button>
-                </div>
+            <button onclick="toggleAccordion('human')" class="w3-button w3-block w3-left-align accordion-label">Beneficial effects of organic food consumption and toxic effects of pesticides in the human population</button>
+            <div id="human" class="w3-hide w3-container">
+                <!-- Content for organic food consumption section -->
             </div>
 
-            <div class="w3-third">
-                <div class="w3-card w3-container research-card" style="min-height:460px">
-                    <h3>Endocrine Disruptors</h3><br>
-                    <i class="fas fa-microscope w3-margin-bottom w3-text-theme"></i>
-                    <p>Studying the effects of endocrine-disrupting chemicals, including bisphenols.</p>
-                    <button class="w3-button w3-blue">Learn More</button>
-                </div>
+            <button onclick="toggleAccordion('genotox')" class="w3-button w3-block w3-left-align accordion-label">Carcinogenic effects of glyphosate and its formulated herbicides</button>
+            <div id="genotox" class="w3-hide w3-container">
+                <!-- Content for carcinogenic effects section -->
+            </div>
+
+            <button onclick="toggleAccordion('cocktail')" class="w3-button w3-block w3-left-align accordion-label">Cocktail effects: understanding combined effects of pesticide mixtures</button>
+            <div id="cocktail" class="w3-hide w3-container">
+                <!-- Content for cocktail effects section -->
+            </div>
+
+            <button onclick="toggleAccordion('nafld')" class="w3-button w3-block w3-left-align accordion-label">Molecular signatures of non-alcoholic fatty liver disease</button>
+            <div id="nafld" class="w3-hide w3-container">
+                <!-- Content for NAFLD section -->
+            </div>
+
+            <button onclick="toggleAccordion('edc')" class="w3-button w3-block w3-left-align accordion-label">Endocrine disrupting effects of pesticides</button>
+            <div id="edc" class="w3-hide w3-container">
+                <!-- Content for endocrine disrupting effects section -->
+            </div>
+
+            <button onclick="toggleAccordion('formulant')" class="w3-button w3-block w3-left-align accordion-label">Toxic effects of pesticide co-formulants</button>
+            <div id="formulant" class="w3-hide w3-container">
+                <!-- Content for pesticide co-formulants section -->
             </div>
         </div>
     </div>
 </div>
 
-<!-- Publications Section -->
-<div class="w3-row-padding w3-light-grey w3-padding-64 w3-container" id="publications">
+<!-- GM Crops Section -->
+<div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
     <div class="w3-content">
-        <h2>Recent Publications</h2>
-        <ul class="w3-ul w3-card-4">
-            <li class="w3-bar">
-                <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">×</span>
-                <div class="w3-bar-item">
-                    <span class="w3-large">Title of Publication 1</span><br>
-                    <span>Authors, Journal (Year)</span>
-                </div>
-            </li>
-            <li class="w3-bar">
-                <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">×</span>
-                <div class="w3-bar-item">
-                    <span class="w3-large">Title of Publication 2</span><br>
-                    <span>Authors, Journal (Year)</span>
-                </div>
-            </li>
-            <li class="w3-bar">
-                <span class="w3-bar-item w3-button w3-white w3-xlarge w3-right">×</span>
-                <div class="w3-bar-item">
-                    <span class="w3-large">Title of Publication 3</span><br>
-                    <span>Authors, Journal (Year)</span>
-                </div>
-            </li>
-        </ul>
+        <h2>Health effects of Genetically Modified crops</h2>
+        <p>When I started my PhD in 2010, the controversy on GM crops was raging. I participated to the analysis and publication of the results of the first long-term toxicity study of a Roundup herbicide and a Roundup-tolerant GM maize.</p>
+        
+        <div class="w3-accordion">
+            <button onclick="toggleAccordion('long-term-toxicity')" class="w3-button w3-block w3-left-align accordion-label">Long-term toxicity of a Roundup herbicide and a Roundup-tolerant GM maize</button>
+            <div id="long-term-toxicity" class="w3-hide w3-container">
+                <!-- Content for long-term toxicity section -->
+            </div>
+
+            <button onclick="toggleAccordion('omics-analysis')" class="w3-button w3-block w3-left-align accordion-label">Integrating multiple 'omics' analysis to study the effects of herbicide-tolerant crops</button>
+            <div id="omics-analysis" class="w3-hide w3-container">
+                <!-- Content for omics analysis section -->
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Contact Section -->
-<div class="w3-container w3-padding-64 w3-center" id="contact">
-    <h2>Contact</h2>
-    <p>Get in touch for collaborations or inquiries:</p>
-    <div class="w3-section">
-        <p><i class="fa fa-map-marker fa-fw w3-xxlarge w3-margin-right"></i> London, UK</p>
-        <p><i class="fa fa-phone fa-fw w3-xxlarge w3-margin-right"></i> Phone: +44 123456789</p>
-        <p><i class="fa fa-envelope fa-fw w3-xxlarge w3-margin-right"></i> Email: robin.mesnage@example.com</p>
-    </div>
-    <br>
-    <div class="w3-xlarge w3-section">
-        <i class="fab fa-facebook w3-hover-opacity"></i>
-        <i class="fab fa-instagram w3-hover-opacity"></i>
-        <i class="fab fa-twitter w3-hover-opacity"></i>
-        <i class="fab fa-linkedin w3-hover-opacity"></i>
+<!-- Plasticizers Section -->
+<div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+    <div class="w3-content">
+        <h2>Health effects of plasticizers (bisphenol A)</h2>
+        <p>Chemical exposure that interferes within the body's hormone systems has been linked to breast cancer. Large numbers of pollutants can have oestrogen hormone-like activities and can stimulate breast cancer cell growth. Bisphenols are used in the manufacture of plastic bottles, resins and the plastic lining of cans, from which they leach into food and drink. Bisphenol A (BPA) is the prototypical member of this class of plastics components, which is now known to mimic the effects of oestrogen. Due to public concerns, industry has been replacing BPA with other bisphenol compounds to produce so called "BPA-free" products.</p>
+        
+        <div class="w3-accordion">
+            <button onclick="toggleAccordion('estrogenic-effects')" class="w3-button w3-block w3-left-align accordion-label">Estrogenic effects of bisphenol A alternatives</button>
+            <div id="estrogenic-effects" class="w3-hide w3-container">
+                <!-- Content for estrogenic effects section -->
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- Footer -->
-<footer class="w3-container w3-padding-64 w3-center w3-opacity w3-blue">
-    <p>© 2024 Dr. Robin Mesnage. All rights reserved.</p>
+<footer class="w3-container w3-padding-64 w3-center w3-opacity">  
+    <div class="w3-xlarge w3-padding-32">
+        <h6 class="w3-text-grey">CONTACT: Robin Mesnage, Wilhelm-Beck-Str. 27, 88662 Überlingen, GERMANY.</h6>
+        <h6 class="w3-text-grey">EMAIL: robin.mesnage[at]buchinger-wilhelmi.com</h6>
+        <div class="w3-xlarge w3-section">
+            <a href="https://x.com/Robin_Mesnage" target="_blank" class="w3-hover-opacity"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.linkedin.com/in/robin-mesnage/" target="_blank" class="w3-hover-opacity"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.instagram.com/robin_mesnage/" target="_blank" class="w3-hover-opacity"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
 </footer>
 
 <button onclick="topFunction()" id="back-to-top" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 
 <script>
-// Toggle between showing and hiding the sidebar when clicking the menu icon
 function toggleMenu() {
     var x = document.getElementById("navDemo");
     if (x.className.indexOf("w3-show") == -1) {
         x.className += " w3-show";
-    } else {
+    } else { 
         x.className = x.className.replace(" w3-show", "");
     }
 }
 
-// When the user scrolls down 20px from the top of the document, show the button
+function toggleAccordion(id) {
+    var x = document.getElementById(id);
+    var btn = document.querySelector(`button[onclick="toggleAccordion('${id}')"]`);
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+        btn.classList.add("w3-show");
+    } else { 
+        x.className = x.className.replace(" w3-show", "");
+        btn.classList.remove("w3-show");
+    }
+}
+
 window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
@@ -193,17 +227,14 @@ function scrollFunction() {
     }
 }
 
-// When the user clicks on the button, scroll to the top of the document
 function topFunction() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
 }
 
-// Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
-
         document.querySelector(this.getAttribute('href')).scrollIntoView({
             behavior: 'smooth'
         });
