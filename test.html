@@ -1,421 +1,112 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <title>Robin Mesnage</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        body {
-            font-family: "Lato", sans-serif;
-            font-size: 16px;
-            scroll-behavior: smooth; /* Smooth scrolling */
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: "Lato", sans-serif;
-        }
-
-        .w3-bar, button {
-            font-family: "Lato", sans-serif;
-        }
-
-        .tile, .publication-title, .publication-authors, .publication-journal, .publication-doi {
-            font-family: "Lato", sans-serif;
-            font-size: 16px;
-        }
-
-        .dropdown .dropbtn {
-            font-family: "Lato", sans-serif;
-            font-size: 16px;
-        }
-
-        .dropdown-content a {
-            font-family: "Lato", sans-serif;
-            font-size: 16px;
-        }
-
-        .fa-bar-chart, .fa-flask, .fa-balance-scale {
-            font-size: 200px;
-        }
-
-        .myface {
-            width: auto;
-            text-align: center;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .dropdown {
-            float: left;
-            overflow: hidden;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a {
-            float: none;
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .tile {
-            padding: 20px;
-            margin: 10px;
-            background-color: #f1f1f1;
-            border-radius: 5px;
-            color: #333333;
-        }
-
-        .publication-title {
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .publication-authors {
-            font-size: 14px;
-        }
-
-        .publication-journal {
-            font-style: italic;
-        }
-
-        .publication-doi {
-            font-size: 14px;
-            color: #1a73e8;
-        }
-
-        .accordion-label::after {
-            content: "\25BC"; /* Down arrow */
-            float: right;
-        }
-
-        .accordion-label.w3-show::after {
-            content: "\25B2"; /* Up arrow */
-        }
-
-        .w3-hide {
-            display: none !important;
-        }
-
-        .sticky {
-            position: -webkit-sticky;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .accordion-content {
-            background-color: #f9f9f9; /* Different background color for unrolled content */
-            padding: 10px;
-        }
-
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: none;
-            z-index: 1000;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Study Questionnaire</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; max-width: 720px; margin: 32px auto; padding: 0 16px; }
+    h1 { font-size: 22px; margin: 0 0 12px; }
+    p { line-height: 1.45; }
+    label { display:block; font-weight: 600; margin: 16px 0 6px; }
+    input, textarea, select { width: 100%; padding: 10px; font-size: 16px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 10px; }
+    textarea { min-height: 110px; resize: vertical; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .card { border: 1px solid #eee; border-radius: 16px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+    .btn { margin-top: 18px; padding: 12px 14px; border: 0; border-radius: 12px; font-size: 16px; cursor: pointer; }
+    .btn-primary { background: #111; color: #fff; }
+    .muted { color: #666; font-size: 14px; }
+    .ok { margin-top: 14px; padding: 12px; border-radius: 12px; background: #f2fff1; border: 1px solid #cfeacc; display:none; }
+    .err { margin-top: 14px; padding: 12px; border-radius: 12px; background: #fff2f2; border: 1px solid #f0c9c9; display:none; }
+  </style>
 </head>
 <body>
+  <h1>Study daily questionnaire</h1>
+  <p class="muted">
+    Please answer calmly. Your answers are sent securely to our study database (Google Forms).
+  </p>
 
-<!-- Navbar -->
-<div class="w3-top sticky">
-    <div class="w3-bar w3-blue w3-card w3-left-align w3-large">
-        <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-        <a href="https://mesnage.github.io/" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
-        <a href="https://mesnage.github.io/publications.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Publications</a>
-        <a href="https://mesnage.github.io/research.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Research</a>
-        <a href="https://github.com/mesnage" target="_blank" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Github</a>
-    </div>
-  
-    <!-- Navbar on small screens -->
-    <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
-        <a href="https://mesnage.github.io/publications.html" class="w3-bar-item w3-button w3-padding-large">Publications</a>
-        <a href="https://mesnage.github.io/research.html" class="w3-bar-item w3-button w3-padding-large">Research</a>
-        <a href="https://github.com/mesnage" target="_blank" class="w3-bar-item w3-button w3-padding-large">Github</a>
-    </div>
-</div>
+  <div class="card">
+    <!--
+      IMPORTANT:
+      1) Replace FORM_ACTION_URL with your Google Form formResponse URL.
+      2) Replace entry.XXXXXXXXX with your actual entry IDs.
+    -->
+    <form id="studyForm">
+      <label for="pid">Participant ID</label>
+      <input id="pid" name="entry.1111111111" placeholder="e.g., BW-0241" required />
 
-<!-- Header -->
-<header class="w3-container w3-black w3-center" style="padding:60px 16px">
-    <h1 class="w3-margin w3-jumbo">Robin Mesnage</h1>
-    <p class="w3-xlarge">My research</p>
-</header>
-
-<!-- PESTICIDES -->
-<div class="w3-row-padding w3-light-grey w3-padding-32 w3-container">
-    <div class="w3-content">
-        <h2 style="padding: 10px">Health effects of pesticides</h2>
-        <h5 style="padding: 10px">My research focus for about 10 years has been on the safety evaluation of pesticides, publishing around 80 scientific articles. The main objective was to identify gaps in the evaluation of pesticide toxicity, and to propose solutions to better predict their effects in human populations.</h5>
-    </div>
-</div>
-
-<!-- Sections -->
-<div class="w3-content">
-    <button onclick="toggleAccordion('gutmicrobe')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Effects of pesticides on the gut microbiome</button>
-    <div id="gutmicrobe" class="w3-hide accordion-content">
-        <div class="myface">
-            <img src="images/microbiome.jpg" class="myface" alt="">
+      <div class="row">
+        <div>
+          <label for="day">Study day</label>
+          <input id="day" name="entry.2222222222" type="number" min="1" step="1" placeholder="e.g., 5" required />
         </div>
-        <div class="w3-row-padding w3-padding-64 w3-container">
-            <div class="w3-content">
-                <h2 style="padding: 10px">Effects of pesticides on the gut microbiome</h2>
-                <h5 style="padding: 10px">Health effects of pesticides are not always correctly predicted before products are released for marketing. Laboratory studies are often insufficient to detect effects of pesticides. This is the case for effects on the gut microbiome which are generally not measured in the battery of tests performed to regulate pesticide adverse effects.</h5>
-                <h5 style="padding: 10px">Effects of the major herbicide glyphosate on the gut microbiome are heavily debated. Because glyphosate can target the metabolism of gastrointestinal microorganisms in the same manner it targets plants to act as a weedkiller, major concerns have been raised regarding the potential antibiotic effects of glyphosate. However, this had never been tested. We combined high-throughput biology techniques (shotgun metagenomics and metabolomics) to assess effects of glyphosate on the caecum microbiota of Sprague-Dawley rats. <a href="https://ehp.niehs.nih.gov/doi/full/10.1289/EHP6990">(Mesnage et al., 2021)</a>. Glyphosate did not act as an antibiotic in the gut. In order for glyphosate to act as an antibiotic, it needs to cause a significant shortage in the production of compounds in bacteria called aromatic amino acids. This is how glyphosate kills plants. More specifically, it interrupts a series of chemical reactions within the shikimate pathway. We reveal for the first time that glyphosate does inhibit the shikimate pathway in the rat gut microbiome. This could have health impact. However, glyphosate likely did not kill bacteria via its impact on the shikimate pathway, because bacteria do not need the shikimate pathway to get the aromatic amino acids they need. Like us, they get them from the food we eat.</h5>
-                <h5 style="padding: 10px">Glyphosate’s impact on the shikimate pathway had other consequences. A multitude of small molecules (metabolites) accumulated, or were depleted in the rat gut. The bacterial composition of the gut microbiome also changed, with some bacteria present at higher levels in the glyphosate exposed animals. We have an explanation for this: the glyphosate molecule contains one atom of phosphorus, and it is very likely that this phosphorus atomic bond was used as a source of energy by some bacteria to proliferate in the rat gut.</h5>
-                <h5 style="padding: 10px">We evaluated this by measuring if the changes in gut microbiome chemistry caused changes in blood composition. The compounds altered as a consequence of the interruption of the shikimate pathway by glyphosate in the gut were mostly unchanged in blood. However, other chemicals had their levels disrupted by glyphosate, with some indicating that glyphosate caused oxidative stress. This oxidative stress was even more pronounced when we tested a commercial herbicide containing glyphosate called Roundup Bioflow (also known as MON 52276, the representative glyphosate herbicide in the EU).</h5>
-                <h5 style="padding: 10px">We performed another study and evaluated if urinary glyphosate excretion associates with changes in faecal microbial community composition and metabolite profiles in 65 adult twins in the UK. This is part of a larger project in which we are comparing the effects of organic and non-organic diets on the composition of the gut microbiota of adult twins from the TwinsUK cohort. This study was done in the UK on 130 individuals <a href="https://ehjournal.biomedcentral.com/articles/10.1186/s12940-022-00860-0">(Mesnage et al., 2022)</a>. Pyrethroid and/or organophosphorus insecticide residues were found in all urine samples, while the herbicide glyphosate was found in 53% of individuals. Food frequency questionnaires showed that residues from organophosphates were higher with increased consumption of fruit and vegetables. A total of 34 associations between pesticide residue concentrations and faecal metabolite concentrations were detected. Glyphosate excretion was positively associated with an overall increased bacterial species richness, as well as to fatty acid metabolites and phosphate levels.</h5>
-                <h5 style="padding: 10px">To further address scientific knowledge gaps, we describe for the first time the effects of glyphosate and a Roundup glyphosate-based herbicide on infant gut microbiota using SHIME technology, which mimics the entire gastrointestinal tract <a href="https://www.biorxiv.org/content/10.1101/2021.12.16.472928v1">(Mesnage et al., 2022)</a>. Roundup and to a lesser extent glyphosate caused an increase in fermentation activity, resulting in acidification of the microbial environment. Ammonium production reflecting proteolytic activities was increased by Roundup exposure. Global metabolomics revealed large scale disturbances in metabolite profiles, including an increased abundance of long chain polyunsaturated fatty acids (n3 and n6). Our results suggested that lactobacilli had their growth stimulated as a result of microenvironment acidification.</h5>
-                <h5 style="padding: 10px">Despite growing evidence linking the presence of different categories of fungi in the human gut to observable diseases and health symptoms, no study has investigated if glyphosate can affect these fungal populations. As part of the multifaceted <a href="https://glyphosatestudy.org">Global Glyphosate Study</a>., which was launched with the aim of providing the most comprehensive evaluation of glyphosate-based herbicides covering long-term toxicity, carcinogenicity and multi-generational effects, we studied changes in bacterial and fungal populations in the caecum of rats exposed prenatally until adulthood (13 weeks after weaning) to three doses of glyphosate (0.5, 5, 50 mg/kg body weight/day), or to the herbicide formulations Roundup Bioflow and RangerPro at the same glyphosate-equivalent doses <a href="https://www.biorxiv.org/content/10.1101/2021.11.19.468976v1.full">(Mesnage et al., 2022)</a>. Altogether, our data suggested that glyphosate and its formulations caused profound changes in gut microbiome composition by affecting the fitness of major commensals, which in turn reduced competition and allowed opportunistic fungi to grow in the gut.</h5>
-            </div>
+        <div>
+          <label for="date">Date</label>
+          <input id="date" name="entry.3333333333" type="date" required />
         </div>
-    </div>
+      </div>
 
-    <button onclick="toggleAccordion('human')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Beneficial effects of organic food consumption and toxic effects of pesticides in the human population</button>
-    <div id="human" class="w3-hide accordion-content">
-        <div class="myface">
-            <img src="images/organic.jpg" class="myface" alt="">
-        </div>
-        <div class="w3-row-padding w3-padding-64 w3-container">
-            <div class="w3-content">
-                <h2 style="padding: 10px">Beneficial effects of organic food consumption and toxic effects of pesticides in the human population</h2>
-                <h5 style="padding: 10px">Despite the widely recognized benefits of organic farming and food consumption, its endorsement by government food standards agencies and the scientific community is generally lacking. One major reason for this is the lack of scientific studies showing direct health benefits of an organic diet.</h5>
-                <h5 style="padding: 10px">Our study on the 65 adult twins in the UK performed in collaboration with the group of Pr. Tim Spector originally aimed at testing the effects of organic food consumption. Twins were selected based on their answers to a food frequency questionnaire (FFQ) modified to include a question on organic food consumption. Our aim was to define two groups of individuals, one less likely to be exposed to pesticides than the other because of organic food consumption. A total of 977, mostly female, twin pairs answered questions on organic food dietary intake from the TwinsUK questionnaire. Among these 977 individuals, 65 twin monozygotic twin pairs were found to be discordant for organic food consumption (one twin eats an organic diet whereas the other does not). However, when a new FFQ was performed at the time of urine collection, only 15 pairs were discordant for organic food consumption. The inconsistency in the answers provided to the nutrition questionnaire, convinced us to drop this component of the investigation, as any findings would be deemed as inconclusive.</h5>
-                <h5 style="padding: 10px">The observed inconsistency between the results of the FFQ before recruitment and during the study is an important finding, which supports the need for dietary intervention studies to accurately determine the effects of an organic diet on the gut microbiome. An inherent difficulty in studies trying to link the consumption of organic food to health consequences is the number of co-variables or confounding factors, which are a natural part of human life. Organic food consumption is by itself multifactorial and its health effects could be due to a reduced exposure to pesticides and/or antibiotics, or to an increased intake of micronutrients. We addressed this topic in a review <a href="https://www.sciencedirect.com/science/article/abs/pii/S2468202019300919">(Mesnage et al., 2020)</a>, and started the first controlled dietary intervention of the health benefits of an organic diet.</h5>
-                <h5 style="padding: 10px">We hypothesised that short term consumption of an organic plant rich diet will lead to higher urinary levels of polyphenols, lower urinary levels of pesticides and improvements in the gut microbiome composition and biomarkers of cardiovascular health in comparison with an equivalent non-organic plant rich diet. To address this hypothesis, we started the <a href="https://clinicaltrials.gov/ct2/show/NCT04276974?term=orgamic&draw=2&rank=1">ORGAnic and MICrobiome study (ORGAMIC) project</a> and performed the first controlled dietary intervention of the health benefits of an organic diet. This includes comparisons of the effects of an organic versus a non-organic diet on urinary polyphenol and pesticide levels, gut microbiota (bacterial population) and selected biomarkers of cardiovascular health in a group of young healthy individuals. A pilot study was conducted and the results are being analysed.</h5>
-            </div>
-        </div>
-    </div>
+      <label for="wellbeing">Overall wellbeing (0–10)</label>
+      <input id="wellbeing" name="entry.4444444444" type="number" min="0" max="10" step="1" required />
 
-    <button onclick="toggleAccordion('genotox')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Carcinogenic effects of glyphosate and its formulated herbicides</button>
-    <div id="genotox" class="w3-hide accordion-content">
-        <div class="myface">
-            <img src="images/chromosomes.jpg" class="myface" alt="">
-        </div>
-        <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-            <div class="w3-content">
-                <h2 style="padding: 10px">Carcinogenic effects of glyphosate and its formulated herbicides</h2>
-                <h5 style="padding: 10px">Carcinogenic effects of glyphosate-based herbicides is an intense matter of debate. Toxicity including genotoxicity of glyphosate alone has been repeatedly tested over the last 40 years. Contrastingly, few studies have conducted comparative investigations between glyphosate and its commercial herbicide formulations, such as Roundup. This comparison is key to understand if cancers possibly developed after exposures to Roundup formulations can be predicted by laboratory tests done with glyphosate alone.</h5>
-                <h5 style="padding: 10px">We performed the first in-depth comparative toxicogenomic evaluation of glyphosate and Roundup formulations <a href="https://academic.oup.com/toxsci/article/186/1/83/6446050">(Mesnage et al., 2021)</a>. This was first done by evaluating effects of glyphosate and Roundup at a profound molecular level of biological functioning through analysis of gene expression (transcriptomics) and epigenetics (DNA methylation) in rat tissues. Roundup altered the expression of 96 genes in the rat liver specifically linked to DNA damage and oxidative stress. The genes disturbed suggested the activation of DNA repair mechanisms. Direct DNA damage measurement by apurinic/apyrimidinic lesion formation in liver was increased with glyphosate exposure. Although a core set of genes whose expression was altered by Roundup was similarly changed in the glyphosate-treated animals, the Roundup formulation was more toxic. The study paves the way for future investigations by identifying gene expression changes and altered DNA methylation sites, which can serve as biomarkers and potential predictors of negative health outcomes resulting from exposure to glyphosate-based herbicides.</h5>
-                <h5 style="padding: 10px">We did more laboratory tests in vitro to understand if glyphosate or Roundup can activate mechanisms which can lead to cancer formation <a href="https://academic.oup.com/toxsci/article/186/1/83/6446050">(Mesnage et al., 2021)</a>. Glyphosate and three Roundup formulations were assessed. We found that two formulations of Roundup herbicide, but not glyphosate, activated oxidative stress and misfolded protein responses, both clear markers of carcinogenicity. This suggested that surfactants in formulations have their own toxic effects and their combination with glyphosate trigger cell mechanisms characteristic of cancer formation which are not activated by glyphosate alone.</h5>
-                <h5 style="padding: 10px">Our data on the genotoxic effects of glyphosate and Roundup at very low concentrations will contribute to understanding the oncogenic (cancer-causing) potential of these substances and will directly contribute to the evidence base being used in the court cases in the US with plaintiffs claiming that Roundup caused their non-Hodgkin lymphoma.</h5>
-            </div>
-        </div>
-    </div>
+      <label for="symptoms">Any symptoms today?</label>
+      <textarea id="symptoms" name="entry.5555555555" placeholder="Headache, dizziness, sleep issues, etc."></textarea>
 
-    <button onclick="toggleAccordion('cocktail')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Cocktail effects: understanding combined effects of pesticide mixtures</button>
-    <div id="cocktail" class="w3-hide accordion-content">
-        <div class="myface">
-            <img src="images/cocktailssmall.jpg" class="myface" alt="">
-        </div>
-        <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-            <div class="w3-content">
-                <h2 style="padding: 10px">Cocktail effects: understanding combined effects of pesticide mixtures</h2>
-                <h5 style="padding: 10px">More recently, we also embarked on new studies to understand how mixtures of pesticides can cause toxic effects at levels at which pesticides alone are considered to be safe.</h5>
-                <h5 style="padding: 10px">Since laboratory studies are often insufficient to detect effects of a cumulative exposure to multiple pesticides at environmental levels of exposure, we tested whether the application of the most recent high-throughput technologies could improve the accuracy of toxicity tests. For this purpose, We compared standard histopathology and serum biochemistry measures and multi-omics analyses in a subchronic toxicity test of a mixture of six pesticides frequently detected in foodstuffs (azoxystrobin, boscalid, chlorpyrifos, glyphosate, imidacloprid and thiabendazole) in Sprague-Dawley rats <a href="https://www.nature.com/commsbio/">(Mesnage et al., 2021)</a>. Analysis of water and feed consumption, body weight, histopathology and serum biochemistry showed little effect. Contrastingly, serum and caecum metabolomics suggested activation of an oxidative stress response. Transcriptomics and genome-wide DNA methylation analysis of the liver reflected the regulation of response to steroid hormones and the activation of stress response pathways. This demonstrated that in-depth molecular profiling in laboratory animals exposed to low concentrations of pesticides allows the detection of metabolic perturbations that would remain undetected by standard regulatory biochemical measures and which could thus improve the predictability of health risks from exposure to chemical pollutants.</h5>
-                <h5 style="padding: 10px">Exposure to low doses of chemicals alone or in mixture can induce detrimental effects during sensitive periods such as pregnancy and lactation. In a new study, we evaluated the effect of low doses of glyphosate alone or in combination with 2,4-D and dicamba in order to mimic exposure to the newest generation of GM crops made tolerant to a combination of herbicides. This is a multi-center collaboration. Molecular profiles of bone marrow, intestinal tissues, and the composition of the gut microbiome are determined in the laboratory of Dr. Michael Antoniou (King’s College London, UK). DNA sequencing is performed at Queen Mary University of London. Assessment of behavioural changes and histopathology will be conducted in the laboratory of Pr. Anca Docea (University of Craiova, Romania) on the different organs. The effects of the treatments on different redox markers will be determined in the laboratory of Pr. Kouretas (University of Thessaly, Greece). Several groups of biomarkers will be evaluated in different tissues plasma (liver, spleen, brain, eye, intestine, lung, pancreas, heart, kidney, stomach, muscle, uterus) and in blood, to provide evidence for the effects of pesticide administration on the antioxidant machinery. DNA damage is evaluated by the measurement of micronuclei in blood in the lab of Pr. Aristides Tsatsakis (University of Crete). Some results of this study were already disclosed at the <a href="https://ict-2022.elsevierdigitaledition.com">2022 international toxicology conference</a>.</h5>
-            </div>
-        </div>
-    </div>
+      <label for="notes">Anything you would like to add?</label>
+      <textarea id="notes" name="entry.6666666666" placeholder="Free text"></textarea>
 
-    <button onclick="toggleAccordion('nafld')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Molecular signatures of non-alcoholic fatty liver disease</button>
-    <div id="nafld" class="w3-hide accordion-content">
-        <div class="myface">
-            <img src="images/liver.png" class="myface" alt="">
-        </div>
-        <div class="w3-row-padding w3-padding-64 w3-container">
-            <div class="w3-content">
-                <h2 style="padding: 10px">Molecular signatures of non-alcoholic fatty liver disease</h2>
-                <h5 style="padding: 10px">Since the exposure to a glyphosate formulated product caused a phenotype overlaying those of non-alcoholic fatty liver disease (NAFLD) in rats <a href="https://ehjournal.biomedcentral.com/articles/10.1186/s12940-015-0056-1">(Mesnage et al., 2015)</a><a href="https://www.nature.com/articles/srep39328">(Mesnage et al., 2017)</a>, we evaluated if liver cells can be affect by glyphosate and its formulations in vitro. For this purpose, we developed a sensitive assay combining transcriptomics and metabolomics approaches to reveal molecular signatures of NAFLD. First of all, we described the alterations in gene expression profiles and metabolite levels in the human HepaRG liver cell line exposed to the polychlorinated biphenyl 126 <a href="https://link.springer.com/article/10.1007/s00204-018-2235-7">(Mesnage et al., 2018a)</a>. Exposure to PCB 126 provoked a decrease in polyunsaturated fatty acids as well as an increase in sphingolipid levels, concomitant with a decrease in the activity of genes involved in lipid metabolism. These changes were observed even at the lowest concentration tested. Our study provided the foundation for the development of molecular signatures of fatty liver diseases to rapidly assess chronic toxic effects from exposure to compounds having a direct effect on the liver in a reliable hepatotoxicity model system. The availability of such an in vitro model system can lessen the burden of chemical risk assessment based on in vivo animal experiments.</h5>
-                <h5 style="padding: 10px">We then used HepaRG cells to investigate toxic effects of pesticides <a href="https://www.sciencedirect.com/science/article/pii/S2214750018304244?via%3Dihub">(Mesnage et al., 2018b)</a>. We focused on quizalofop-p-ethyl, isoxaflutole, mesotrione and glyphosate as use of herbicides containing these active principles is predicted to rapidly increase in coming years in an effort to overcome the wide-spread appearance of glyphosate-resistant weeds. Quizalofop-p-ethyl was found to alter lipid metabolism. Glyphosate only caused subtle changes in the gene expression profiles of liver cells. In order to explore the effects of glyphosate in greater depth and detail, we undertook a global metabolome profiling. This revealed a decrease in free long chain fatty acids and polyunsaturated fatty acid levels at the lowest concentration (0.06 μM) of glyphosate, although no effects were detected at the two higher concentrations tested, perhaps suggesting a non-linear dose response. This surprising result will need to be confirmed by additional studies.</h5>
-            </div>
-        </div>
-    </div>
+      <button class="btn btn-primary" type="submit">Send answers</button>
 
-    <button onclick="toggleAccordion('edc')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Endocrine disrupting effects of pesticides</button>
-    <div id="edc" class="w3-hide accordion-content">
-        <div class="myface">
-            <img src="images/experiment.jpg" class="myface" alt="">
-        </div>
-        <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-            <div class="w3-content">
-                <h2 style="padding: 10px">Endocrine disrupting effects of pesticides</h2>
-                <h5 style="padding: 10px">Exposure to endocrine disrupting chemicals is a risk factor for obesity. Although some pesticides have been shown to act as obesogens, the most commonly used pesticide active principles have never been tested in an adipogenesis assay. Given the increasing use of 2,4-dichlorophenoxyacetic acid (2,4-D), dicamba, mesotrione, isoxaflutole, quizalofop-p-ethyl and glyphosate, we have evaluated their obesogenic potential using 3T3-L1 adipocytes. Our results showed that quizalofop-p-ethyl has the most pronounced adipogenic (lipid accumulation) effect <a href="https://academic.oup.com/toxsci/article/170/2/452/5472348">(Biserni et al., 2019)</a>.</h5>
-                <h5 style="padding: 10px">Few studies have investigated non‐target effects of neonicotinoid insecticides on mammalian physiology. We describe the first investigation evaluating the interaction of seven principal neonicotinoid insecticides (thiamethoxam, imidacloprid, clothianidin, flupyradifurone, dinotefuran, nitenpyram, thiacloprid) with oestrogen and thyroid hormone receptors, as well as their adipogenic effects <a href="https://academic.oup.com/toxsci/article/170/2/452/5472348">(Mesnage et al., 2018c)</a>. Our study showed that imidacloprid could be a potential obesogen as it promoted lipid accumulation in 3T3‐L1 cells.</h5>
-                <h5 style="padding: 10px">The endocrine disruptive capability, of glyphosate-based herbicides is a matter of intense debate. We evaluated the estrogenic potential of glyphosate using breast cancer cells <a href="https://www.sciencedirect.com/science/article/pii/S0278691517303976?via%3Dihub">(Mesnage et al., 2017a)</a>. We collaborated with the US EPA to study estrogenic effects of glyphosate with a biomarker of Estrogen Receptor Alpha activation using RNA-sequencing technologies. The quantum mechanical behaviour of glyphosate was also assessed using molecular dynamic simulation. Glyphosate only activated ERa at very high concentrations.</h5>
-            </div>
-        </div>
-    </div>
+      <div id="ok" class="ok">Thank you. Your answers were sent.</div>
+      <div id="err" class="err">Sorry, the submission did not work. Please try again.</div>
+    </form>
+  </div>
 
-    <button onclick="toggleAccordion('formulant')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Toxic effects of pesticide co-formulants</button>
-    <div id="formulant" class="w3-hide accordion-content">
-        <div class="myface">
-            <img src="images/pesticidespray.jpg" class="myface" alt="">
-        </div>
-        <div class="w3-row-padding w3-padding-64 w3-container">
-            <div class="w3-content">
-                <h2 style="padding: 10px">Toxic effects of pesticide co-formulants</h2>
-                <h5 style="padding: 10px">My research studies on glyphosate started in 2008 when I joined the group of Pr. Séralini at the University of Caen in France. During this period, my main focus was the comparison of the toxic effects of glyphosate to those of its commercial formulations. I published the first study linking the concentration of ethoxylated surfactants to the toxicity of glyphosate-based herbicides <a href="https://www.sciencedirect.com/science/article/abs/pii/S0300483X12003459?via%3Dihub">(Mesnage et al., 2013)</a>. We tested seven glyphosate formulations. Some were as toxic as glyphosate, and others were approximately 300 times more toxic. We did not stop at the cytotoxicity profiles. We looked beyond the glyphosate label by analysing the composition of the co-formulants by mass spectrometry. This revealed that the toxic effects were linked to the presence of ethoxylated tallowamine surfactants. Although this was not the first study showing the toxicity of these surfactants, it revealed that they were more toxic than other surfactants in other glyphosate-based herbicides sold for the same purposes. So ethoxylated tallowamines were not essential and could be substituted. This observation contributed to the banning of ethoxylated tallowamines from glyphosate-based herbicides in Europe.</h5>
-                <h5 style="padding: 10px">In a follow-up study in 2014, I investigated 9 active ingredients. They were selected from herbicides, insecticides, or fungicides of different classes which are used for agricultural or domestic purposes, from the major pesticides used worldwide. I found that 8 formulations out of 9 were up to one thousand times more toxic than their active principles on the three cell lines tested <a href="https://www.hindawi.com/journals/bmri/2014/179691/">(Mesnage et al., 2014)</a>.</h5>
-                <h5 style="padding: 10px">In 2021, I put together and led a group of scientists from across the EU to write an article for more transparent data on how pesticides are used on farms. We managed to publish this article in the best journal for ecology from Nature <a href="https://www.nature.com/articles/s41559-021-01574-1">(Mesnage, Straw, et al., 2021)</a>. This article triggered debates, some NGOs campaigned to change the regulation, and now it's being reported that the EU will be creating the kind of database we proposed <a href="https://www.agrarheute.com/pflanze/eu-pflanzenschutzmittel-register-startet-2028-598599">(news article)</a>.</h5>
-                <h5 style="padding: 10px">I am still pursuing this area of research. Pesticide active ingredients are compared to their commercial formulations in most of the studies I performed to evaluate genotoxicity <a href="https://www.biorxiv.org/content/10.1101/2021.04.12.439463v1">(Mesnage et al., 2021)</a>, endocrine disrupting effects <a href="https://www.sciencedirect.com/science/article/pii/S0278691517303976?via%3Dihub">(Mesnage et al., 2017a)</a>, obesogenic potential <a href="https://academic.oup.com/toxsci/article/170/2/452/5472348">(Biserni et al., 2019)</a> or effects on the gut microbiome <a href="https://ehp.niehs.nih.gov/doi/full/10.1289/EHP6990">(Mesnage et al., 2021)</a>. I regularly publish reviews on the topic <a href="https://www.sciencedirect.com/science/article/pii/S0278691519301814?via%3Dihub">(Mesnage et al., 2019)</a>, to provide clarification of the composition of pesticide formulations based on information available from the scientific literature, patents, industry publications. I also addressed the toxicity of co-formulants in a book on herbicide in concise language appropriate to engage both specialists in the research community and informed persons responsible for legislative, funding, and public health matters in the community at large <a href="https://www.elsevier.com/books/herbicides/mesnage/978-0-12-823674-1">(Mesnage and Zaller, 2021)</a>. I am regularly invited to speak about this topic in scientific conferences and public events, such as at the European Parliament <a href="https://www.europarl.europa.eu/thinktank/en/pastevents.html?month=06-2018&eventType=&body=">PEST hearing</a> on authorisation of plant protection products by Member States.</h5>
-            </div>
-        </div>
-    </div>
-</div>
+  <script>
+    // Paste your Google Form "formResponse" URL here:
+    const FORM_ACTION_URL = "https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse";
 
-<!-- GM CROPS -->
-<div class="w3-row-padding w3-light-grey w3-padding-32 w3-container">
-    <div class="w3-content">
-        <h2 style="padding: 10px">Health effects of Genetically Modified crops</h2>
-        <h5 style="padding: 10px">When I started my PhD in 2010, the controversy on GM crops was raging. I participated in the analysis and publication of the results of the first long-term toxicity study of a Roundup herbicide and a Roundup-tolerant GM maize.</h5>
-    </div>
-</div>
+    // Optional: prefill date with today
+    (function init() {
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      document.getElementById("date").value = `${yyyy}-${mm}-${dd}`;
 
-<!-- Fifth Grid -->
-<div class="w3-content">
-    <button onclick="toggleAccordion('long-term-toxicity')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Long-term toxicity of a Roundup herbicide and a Roundup-tolerant GM maize</button>
-    <div id="long-term-toxicity" class="w3-hide accordion-content">
-        <div class="myface">
-            <img src="images/cagerats.png" class="myface" alt="">
-        </div>
-        <div class="w3-row-padding w3-padding-64 w3-container">
-            <div class="w3-content">
-                <h2 style="padding: 10px">Long-term toxicity of a Roundup herbicide and a Roundup-tolerant GM maize</h2>
-                <h5 style="padding: 10px">The contamination of foodstuffs by glyphosate residues has been linked to its use on crops which have been made tolerant to agricultural applications of Roundup herbicides. When I started my PhD in 2010, the controversy on GM crops was raging. No long-term studies were available to understand if the residues from glyphosate spray on GM plants could be a source of health risk. Repeated-dose 90-day toxicity studies on GM crops fed to rats often produced statistically significant differences in liver and kidney biochemical parameters, but it was not clear whether these differences were due to chance or to early signs of the development of chronic disease. The research group initiated the first study of the long-term toxicity of Roundup in Roundup-tolerant GM maize, that is, sprayed or not sprayed with Roundup.</h5>
-                <h5 style="padding: 10px">The first manuscript describing the main findings was published in September 2012 in the journal Food and Chemical Toxicology <a href="https://www.sciencedirect.com/science/article/pii/S0278691512005637">(Séralini et al, 2012)</a>. The study was exploratory and not conceived to conclude with certainty on long-term effects because the pathologies of normal aging introduce background noise that impairs statistical power with 10 animals per group. The strain of rat used, Sprague-Dawley, is particularly prone to tumors. The paper caused an explosion of media coverage because it contained graphic images of rats with large tumors. The media coverage strategy used by Pr. Séralini was heavily criticized and condemned by the scientific community and journalists. This had a strong influence on public opinion about GM foods. The debate unfortunately even led to serious political consequences, with countries such as Kenya and Peru placing a moratorium on GM crops.</h5>
-                <h5 style="padding: 10px">One year after publication, the editor-in-chief of the journal requested the raw data. This was examined by a panel of experts, who together with the editor-in-chief decided that the paper should be retracted because “the results presented (while not incorrect) are inconclusive”. Conflicts of interests, confidentiality and censorship in health risk assessment of these products were then discussed <a href="https://enveurope.springeropen.com/articles/10.1186/s12302-014-0013-6">(Séralini et al., 2014)</a>. The debate continues, as lawsuits have uncovered evidence that Monsanto, the maker of Roundup, engaged with a network of scientists to discredit the study and obtain retraction of the paper. One should bear in mind that the influence of advocate groups is not unilateral. While companies develop strategies to preserve the commercialization of their pesticides, other advocate groups deploy strategies to ban pesticides. This was the case in the Séralini affair. While Monsanto deployed a strategy to undermine the publication, the network of activists involved in the publication of this study orchestrated a communication operation causing an explosion of media coverage by spreading graphic images of rats with large tumors. Although the Séralini publication didn't provide insights on the toxicity of GM crops because of its inconclusiveness, the series of controversies which became the Séralini affair is a well-documented case of fundamental challenges faced by science in a world increasingly dominated by corporate influence.</h5>
-            </div>
-        </div>
-    </div>
-</div>
+      // Optional: read URL parameters like ?pid=BW-0241&day=5
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("pid")) document.getElementById("pid").value = params.get("pid");
+      if (params.get("day")) document.getElementById("day").value = params.get("day");
+    })();
 
-<!-- Sixth Grid -->
-<div class="w3-content">
-    <button onclick="toggleAccordion('omics-analysis')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Integrating multiple ‘omics’ analysis to study the effects of herbicide-tolerant crops</button>
-    <div id="omics-analysis" class="w3-hide accordion-content">
-        <div class="myface">
-            <img src="images/crops-3604797_1280.jpg" class="myface" alt="">
-        </div>
-        <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
-            <div class="w3-content">
-                <h2 style="padding: 10px">Integrating multiple ‘omics’ analysis to study the effects of herbicide-tolerant crops</h2>
-                <h5 style="padding: 10px">I was hired by the group of Dr. Michael Antoniou at King’s College London to evaluate if the molecular profiles (proteomics, transcriptomics, and metabolomics) of liver and kidneys from animals of the Séralini study could reveal more insights into the toxicity of Roundup and the Roundup-tolerant GM crop.</h5>
-                <h5 style="padding: 10px">Molecular profiles from liver and kidneys of animals fed GM crops (sprayed or not with Roundup) indicated that these products did not alter organ function. This clearly indicated that no adverse effects related to the feeding of the NK603 maize cultivated with or without Roundup were observed <a href="https://enveurope.springeropen.com/articles/10.1186/s12302-017-0105-1">(Mesnage et al., 2017c)</a>. The absence of pathological effects from the consumption of glyphosate-tolerant crops was further confirmed by other projects. I participated in some of these projects more recently by analyzing the gut microbiome composition in Wistar rats fed NK603 and MON 810 GM maize for 6 months <a href="https://www.sciencedirect.com/science/article/pii/S0278691519303229?via%3Dihub">(Mesnage et al., 2019)</a>, at two concentrations (11 and 33%). Our analysis showed that the different maize diets have not caused changes in microbiome composition.</h5>
-                <h5 style="padding: 10px">Although there was no effect when animals were fed NK603 GM corn, liver molecular profiles suggested the development of non-alcoholic fatty liver disease for animals exposed to the Roundup herbicide in their drinking water. Overall, transcriptome, metabolome and proteome disturbances showed a substantial overlap with biomarkers of non-alcoholic fatty liver disease and its progression to steatohepatosis <a href="https://ehjournal.biomedcentral.com/articles/10.1186/s12940-015-0056-1">(Mesnage et al., 2015)</a><a href="https://www.nature.com/articles/srep39328">(Mesnage et al., 2017d)</a></h5>
-                <h5 style="padding: 10px">We evaluated compositional differences between the NK603 GM corn and its isogenic counterpart using metabolomics and proteomics <a href="https://www.nature.com/articles/srep37855">(Mesnage et al., 2016)</a>. This revealed energy metabolism changes which can be linked to the insertion of the transgene. The maize kernels analyzed were previously used in a chronic study investigating the potential toxic effects arising from the consumption of the NK603 Roundup-tolerant GM maize in rats. I analyzed the transcriptome and metabolome of liver and kidneys from this study <a href="https://enveurope.springeropen.com/articles/10.1186/s12302-017-0105-1">(Mesnage et al., 2017c)</a>. There were no statistically significant differences that we could attribute to the consumption of the NK603 Roundup-tolerant GM crop (with our without Roundup application during cultivation). This suggested that the metabolic changes caused by the transgene insertion are not toxicologically relevant.</h5>
-                <h5 style="padding: 10px">A large number of animal toxicity tests have been performed with herbicide-tolerant crops. The available scientific evidence indicates that the potential adverse health effects arising from GM crops are not different from those created by conventional breeding practices. The main lesson learned from 20 years of animal feeding trials with GM crops is that animal feeding trials with whole food/feed are largely irreproducible because they have a low power to detect adverse effects. The use of ‘omics’ approaches can improve the predictive ability of these tests, as well as the accuracy of the comparative analysis of chemical composition. Future health risk evaluations would benefit from the use of high-throughput ‘omics’ technologies.</h5>
-            </div>
-        </div>
-    </div>
-</div>
+    document.getElementById("studyForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-<div class="w3-row-padding w3-light-grey w3-padding-32 w3-container">
-    <div class="w3-content">
-        <h2 style="padding: 10px">Health effects of plasticizers (bisphenol A)</h2>
-        <h5 style="padding: 10px">Chemical exposure that interferes within the body’s hormone systems has been linked to breast cancer. Large numbers of pollutants can have oestrogen hormone-like activities and can stimulate breast cancer cell growth. Bisphenols are used in the manufacture of plastic bottles, resins and the plastic lining of cans, from which they leach into food and drink. Bisphenol A (BPA) is the prototypical member of this class of plastics components, which is now known to mimic the effects of oestrogen. Due to public concerns, industry has been replacing BPA with other bisphenol compounds to produce so called “BPA-free” products.</h5>
-    </div>
-</div>
+      const ok = document.getElementById("ok");
+      const err = document.getElementById("err");
+      ok.style.display = "none";
+      err.style.display = "none";
 
-<!-- First Grid -->
-<div class="w3-content">
-    <button onclick="toggleAccordion('estrogenic-effects')" class="w3-button w3-block w3-light-grey w3-left-align accordion-label">Estrogenic effects of bisphenol A alternatives</button>
-    <div id="estrogenic-effects" class="w3-hide accordion-content">
-        <div class="myface">
-            <img src="images/bisphenols.png" class="myface" alt="">
-        </div>
-        <div class="w3-row-padding w3-padding-64 w3-container">
-            <div class="w3-content">
-                <h2 style="padding: 10px">Estrogenic effects of bisphenol A alternatives</h2>
-                <h5 style="padding: 10px">We investigated estrogenic effects of bisphenol A (BPA) variants in 3 human breast cancer cell lines <a href="https://academic.oup.com/toxsci/article/158/2/431/3849675">(Mesnage et al., 2017b)</a>. We found that BPA alternatives are not necessarily less estrogenic than BPA in human breast cancer cells. BPAF, BPB, and BPZ were more estrogenic than BPA. This study was published in the official journal of the Society of Toxicology, Toxicological Sciences, and highlighted by the Editor-in-Chief of the cover of journal. The EPA issued a press release to ‘highlight the need for testing of replacement chemicals prior to their introduction into commerce to demonstrate that they are safer than the chemical being replaced.’ Our study has subsequently been used as the basis of a new bill by the State of New York.</h5>
-                <h5 style="padding: 10px">More recently, Breast Cancer UK has awarded a grant of £100,000 to Dr Michael Antoniou and colleagues Dr Robin Mesnage and Dr Ana Rodriguez-Mateos, King’s College London, to fund a PhD studentship, which will undertake biomonitoring of UK residents to identify levels of bisphenols and evaluate the potential breast cancer initiating and growth promoting activity of bisphenol mixtures.</h5>
-            </div>
-        </div>
-    </div>
-</div>
+      const formEl = e.target;
+      const formData = new FormData(formEl);
 
-<!-- Back to Top Button -->
-<button onclick="scrollToTop()" class="w3-button w3-blue back-to-top" title="Go to top"><i class="fa fa-arrow-up"></i></button>
+      try {
+        // Google Forms does not send CORS headers, so we must use no-cors.
+        // That means we cannot read the response, but submission works.
+        await fetch(FORM_ACTION_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: formData
+        });
 
-<!-- Footer -->
-<footer class="w3-container w3-padding-64 w3-center w3-opacity">  
-    <div class="w3-xlarge w3-padding-32">
-        <h6 class="w3-text-grey">CONTACT: Robin Mesnage, Wilhelm-Beck-Str. 27, 88662 Überlingen, GERMANY.</h6>
-        <h6 class="w3-text-grey">EMAIL: robin.mesnage[at]buchinger-wilhelmi.com</h6>
-        <div class="w3-xlarge w3-section">
-            <a href="https://x.com/Robin_Mesnage?text=Check%20out%20this%20website&url=https://mesnage.github.io" target="_blank" class="w3-hover-opacity"><i class="fa fa-twitter"></i></a>
-            <a href="https://www.linkedin.com/in/robin-mesnage/?mini=true&url=https://mesnage.github.io" target="_blank" class="w3-hover-opacity"><i class="fa fa-linkedin"></i></a>
-            <a href="https://www.instagram.com/robin_mesnage/?url=https://mesnage.github.io" target="_blank" class="w3-hover-opacity"><i class="fa fa-instagram"></i></a>
-        </div>
-    </div>
-</footer>
-
-<script>
-function myFunction() {
-    var x = document.getElementById("navDemo");
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-    } else { 
-        x.className = x.className.replace(" w3-show", "");
-    }
-}
-
-function toggleAccordion(id) {
-    var x = document.getElementById(id);
-    var btn = document.querySelector(`button[onclick="toggleAccordion('${id}')"]`);
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-        btn.classList.add("w3-show");
-    } else { 
-        x.className = x.className.replace(" w3-show", "");
-        btn.classList.remove("w3-show");
-    }
-}
-
-function scrollToTop() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
-
-window.onscroll = function() {toggleScrollButton()};
-
-function toggleScrollButton() {
-    var button = document.querySelector(".back-to-top");
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        button.style.display = "block";
-    } else {
-        button.style.display = "none";
-    }
-}
-</script>
-
+        formEl.reset();
+        ok.style.display = "block";
+      } catch (error) {
+        err.style.display = "block";
+      }
+    });
+  </script>
 </body>
 </html>
