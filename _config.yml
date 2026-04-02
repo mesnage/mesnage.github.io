@@ -1,0 +1,13 @@
+title: Robin Mesnage
+description: >-
+  Scientific Director at Buchinger Wilhelmi Clinics and Research Fellow at
+  King's College London. 100+ publications, 8,000+ citations. Research on
+  fasting, gut microbiome, pesticides, and environmental health.
+url: "https://mesnage.github.io"
+baseurl: ""
+author: Robin Mesnage
+twitter_username: Robin_Mesnage
+github_username: mesnage
+
+# Build settings
+markdown: kramdown

@@ -1,0 +1,16 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {% assign pages = site.pages | where_exp: "p", "p.url != '/sitemap.xml'" %}
+  {% for page in pages %}
+  {% unless page.url contains '.xml' or page.url contains 'test' %}
+  <url>
+    <loc>{{ site.url }}{{ page.url }}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>{% if page.url == '/' %}1.0{% else %}0.8{% endif %}</priority>
+  </url>
+  {% endunless %}
+  {% endfor %}
+</urlset>

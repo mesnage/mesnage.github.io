@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% if page.title %}{{ page.title }} | Robin Mesnage{% else %}Robin Mesnage{% endif %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+    <meta property="og:title" content="{% if page.title %}{{ page.title }} | Robin Mesnage{% else %}Robin Mesnage{% endif %}">
+    <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Montserrat&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+    <div class="w3-bar w3-blue w3-card w3-left-align w3-large">
+        <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+        <a href="{{ site.baseurl }}/" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+        <a href="{{ site.baseurl }}/publications.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Publications</a>
+        <div class="dropdown">
+            <button class="w3-button w3-hide-small w3-padding-large w3-hover-white dropbtn">Research <i class="fa fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <a href="{{ site.baseurl }}/research-fasting.html">Fasting</a>
+                <a href="{{ site.baseurl }}/research-pesticides.html">Pesticides</a>
+                <a href="{{ site.baseurl }}/research-plasticizers.html">Plasticizers</a>
+                <a href="{{ site.baseurl }}/research-gmo.html">GM crops</a>
+            </div>
+        </div>
+        <a href="https://github.com/mesnage" target="_blank" rel="noopener" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Github</a>
+    </div>
+
+    <!-- Navbar on small screens -->
+    <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
+        <a href="{{ site.baseurl }}/publications.html" class="w3-bar-item w3-button w3-padding-large">Publications</a>
+        <a href="{{ site.baseurl }}/research-fasting.html" class="w3-bar-item w3-button w3-padding-large">Fasting</a>
+        <a href="{{ site.baseurl }}/research-pesticides.html" class="w3-bar-item w3-button w3-padding-large">Pesticides</a>
+        <a href="{{ site.baseurl }}/research-plasticizers.html" class="w3-bar-item w3-button w3-padding-large">Plasticizers</a>
+        <a href="{{ site.baseurl }}/research-gmo.html" class="w3-bar-item w3-button w3-padding-large">GM crops</a>
+        <a href="https://github.com/mesnage" target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding-large">Github</a>
+    </div>
+</div>
+
+{{ content }}
+
+<!-- Footer -->
+<footer class="w3-container w3-padding-64 w3-center w3-opacity">
+    <div class="w3-xlarge w3-padding-32">
+        <p class="w3-text-grey">Robin Mesnage &mdash; Wilhelm-Beck-Str. 27, 88662 &Uuml;berlingen, Germany</p>
+        <p class="w3-text-grey"><a href="mailto:robin.mesnage@buchinger-wilhelmi.com">robin.mesnage@buchinger-wilhelmi.com</a></p>
+        <div class="w3-xlarge w3-section">
+            <a href="https://x.com/Robin_Mesnage" target="_blank" rel="noopener" class="w3-hover-opacity" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://www.linkedin.com/in/robin-mesnage/" target="_blank" rel="noopener" class="w3-hover-opacity" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://www.instagram.com/robin_mesnage/" target="_blank" rel="noopener" class="w3-hover-opacity" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        </div>
+    </div>
+</footer>
+
+<script>
+function myFunction() {
+    var x = document.getElementById("navDemo");
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else {
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
+
+function toggleAccordion(id) {
+    var x = document.getElementById(id);
+    var btn = document.querySelector('button[onclick="toggleAccordion(\'' + id + '\')"]');
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+        if (btn) btn.classList.add("w3-show");
+    } else {
+        x.className = x.className.replace(" w3-show", "");
+        if (btn) btn.classList.remove("w3-show");
+    }
+}
+
+window.onscroll = function() {
+    var button = document.querySelector(".back-to-top");
+    if (button) {
+        button.style.display = (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) ? "block" : "none";
+    }
+};
+
+function scrollToTop() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+</html>
