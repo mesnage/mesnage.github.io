@@ -1,98 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{% if page.title %}{{ page.title }} | Robin Mesnage{% else %}Robin Mesnage{% endif %}</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
-    <meta property="og:title" content="{% if page.title %}{{ page.title }} | Robin Mesnage{% else %}Robin Mesnage{% endif %}">
-    <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ site.url }}{{ page.url }}">
-    <link rel="canonical" href="{{ site.url }}{{ page.url }}">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Montserrat&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
+  <title>{% if page.title %}{{ page.title }} | Robin Mesnage{% else %}Robin Mesnage{% endif %}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+  <meta property="og:title" content="{% if page.title %}{{ page.title }} | Robin Mesnage{% else %}Robin Mesnage{% endif %}">
+  <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
 </head>
 <body>
 
-<!-- Navbar -->
-<div class="w3-top">
-    <div class="w3-bar w3-blue w3-card w3-left-align w3-large">
-        <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-blue" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
-        <a href="{{ site.baseurl }}/" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
-        <a href="{{ site.baseurl }}/publications.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Publications</a>
-        <div class="dropdown">
-            <button class="w3-button w3-hide-small w3-padding-large w3-hover-white dropbtn">Research <i class="fa fa-caret-down"></i></button>
-            <div class="dropdown-content">
-                <a href="{{ site.baseurl }}/research-fasting.html">Fasting</a>
-                <a href="{{ site.baseurl }}/research-pesticides.html">Pesticides</a>
-                <a href="{{ site.baseurl }}/research-plasticizers.html">Plasticizers</a>
-                <a href="{{ site.baseurl }}/research-gmo.html">GM crops</a>
-            </div>
+<!-- Navigation -->
+<nav class="site-nav" id="site-nav">
+  <div class="nav-inner">
+    <a href="{{ site.baseurl }}/" class="nav-brand">Robin Mesnage</a>
+
+    <div class="nav-links">
+      <a href="{{ site.baseurl }}/publications.html">Publications</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle">Research <i class="fa-solid fa-chevron-down" style="font-size:.7rem"></i></button>
+        <div class="nav-dropdown-menu">
+          <a href="{{ site.baseurl }}/research-fasting.html">Fasting</a>
+          <a href="{{ site.baseurl }}/research-pesticides.html">Pesticides</a>
+          <a href="{{ site.baseurl }}/research-plasticizers.html">Plasticizers</a>
+          <a href="{{ site.baseurl }}/research-gmo.html">GM Crops</a>
         </div>
-        <a href="https://github.com/mesnage" target="_blank" rel="noopener" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Github</a>
+      </div>
+      <a href="https://github.com/mesnage" target="_blank" rel="noopener">GitHub</a>
+      <a href="{{ site.baseurl }}/publications.html" class="nav-cta">Publications →</a>
     </div>
 
-    <!-- Navbar on small screens -->
-    <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
-        <a href="{{ site.baseurl }}/publications.html" class="w3-bar-item w3-button w3-padding-large">Publications</a>
-        <a href="{{ site.baseurl }}/research-fasting.html" class="w3-bar-item w3-button w3-padding-large">Fasting</a>
-        <a href="{{ site.baseurl }}/research-pesticides.html" class="w3-bar-item w3-button w3-padding-large">Pesticides</a>
-        <a href="{{ site.baseurl }}/research-plasticizers.html" class="w3-bar-item w3-button w3-padding-large">Plasticizers</a>
-        <a href="{{ site.baseurl }}/research-gmo.html" class="w3-bar-item w3-button w3-padding-large">GM crops</a>
-        <a href="https://github.com/mesnage" target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding-large">Github</a>
-    </div>
+    <button class="nav-mobile-toggle" id="nav-mobile-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span class="hamburger"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav panel -->
+<div class="nav-mobile-panel" id="nav-mobile-panel">
+  <a href="{{ site.baseurl }}/">Home</a>
+  <a href="{{ site.baseurl }}/publications.html">Publications</a>
+  <span class="nav-section-label">Research</span>
+  <a href="{{ site.baseurl }}/research-fasting.html">Fasting</a>
+  <a href="{{ site.baseurl }}/research-pesticides.html">Pesticides</a>
+  <a href="{{ site.baseurl }}/research-plasticizers.html">Plasticizers</a>
+  <a href="{{ site.baseurl }}/research-gmo.html">GM Crops</a>
+  <a href="https://github.com/mesnage" target="_blank" rel="noopener">GitHub</a>
 </div>
 
 {{ content }}
 
 <!-- Footer -->
-<footer class="w3-container w3-padding-64 w3-center w3-opacity">
-    <div class="w3-xlarge w3-padding-32">
-        <p class="w3-text-grey">Robin Mesnage &mdash; Wilhelm-Beck-Str. 27, 88662 &Uuml;berlingen, Germany</p>
-        <p class="w3-text-grey"><a href="mailto:robin.mesnage@buchinger-wilhelmi.com">robin.mesnage@buchinger-wilhelmi.com</a></p>
-        <div class="w3-xlarge w3-section">
-            <a href="https://x.com/Robin_Mesnage" target="_blank" rel="noopener" class="w3-hover-opacity" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="https://www.linkedin.com/in/robin-mesnage/" target="_blank" rel="noopener" class="w3-hover-opacity" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-            <a href="https://www.instagram.com/robin_mesnage/" target="_blank" rel="noopener" class="w3-hover-opacity" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        </div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Robin Mesnage</div>
+      <p class="footer-tagline">Scientist · Author · Scientific Director</p>
+      <div class="footer-contact">
+        <p>Wilhelm-Beck-Str. 27, 88662 Überlingen, Germany</p>
+        <p><a href="mailto:robin.mesnage@buchinger-wilhelmi.com">robin.mesnage@buchinger-wilhelmi.com</a></p>
+      </div>
+      <div class="footer-social">
+        <a href="https://x.com/Robin_Mesnage" target="_blank" rel="noopener" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.linkedin.com/in/robin-mesnage/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://www.instagram.com/robin_mesnage/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://github.com/mesnage" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+      </div>
     </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="{{ site.baseurl }}/">Home</a>
+      <a href="{{ site.baseurl }}/publications.html">Publications</a>
+      <a href="{{ site.baseurl }}/research-fasting.html">Fasting Research</a>
+      <a href="{{ site.baseurl }}/research-pesticides.html">Pesticides Research</a>
+      <a href="{{ site.baseurl }}/research-plasticizers.html">Plasticizers Research</a>
+      <a href="{{ site.baseurl }}/research-gmo.html">GM Crops Research</a>
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    &copy; {{ site.time | date: '%Y' }} Robin Mesnage. All rights reserved.
+  </div>
 </footer>
 
 <script>
-function myFunction() {
-    var x = document.getElementById("navDemo");
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-    } else {
-        x.className = x.className.replace(" w3-show", "");
-    }
-}
+/* ---- Sticky nav shadow on scroll ---- */
+(function() {
+  var nav = document.getElementById('site-nav');
+  window.addEventListener('scroll', function() {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+})();
 
-function toggleAccordion(id) {
-    var x = document.getElementById(id);
-    var btn = document.querySelector('button[onclick="toggleAccordion(\'' + id + '\')"]');
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-        if (btn) btn.classList.add("w3-show");
-    } else {
-        x.className = x.className.replace(" w3-show", "");
-        if (btn) btn.classList.remove("w3-show");
+/* ---- Mobile menu toggle ---- */
+(function() {
+  var btn = document.getElementById('nav-mobile-toggle');
+  var panel = document.getElementById('nav-mobile-panel');
+  btn.addEventListener('click', function() {
+    var open = panel.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+  });
+  document.addEventListener('click', function(e) {
+    if (!btn.contains(e.target) && !panel.contains(e.target)) {
+      panel.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
     }
-}
+  });
+})();
 
-window.onscroll = function() {
-    var button = document.querySelector(".back-to-top");
-    if (button) {
-        button.style.display = (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) ? "block" : "none";
-    }
-};
+/* ---- Scroll reveal ---- */
+(function() {
+  var els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(function(el) { io.observe(el); });
+})();
 
-function scrollToTop() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
+/* ---- Accordion ---- */
+function toggleAccordion(btn) {
+  var group = btn.closest ? btn.closest('.accordion-group') : btn.parentElement;
+  var body = group.querySelector('.accordion-body');
+  var open = body.classList.toggle('open');
+  btn.classList.toggle('open', open);
 }
 </script>
 
