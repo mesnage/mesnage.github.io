@@ -126,6 +126,35 @@
   els.forEach(function(el) { io.observe(el); });
 })();
 
+/* ---- Homepage scrollytelling ---- */
+(function() {
+  var steps = document.querySelectorAll('.story-step');
+  var img = document.getElementById('story-image');
+  if (!steps.length || !img) return;
+  var kicker = document.getElementById('story-kicker');
+  var title = document.getElementById('story-title');
+  var summary = document.getElementById('story-summary');
+  var link = document.getElementById('story-link');
+
+  function activate(step) {
+    steps.forEach(function(s) { s.classList.remove('active'); });
+    step.classList.add('active');
+    img.src = step.dataset.image;
+    img.alt = step.dataset.title + ' visual';
+    kicker.textContent = step.dataset.kicker;
+    title.textContent = step.dataset.title;
+    summary.textContent = step.dataset.summary;
+    link.href = step.dataset.link;
+  }
+
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) activate(entry.target);
+    });
+  }, { threshold: 0.65 });
+  steps.forEach(function(step) { io.observe(step); });
+})();
+
 /* ---- Accordion ---- */
 function toggleAccordion(btn) {
   var group = btn.closest ? btn.closest('.accordion-group') : btn.parentElement;
