@@ -146,6 +146,7 @@ p { max-width: 70ch; }
   z-index: 300;
 }
 .nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown .nav-dropdown-toggle[aria-expanded="true"] + .nav-dropdown-menu,
 .nav-dropdown:focus-within .nav-dropdown-menu { display: block; }
 .nav-dropdown-menu a {
   display: block;
