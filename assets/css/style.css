@@ -706,17 +706,20 @@ p { max-width: 70ch; }
 /* ============================================================
    Scrollytelling
    ============================================================ */
-.scrolly-section { padding: 88px 0; background: var(--surface); }
-.scrolly-intro { color: var(--text-muted); margin: 12px 0 30px; }
+.scrolly-section { padding: 96px 0; background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%); }
+.scrolly-intro { color: var(--text-muted); margin: 12px 0 22px; }
+.scrolly-progress { height: 4px; width: 100%; background: #dbeafe; border-radius: 999px; margin-bottom: 18px; overflow: hidden; }
+.scrolly-progress span { display:block; height:100%; width:20%; background: linear-gradient(90deg, #2563eb, #0ea5e9); transition: width .35s ease; }
 .scrolly-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: start; }
 .scrolly-visual { position: sticky; top: calc(var(--nav-height) + 24px); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); background: var(--navy); }
-.scrolly-visual img { width: 100%; aspect-ratio: 4/3; object-fit: cover; opacity: .82; }
+.scrolly-visual img { width: 100%; aspect-ratio: 4/3; object-fit: cover; opacity: .88; transition: opacity .28s ease, transform .4s ease; }
+.scrolly-visual img.is-transitioning { opacity: .5; transform: scale(1.02); }
 .scrolly-overlay { position: absolute; inset: auto 0 0; padding: 22px; color: white; background: linear-gradient(to top, rgba(15,23,42,.94), rgba(15,23,42,.1)); }
 .scrolly-overlay h3 { color: white; margin: 4px 0; }
 .scrolly-overlay p { color: #cbd5e1; }
 .scrolly-overlay .card-link { color: #7dd3fc; font-weight: 700; }
 .scrolly-steps { display: grid; gap: 16px; }
-.story-step { border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; background: #fff; transition: .2s ease; }
+.story-step { border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; background: rgba(255,255,255,.86); backdrop-filter: blur(6px); transition: .25s ease; min-height: 150px; display:flex; flex-direction:column; justify-content:center; }
 .story-step.active { border-color: var(--blue); box-shadow: 0 8px 26px rgba(37,99,235,.15); transform: translateY(-2px); }
 .story-step p { color: var(--text-muted); }
 .career-section { padding: 84px 0; background: var(--bg); }
