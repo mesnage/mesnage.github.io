@@ -24,10 +24,12 @@
     <a href="{{ site.baseurl }}/" class="nav-brand">Robin Mesnage</a>
 
     <div class="nav-links">
+      <a href="{{ site.baseurl }}/">Home</a>
       <a href="{{ site.baseurl }}/publications.html">Publications</a>
       <div class="nav-dropdown">
-        <button class="nav-dropdown-toggle">Research <i class="fa-solid fa-chevron-down" style="font-size:.7rem"></i></button>
+        <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true">Research <i class="fa-solid fa-chevron-down" style="font-size:.7rem"></i></button>
         <div class="nav-dropdown-menu">
+          <a href="{{ site.baseurl }}/research.html">Research Library</a>
           <a href="{{ site.baseurl }}/research-fasting.html">Fasting</a>
           <a href="{{ site.baseurl }}/research-pesticides.html">Pesticides</a>
           <a href="{{ site.baseurl }}/research-plasticizers.html">Plasticizers</a>
@@ -48,6 +50,7 @@
 <div class="nav-mobile-panel" id="nav-mobile-panel">
   <a href="{{ site.baseurl }}/">Home</a>
   <a href="{{ site.baseurl }}/publications.html">Publications</a>
+  <a href="{{ site.baseurl }}/research.html">Research Library</a>
   <span class="nav-section-label">Research</span>
   <a href="{{ site.baseurl }}/research-fasting.html">Fasting</a>
   <a href="{{ site.baseurl }}/research-pesticides.html">Pesticides</a>
@@ -100,6 +103,24 @@
 
 /* ---- Mobile menu toggle ---- */
 (function() {
+  var dropdownToggle = document.querySelector('.nav-dropdown-toggle');
+  var dropdown = document.querySelector('.nav-dropdown');
+  if (dropdownToggle && dropdown) {
+    function setExpanded(state) {
+      dropdownToggle.setAttribute('aria-expanded', state ? 'true' : 'false');
+    }
+    dropdown.addEventListener('mouseenter', function() { setExpanded(true); });
+    dropdown.addEventListener('mouseleave', function() { setExpanded(false); });
+    dropdownToggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      var isOpen = dropdownToggle.getAttribute('aria-expanded') === 'true';
+      setExpanded(!isOpen);
+    });
+    dropdownToggle.addEventListener('focus', function() { setExpanded(true); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') setExpanded(false);
+    });
+  }
   var btn = document.getElementById('nav-mobile-toggle');
   var panel = document.getElementById('nav-mobile-panel');
   btn.addEventListener('click', function() {
