@@ -106,20 +106,9 @@
   var dropdownToggle = document.querySelector('.nav-dropdown-toggle');
   var dropdown = document.querySelector('.nav-dropdown');
   if (dropdownToggle && dropdown) {
-    function setExpanded(state) {
-      dropdownToggle.setAttribute('aria-expanded', state ? 'true' : 'false');
-    }
-    dropdown.addEventListener('mouseenter', function() { setExpanded(true); });
-    dropdown.addEventListener('mouseleave', function() { setExpanded(false); });
-    dropdownToggle.addEventListener('click', function(e) {
-      e.preventDefault();
-      var isOpen = dropdownToggle.getAttribute('aria-expanded') === 'true';
-      setExpanded(!isOpen);
-    });
-    dropdownToggle.addEventListener('focus', function() { setExpanded(true); });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') setExpanded(false);
-    });
+    dropdown.addEventListener('mouseenter', function() { dropdownToggle.setAttribute('aria-expanded', 'true'); });
+    dropdown.addEventListener('mouseleave', function() { dropdownToggle.setAttribute('aria-expanded', 'false'); });
+    dropdownToggle.addEventListener('focus', function() { dropdownToggle.setAttribute('aria-expanded', 'true'); });
   }
   var btn = document.getElementById('nav-mobile-toggle');
   var panel = document.getElementById('nav-mobile-panel');
