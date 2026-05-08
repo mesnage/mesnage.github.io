@@ -7,107 +7,486 @@ description: >-
   gut microbiome, pesticides, and environmental health.
 ---
 
-<div class="hero-bg-wrap">
-  <div class="hero">
-    <div class="hero-content">
-      <p class="hero-eyebrow">Scientist · Author · Director</p>
-      <h1>Robin<br><span>Mesnage</span></h1>
-      <p class="hero-subtitle">
-        Scientific Director at Buchinger Wilhelmi Clinics and Research Fellow at King's College London.
-        Connecting mechanistic toxicology, clinical fasting, and nutrition science.
+<!-- Scroll progress bar -->
+<div class="scroll-progress" id="scroll-progress"></div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="st-hero">
+  <div class="st-hero__inner">
+    <div class="st-hero__text">
+      <p class="st-eyebrow">Scientist &middot; Author &middot; Director</p>
+      <h1 class="st-hero__name">Robin<br><em>Mesnage</em></h1>
+      <p class="st-hero__subtitle">
+        Scientific Director at Buchinger Wilhelmi Clinics and Research Fellow
+        at King's College London — leading research at the frontier of fasting,
+        gut microbiome, and environmental health.
       </p>
+      <div class="st-hero__fields">
+        <span>Therapeutic Fasting</span>
+        <span>Gut Microbiome</span>
+        <span>Pesticide Toxicology</span>
+        <span>Environmental Health</span>
+      </div>
       <div class="hero-cta">
         <a href="/publications.html" class="btn btn-primary">View Publications</a>
-        <a href="#research-story" class="btn btn-outline">Start the Story</a>
+        <a href="/consulting.html" class="btn btn-outline">Work With Me</a>
       </div>
     </div>
-    <div class="hero-image-wrap">
+    <div class="st-hero__portrait">
       <img src="images/photoBW.jpg" alt="Robin Mesnage" loading="eager">
     </div>
   </div>
-</div>
-
-<div class="stats-bar">
-  <div class="stats-grid">
-    <div class="stat reveal"><span class="stat-number">100+</span><span class="stat-label">Publications</span></div>
-    <div class="stat reveal"><span class="stat-number">8,000+</span><span class="stat-label">Citations</span></div>
-    <div class="stat reveal"><span class="stat-number">5</span><span class="stat-label">Research Axes</span></div>
+  <div class="st-hero__scroll-hint">
+    <span>Scroll to explore</span>
+    <svg width="22" height="34" viewBox="0 0 22 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="1" y="1" width="20" height="32" rx="10" stroke="currentColor" stroke-width="1.5"/>
+      <rect class="scroll-mouse-dot" x="9.5" y="6" width="3" height="7" rx="1.5" fill="currentColor"/>
+    </svg>
   </div>
-</div>
+</section>
 
-<section id="research-story" class="scrolly-section">
-  <div class="container">
-    <p class="section-label">Scrollytelling</p>
-    <h2 class="section-title">A Scientific Journey Toward Healthy Longevity</h2>
-    <p class="scrolly-intro">Scroll through eight steps tracing a continuous path from risk to resilience.</p>
+<!-- ============================================================
+     CHAPTER 1 — THE SCIENTIST
+     ============================================================ -->
+<section class="st-chapter" id="chapter-about">
+  <div class="chapter-label" aria-hidden="true">01</div>
+  <div class="chapter-inner">
 
-    <div class="scrolly-progress" aria-hidden="true"><span id="story-progress"></span></div>
-    <div class="scrolly-grid">
-      <div class="scrolly-visual reveal" id="story-visual">
-        <img id="story-image" src="images/fastforward.jpg" alt="A Scientific Journey Toward Healthy Longevity visual">
-        <div class="scrolly-overlay">
-          <p id="story-kicker">Slide 1</p>
-          <h3 id="story-title">One central question</h3>
-          <p id="story-summary">What allows human beings to live longer, but also better? This journey follows nearly two decades of research from chemical risks to biological resilience.</p>
-          <a id="story-link" href="/research.html" class="card-link">Explore related research <i class="fa-solid fa-arrow-right"></i></a>
+    <div class="sticky-panel" id="panel-about">
+      <div class="panel-inner">
+
+        <div class="panel-slide active" data-slide="0">
+          <div class="panel-portrait">
+            <img src="images/photoBW.jpg" alt="Robin Mesnage">
+            <div class="portrait-badge">PhD &middot; MSc &middot; Scientific Director</div>
+          </div>
         </div>
+
+        <div class="panel-slide" data-slide="1">
+          <svg class="stat-rings" viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="140" cy="140" r="120" fill="none" stroke="rgba(37,99,235,.08)" stroke-width="1"/>
+            <circle cx="140" cy="140" r="90"  fill="none" stroke="rgba(37,99,235,.08)" stroke-width="1"/>
+            <circle cx="140" cy="140" r="60"  fill="none" stroke="rgba(37,99,235,.08)" stroke-width="1"/>
+            <circle cx="140" cy="140" r="120" fill="none" stroke="#2563eb" stroke-width="10"
+              stroke-dasharray="754" stroke-dashoffset="754" stroke-linecap="round"
+              transform="rotate(-90 140 140)" class="ring-anim ring-1"/>
+            <circle cx="140" cy="140" r="90"  fill="none" stroke="#0ea5e9" stroke-width="10"
+              stroke-dasharray="565" stroke-dashoffset="565" stroke-linecap="round"
+              transform="rotate(-90 140 140)" class="ring-anim ring-2"/>
+            <circle cx="140" cy="140" r="60"  fill="none" stroke="#22d3ee" stroke-width="10"
+              stroke-dasharray="377" stroke-dashoffset="377" stroke-linecap="round"
+              transform="rotate(-90 140 140)" class="ring-anim ring-3"/>
+            <text x="140" y="126" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="30" font-weight="800" fill="#0f172a">100+</text>
+            <text x="140" y="146" text-anchor="middle" font-family="Lato,sans-serif" font-size="11" fill="#64748b" letter-spacing="1.5">PUBLICATIONS</text>
+            <text x="140" y="172" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="20" font-weight="700" fill="#2563eb">8,000+</text>
+            <text x="140" y="188" text-anchor="middle" font-family="Lato,sans-serif" font-size="10" fill="#94a3b8" letter-spacing="1">CITATIONS</text>
+            <text x="140" y="210" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="700" fill="#0ea5e9">Top 1%</text>
+            <text x="140" y="224" text-anchor="middle" font-family="Lato,sans-serif" font-size="10" fill="#94a3b8" letter-spacing="1">WORLDWIDE</text>
+          </svg>
+        </div>
+
+        <div class="panel-slide" data-slide="2">
+          <div class="panel-institutions">
+            <div class="inst-card">
+              <div class="inst-icon">🏥</div>
+              <div>
+                <div class="inst-name">Buchinger Wilhelmi</div>
+                <div class="inst-role">Scientific Director</div>
+                <div class="inst-location">Überlingen, Germany &middot; Marbella, Spain</div>
+              </div>
+            </div>
+            <div class="inst-divider"></div>
+            <div class="inst-card">
+              <div class="inst-icon">🎓</div>
+              <div>
+                <div class="inst-name">King's College London</div>
+                <div class="inst-role">Research Fellow</div>
+                <div class="inst-location">Department of Nutritional Sciences</div>
+              </div>
+            </div>
+            <div class="inst-divider"></div>
+            <div class="inst-card">
+              <div class="inst-icon">📖</div>
+              <div>
+                <div class="inst-name">Elsevier · 2021</div>
+                <div class="inst-role">Scientific Editor</div>
+                <div class="inst-location">Herbicides: Chemistry, Efficacy &amp; Toxicology</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="narrative" data-panel="panel-about">
+
+      <div class="step active" data-step="0">
+        <p class="step-label">The Scientist</p>
+        <h2>A career built at the intersection of toxicology and data science</h2>
+        <p>I am Robin Mesnage — a toxicologist, bioinformatician, and research director whose work spans the gut microbiome, therapeutic fasting, and the hidden dangers of everyday chemicals.</p>
+        <p>With a PhD in toxicology and an MSc in Bioinformatics awarded with highest distinction from Birkbeck University of London, I combine classical laboratory science with large-scale computational analysis to answer questions that matter for public health.</p>
       </div>
 
-      <div class="scrolly-steps">
-        <article class="story-step active" data-image="images/fastforward.jpg" data-kicker="Slide 1" data-title="One central question" data-summary="What allows human beings to live longer, but also better? From toxic exposures to nutrition and fasting, this is one continuous path from risk to resilience." data-link="/research.html">
-          <h3>1. One central question</h3>
-          <p>From what damages health to what strengthens it.</p>
-        </article>
-        <article class="story-step" data-image="images/experiment.jpg" data-kicker="Slide 2" data-title="Seeing what toxicology was missing" data-summary="From Caen to King’s College London, omics methods revealed biological disturbances that classical toxicology can miss, including signatures linked to fatty liver disease and oxidative stress." data-link="/research-gmo.html">
-          <h3>2. What toxicology missed</h3>
-          <p>Long-term studies + omics uncovered hidden effects.</p>
-        </article>
-        <article class="story-step" data-image="images/pesticidespray.jpg" data-kicker="Slide 3" data-title="Chemicals are more complex than labels" data-summary="A pesticide formulation is not just its active ingredient. Some glyphosate-based formulations showed higher toxicity than glyphosate alone, and some BPA alternatives were not safer in estrogenicity models." data-link="/research-plasticizers.html">
-          <h3>3. Beyond reassuring labels</h3>
-          <p>Real effects must be tested at formulation level.</p>
-        </article>
-        <article class="story-step" data-image="images/microbiome.jpg" data-kicker="Slide 4" data-title="The gut microbiome changed the perspective" data-summary="Glyphosate-related work showed microbiome shifts beyond a simple antibiotic narrative, widening the view to diet–pollutant–microbiome–metabolism interactions." data-link="/glyphosate_microbiome_study.html">
-          <h3>4. Microbiome perspective</h3>
-          <p>Health emerges from host–microbe dialogue.</p>
-        </article>
-        <article class="story-step" data-image="images/blueberries.jpg" data-kicker="Slide 5" data-title="From exposure to protection" data-summary="At King’s College London, polyphenol-rich foods linked nutrition, microbial activity, metabolism, vascular function, and inflammation—framing food as a resilience builder." data-link="/research.html">
-          <h3>5. From risk to protection</h3>
-          <p>Polyphenols as biological signals, not just antioxidants.</p>
-        </article>
-        <article class="story-step" data-image="images/fasting_table_clocks.jpg" data-kicker="Slide 6" data-title="Fasting as a model of resilience" data-summary="Since 2024 at Buchinger Wilhelmi, research on long-term and intermittent fasting tracks metabolic switching, ketones, inflammation, microbiome adaptation, and physiological repair." data-link="/research-fasting.html">
-          <h3>6. Fasting physiology</h3>
-          <p>A controlled transition from external to internal fuel.</p>
-        </article>
-        <article class="story-step" data-image="images/BWclinic.jpeg" data-kicker="Slide 7" data-title="Toward personalised healthy longevity" data-summary="Current programs combine cohorts, biomarkers, microbiome analysis, digital monitoring, and personalisation to understand for whom fasting works, how, and under which conditions." data-link="/research-fasting.html">
-          <h3>7. Personalised prevention</h3>
-          <p>From population evidence to individual guidance.</p>
-        </article>
-        <article class="story-step" data-image="images/PhotoBuchingerWilhelmi.JPG" data-kicker="Slide 8" data-title="The full story" data-summary="Pesticides, plasticizers, polyphenols, microbiome science, and fasting are connected by one idea: healthy longevity depends on interactions between the body and its environment." data-link="/research.html">
-          <h3>8. The full story</h3>
-          <p>Understanding how health is damaged, restored, and sustained.</p>
-        </article>
+      <div class="step" data-step="1">
+        <p class="step-label">The Impact</p>
+        <h2>More than 100 peer-reviewed publications, 8,000+ citations</h2>
+        <p>Recognised as a top 1% cited scientist worldwide, my research has appeared in leading journals including <em>Environmental Health Perspectives</em>, <em>Nature Metabolism</em>, and <em>Gut Microbes</em>.</p>
+        <p>I have served as expert adviser to the French government and the European Parliament on chemical pollutants and human health risk assessment — turning laboratory findings into policy-relevant evidence.</p>
       </div>
+
+      <div class="step" data-step="2">
+        <p class="step-label">The Institutions</p>
+        <h2>Leading research at two world-class institutions</h2>
+        <p>As Scientific Director at Buchinger Wilhelmi — the world's foremost centre for therapeutic fasting — I design clinical trials and translate findings into evidence-based protocols used by thousands of patients each year.</p>
+        <p>In parallel, as Research Fellow at King's College London, I investigate how diet and the gut microbiome interact to shape human metabolism and disease.</p>
+      </div>
+
     </div>
   </div>
 </section>
 
-<section class="career-section">
+<div class="pull-quote">
+  <blockquote>
+    "The gut microbiome is the hidden organ that connects what we eat to how we age, how we feel, and how we heal."
+  </blockquote>
+</div>
+
+<!-- ============================================================
+     CHAPTER 2 — FASTING & LONGEVITY
+     ============================================================ -->
+<section class="st-chapter st-chapter--dark" id="chapter-fasting">
+  <div class="chapter-label" aria-hidden="true">02</div>
+  <div class="chapter-inner chapter-inner--flip">
+
+    <div class="narrative" data-panel="panel-fasting">
+
+      <div class="step active" data-step="0">
+        <p class="step-label">Fasting &amp; Longevity</p>
+        <h2>The science of therapeutic fasting</h2>
+        <p>Buchinger Wilhelmi is the world's leading therapeutic fasting clinic, with over a century of clinical practice. I joined as Scientific Director to transform empirical tradition into rigorous, published evidence.</p>
+        <p>My team analyses data from thousands of supervised fasting programmes — measuring metabolomics, gut microbiome composition, inflammatory markers, and cardiovascular parameters before, during, and after fasting.</p>
+      </div>
+
+      <div class="step" data-step="1">
+        <p class="step-label">What the Data Shows</p>
+        <h2>Fasting resets metabolic health across the board</h2>
+        <p>Seven days of therapeutic fasting produces measurable improvements in body weight, blood pressure, blood glucose, inflammatory markers (CRP), and cholesterol — even in patients with type 2 diabetes.</p>
+        <p>Our 2025 study demonstrated significant metabolic renewal in patients with obesity-related type 2 diabetes following supervised therapeutic fasting, validating what clinicians at Buchinger Wilhelmi have observed for decades.</p>
+      </div>
+
+      <div class="step" data-step="2">
+        <p class="step-label">The Microbiome Connection</p>
+        <h2>Fasting reshapes the gut virome and bacterial ecosystem</h2>
+        <p>Using shotgun metagenomics — sequencing over 20 million DNA fragments per sample — we discovered that therapeutic fasting dramatically remodels the gut virome, increasing bacteriophages associated with reduced inflammation.</p>
+        <p>Published in <em>Gut Microbes</em> (2025), this finding opens entirely new avenues for understanding how fasting heals far beyond simple calorie restriction.</p>
+      </div>
+
+      <div class="step" data-step="3">
+        <p class="step-label">The Bigger Picture</p>
+        <h2>Fasting as a tool against ageing and chronic disease</h2>
+        <p>Beyond weight loss, we are exploring how calorie restriction and periodic fasting can delay hallmarks of biological ageing — reducing oxidative stress, improving mitochondrial function, and reprogramming epigenetic clocks.</p>
+        <a href="/research-fasting.html" class="step-link">Explore fasting research →</a>
+      </div>
+
+    </div>
+
+    <div class="sticky-panel" id="panel-fasting">
+      <div class="panel-inner">
+
+        <div class="panel-slide active" data-slide="0">
+          <div class="panel-image-wrap"><img src="images/BWclinic.jpeg" alt="Buchinger Wilhelmi clinic"></div>
+        </div>
+
+        <div class="panel-slide" data-slide="1">
+          <svg class="fasting-chart" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+            <line x1="54" y1="16" x2="54" y2="196" stroke="#e2e8f0" stroke-width="1.5"/>
+            <line x1="54" y1="196" x2="302" y2="196" stroke="#e2e8f0" stroke-width="1.5"/>
+            <line x1="54" y1="68"  x2="302" y2="68"  stroke="#f1f5f9" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="54" y1="118" x2="302" y2="118" stroke="#f1f5f9" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="54" y1="158" x2="302" y2="158" stroke="#f1f5f9" stroke-width="1" stroke-dasharray="4,4"/>
+            <text x="72"  y="212" font-family="Lato,sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Baseline</text>
+            <text x="130" y="212" font-family="Lato,sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Day 3</text>
+            <text x="188" y="212" font-family="Lato,sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Day 7</text>
+            <text x="246" y="212" font-family="Lato,sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">Day 14</text>
+            <text x="292" y="212" font-family="Lato,sans-serif" font-size="9" fill="#94a3b8" text-anchor="middle">End</text>
+            <polyline points="72,52 130,88 188,122 246,152 292,162" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chart-line" style="stroke-dasharray:420;stroke-dashoffset:420"/>
+            <circle cx="72"  cy="52"  r="4" fill="#2563eb" class="chart-dot"/>
+            <circle cx="130" cy="88"  r="4" fill="#2563eb" class="chart-dot"/>
+            <circle cx="188" cy="122" r="4" fill="#2563eb" class="chart-dot"/>
+            <circle cx="246" cy="152" r="4" fill="#2563eb" class="chart-dot"/>
+            <circle cx="292" cy="162" r="4" fill="#2563eb" class="chart-dot"/>
+            <polyline points="72,44 130,92 188,148 246,170 292,176" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chart-line" style="stroke-dasharray:420;stroke-dashoffset:420"/>
+            <circle cx="72"  cy="44"  r="4" fill="#ef4444" class="chart-dot"/>
+            <circle cx="130" cy="92"  r="4" fill="#ef4444" class="chart-dot"/>
+            <circle cx="188" cy="148" r="4" fill="#ef4444" class="chart-dot"/>
+            <circle cx="246" cy="170" r="4" fill="#ef4444" class="chart-dot"/>
+            <circle cx="292" cy="176" r="4" fill="#ef4444" class="chart-dot"/>
+            <rect x="60"  y="26" width="10" height="3" rx="1.5" fill="#2563eb"/>
+            <text x="74"  y="30" font-family="Lato,sans-serif" font-size="9" fill="#475569">Body weight</text>
+            <rect x="148" y="26" width="10" height="3" rx="1.5" fill="#ef4444"/>
+            <text x="162" y="30" font-family="Lato,sans-serif" font-size="9" fill="#475569">Inflammation (CRP)</text>
+            <text x="178" y="56" font-family="Montserrat,sans-serif" font-size="20" font-weight="800" fill="#0f172a" text-anchor="middle">↓ 6 kg</text>
+            <text x="178" y="72" font-family="Lato,sans-serif" font-size="9" fill="#64748b" text-anchor="middle">avg. weight loss · 7 days</text>
+          </svg>
+        </div>
+
+        <div class="panel-slide" data-slide="2">
+          <div class="panel-image-wrap"><img src="images/microbiota_fasting.jpeg" alt="Microbiome changes during fasting"></div>
+        </div>
+
+        <div class="panel-slide" data-slide="3">
+          <div class="panel-image-wrap"><img src="images/fasting_clocks.jpg" alt="Time-restricted fasting"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 3 — PESTICIDES & THE MICROBIOME
+     ============================================================ -->
+<section class="st-chapter" id="chapter-pesticides">
+  <div class="chapter-label" aria-hidden="true">03</div>
+  <div class="chapter-inner">
+
+    <div class="sticky-panel" id="panel-pesticides">
+      <div class="panel-inner">
+
+        <div class="panel-slide active" data-slide="0">
+          <div class="panel-image-wrap"><img src="images/pesticidespray.jpg" alt="Pesticide spray in agriculture"></div>
+        </div>
+
+        <div class="panel-slide" data-slide="1">
+          <svg class="microbiome-svg" viewBox="0 0 280 300" xmlns="http://www.w3.org/2000/svg">
+            <text x="140" y="22" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="10" font-weight="700" fill="#64748b" letter-spacing="1.5">HEALTHY MICROBIOME</text>
+            <circle cx="140" cy="150" r="108" fill="rgba(37,99,235,.04)" stroke="rgba(37,99,235,.12)" stroke-width="1.5"/>
+            <circle cx="96"  cy="100" r="14" fill="#22d3ee" opacity=".9"/>
+            <circle cx="140" cy="80"  r="10" fill="#2563eb" opacity=".9"/>
+            <circle cx="182" cy="98"  r="16" fill="#10b981" opacity=".9"/>
+            <circle cx="208" cy="132" r="9"  fill="#f59e0b" opacity=".9"/>
+            <circle cx="202" cy="168" r="12" fill="#8b5cf6" opacity=".9"/>
+            <circle cx="178" cy="198" r="8"  fill="#ec4899" opacity=".9"/>
+            <circle cx="140" cy="210" r="14" fill="#22d3ee" opacity=".9"/>
+            <circle cx="100" cy="198" r="10" fill="#10b981" opacity=".9"/>
+            <circle cx="74"  cy="168" r="11" fill="#2563eb" opacity=".9"/>
+            <circle cx="72"  cy="132" r="8"  fill="#f59e0b" opacity=".9"/>
+            <circle cx="116" cy="148" r="7"  fill="#8b5cf6" opacity=".9"/>
+            <circle cx="162" cy="146" r="9"  fill="#ec4899" opacity=".9"/>
+            <circle cx="138" cy="132" r="6"  fill="#10b981" opacity=".9"/>
+            <text x="140" y="155" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="13" font-weight="700" fill="#0f172a">High diversity</text>
+            <text x="140" y="170" text-anchor="middle" font-family="Lato,sans-serif" font-size="10" fill="#64748b">balanced ecosystem</text>
+            <text x="140" y="286" text-anchor="middle" font-family="Lato,sans-serif" font-size="9" fill="#94a3b8">13 bacterial groups · normal gut health</text>
+          </svg>
+        </div>
+
+        <div class="panel-slide" data-slide="2">
+          <svg class="microbiome-svg" viewBox="0 0 280 300" xmlns="http://www.w3.org/2000/svg">
+            <text x="140" y="22" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="10" font-weight="700" fill="#ef4444" letter-spacing="1.5">AFTER GLYPHOSATE EXPOSURE</text>
+            <circle cx="140" cy="150" r="108" fill="rgba(239,68,68,.04)" stroke="rgba(239,68,68,.15)" stroke-width="1.5"/>
+            <circle cx="96"  cy="100" r="5"  fill="#cbd5e1" opacity=".4"/>
+            <circle cx="182" cy="98"  r="6"  fill="#cbd5e1" opacity=".35"/>
+            <circle cx="208" cy="132" r="4"  fill="#cbd5e1" opacity=".3"/>
+            <circle cx="100" cy="198" r="5"  fill="#cbd5e1" opacity=".4"/>
+            <circle cx="74"  cy="168" r="4"  fill="#cbd5e1" opacity=".3"/>
+            <circle cx="140" cy="150" r="52" fill="rgba(239,68,68,.18)" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <circle cx="140" cy="150" r="32" fill="#ef4444" opacity=".85"/>
+            <text x="140" y="147" text-anchor="middle" font-family="Lato,sans-serif" font-size="9" fill="white" font-weight="700">Dysbiosis</text>
+            <text x="140" y="158" text-anchor="middle" font-family="Lato,sans-serif" font-size="8" fill="rgba(255,255,255,.8)">bloom</text>
+            <text x="140" y="216" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="14" font-weight="700" fill="#ef4444">↓ Diversity</text>
+            <text x="140" y="232" text-anchor="middle" font-family="Lato,sans-serif" font-size="10" fill="#64748b">gut ecosystem disrupted</text>
+            <text x="140" y="286" text-anchor="middle" font-family="Lato,sans-serif" font-size="9" fill="#94a3b8">Env. Health Perspectives · No.1 in toxicology</text>
+          </svg>
+        </div>
+
+        <div class="panel-slide" data-slide="3">
+          <div class="panel-image-wrap"><img src="images/cocktailssmall.jpg" alt="Pesticide mixture cocktail effects"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="narrative" data-panel="panel-pesticides">
+
+      <div class="step active" data-step="0">
+        <p class="step-label">Pesticide Toxicology</p>
+        <h2>80+ publications on the hidden costs of chemical agriculture</h2>
+        <p>For over a decade I have investigated how agricultural chemicals — glyphosate, herbicide co-formulants, and pesticide mixtures — affect human biology in ways that regulatory assessments have yet to fully acknowledge.</p>
+        <p>With more than 6,500 citations in this field, my work has helped shift the scientific and regulatory conversation around pesticide safety — from laboratory bench to European Parliament.</p>
+      </div>
+
+      <div class="step" data-step="1">
+        <p class="step-label">A Healthy Gut</p>
+        <h2>The gut microbiome: 38 trillion microorganisms in balance</h2>
+        <p>A healthy gut microbiome is extraordinarily diverse — hundreds of bacterial species co-existing in a dynamic ecosystem that shapes immunity, metabolism, and mental health. Disrupting that balance has profound and lasting consequences for human health.</p>
+      </div>
+
+      <div class="step" data-step="2">
+        <p class="step-label">The Microbiome Under Threat</p>
+        <h2>Glyphosate disrupts the gut microbiome</h2>
+        <p>Using shotgun metagenomics, my team showed for the first time that glyphosate and Roundup alter gut microbiome composition — reducing bacterial diversity and promoting dysbiosis at realistic dietary doses.</p>
+        <p>This work, published in <em>Environmental Health Perspectives</em> — ranked No.&nbsp;1 in toxicology — was among the first to link herbicide exposure to gut ecosystem disruption, opening a new field of research.</p>
+      </div>
+
+      <div class="step" data-step="3">
+        <p class="step-label">The Cocktail Problem</p>
+        <h2>Pesticide mixtures are more dangerous than individually tested</h2>
+        <p>People are never exposed to a single pesticide in isolation — we encounter dozens simultaneously through food, water, and the environment. Our mixtox research demonstrates that combinations produce synergistic toxic effects impossible to predict by testing each compound alone.</p>
+        <a href="/research-pesticides.html" class="step-link">Explore pesticide research →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 4 — ENVIRONMENTAL CHEMICAL SAFETY
+     ============================================================ -->
+<section class="st-chapter st-chapter--surface" id="chapter-env">
+  <div class="chapter-label" aria-hidden="true">04</div>
+  <div class="chapter-inner chapter-inner--flip">
+
+    <div class="narrative" data-panel="panel-env">
+
+      <div class="step active" data-step="0">
+        <p class="step-label">Environmental Chemical Safety</p>
+        <h2>BPA-free does not mean safe</h2>
+        <p>Bisphenol A (BPA) was phased out from consumer plastics following evidence of its estrogenic effects. But the alternatives rushed to market — BPAF, BPB, BPZ — appear equally, if not more, problematic.</p>
+        <p>My research, supported by Breast Cancer UK, characterised the estrogenic potency of BPA replacements using breast cancer cell models — finding that several alternatives are more potent oestrogen mimics than BPA itself.</p>
+        <a href="/research-plasticizers.html" class="step-link">Plasticizers research →</a>
+      </div>
+
+      <div class="step" data-step="1">
+        <p class="step-label">GM Crops &amp; Multi-Omics</p>
+        <h2>A landmark two-year safety study of Roundup-tolerant maize</h2>
+        <p>In one of the most comprehensive safety evaluations of a GM crop ever conducted, I co-authored a long-term study analysing the effects of Roundup-tolerant maize on rat health using proteomics, transcriptomics, and metabolomics simultaneously.</p>
+        <p>This multi-omics approach revealed molecular-level perturbations in liver and kidney function invisible to classical toxicology — demonstrating why standard regulatory testing is insufficient.</p>
+        <a href="/research-gmo.html" class="step-link">GM crops research →</a>
+      </div>
+
+      <div class="step" data-step="2">
+        <p class="step-label">The Book</p>
+        <h2>Herbicides: Chemistry, Efficacy, Toxicology, and Environmental Impacts</h2>
+        <p>Edited with Johann Zaller and published by Elsevier in 2021, this reference volume brings together internationally recognised experts to provide the most comprehensive scientific account of herbicide toxicology available today.</p>
+        <a href="https://www.elsevier.com/books/herbicides/mesnage/978-0-12-823674-1" target="_blank" rel="noopener" class="step-link">View on Elsevier →</a>
+      </div>
+
+    </div>
+
+    <div class="sticky-panel" id="panel-env">
+      <div class="panel-inner">
+
+        <div class="panel-slide active" data-slide="0">
+          <div class="panel-image-wrap"><img src="images/bisphenols.png" alt="Bisphenol molecular structures"></div>
+        </div>
+
+        <div class="panel-slide" data-slide="1">
+          <div class="panel-image-wrap"><img src="images/crops-3604797_1280.jpg" alt="GM crops field"></div>
+        </div>
+
+        <div class="panel-slide" data-slide="2">
+          <div class="book-3d">
+            <div class="book-face">
+              <i class="fa-solid fa-book-open" style="font-size:2.8rem;margin-bottom:14px;opacity:.85;display:block;"></i>
+              <p style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px;color:white;">Herbicides</p>
+              <p style="opacity:.8;font-size:.82rem;line-height:1.55;color:rgba(255,255,255,.85);">Chemistry, Efficacy,<br>Toxicology &amp;<br>Environmental Impacts</p>
+              <p style="opacity:.6;font-size:.76rem;margin-top:14px;color:rgba(255,255,255,.7);">Edited by Robin Mesnage<br>&amp; Johann G. Zaller</p>
+              <p style="opacity:.5;font-size:.72rem;margin-top:8px;color:rgba(255,255,255,.6);">Elsevier &middot; 2021</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<div class="st-stats-band">
+  <div class="st-stats-inner">
+    <div class="st-stat reveal"><span class="st-stat-num">100+</span><span class="st-stat-lbl">Peer-reviewed<br>publications</span></div>
+    <div class="st-stat reveal"><span class="st-stat-num">8,000+</span><span class="st-stat-lbl">Citations</span></div>
+    <div class="st-stat reveal"><span class="st-stat-num">Top&nbsp;1%</span><span class="st-stat-lbl">Cited scientists<br>worldwide</span></div>
+    <div class="st-stat reveal"><span class="st-stat-num">15+</span><span class="st-stat-lbl">Years of<br>active research</span></div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<section class="st-timeline">
   <div class="container">
-    <p class="section-label">Career continuity</p>
-    <h2 class="section-title">From mechanistic toxicology to clinical translation</h2>
-    <div class="career-grid">
-      <div class="career-card reveal">
-        <h3>Foundations</h3>
-        <p>Early work in chemical toxicology established a robust mechanistic framework for exposure science.</p>
-      </div>
-      <div class="career-card reveal">
-        <h3>Integration</h3>
-        <p>Research expanded into microbiome and nutrition, linking environment, metabolism, and disease prevention.</p>
-      </div>
-      <div class="career-card reveal">
-        <h3>Translation</h3>
-        <p>Current clinical fasting programmes translate this evidence into practical patient care and policy dialogue.</p>
-      </div>
+    <p class="section-label">Journey</p>
+    <h2 class="section-title">Key Milestones</h2>
+    <div class="timeline-track">
+      <div class="timeline-item reveal"><div class="tl-year">2010</div><div class="tl-content"><h4>PhD in Toxicology</h4><p>Begins doctoral research on pesticide toxicology and cell signalling mechanisms.</p></div></div>
+      <div class="timeline-item reveal"><div class="tl-year">2013</div><div class="tl-content"><h4>King's College London</h4><p>Joins the Department of Nutritional Sciences as postdoctoral researcher, beginning microbiome investigations.</p></div></div>
+      <div class="timeline-item reveal"><div class="tl-year">2017</div><div class="tl-content"><h4>Glyphosate &amp; Microbiome</h4><p>Publishes landmark study on glyphosate's effects on the gut microbiome in <em>Environmental Health Perspectives</em>, ranked No.&nbsp;1 in toxicology.</p></div></div>
+      <div class="timeline-item reveal"><div class="tl-year">2019</div><div class="tl-content"><h4>MSc in Bioinformatics</h4><p>Awarded highest distinction in MSc Bioinformatics at Birkbeck University of London.</p></div></div>
+      <div class="timeline-item reveal"><div class="tl-year">2021</div><div class="tl-content"><h4>Herbicides Book Published</h4><p>Elsevier publishes <em>Herbicides: Chemistry, Efficacy, Toxicology, and Environmental Impacts</em>, co-edited with Johann Zaller.</p></div></div>
+      <div class="timeline-item reveal"><div class="tl-year">2022</div><div class="tl-content"><h4>Scientific Director, Buchinger Wilhelmi</h4><p>Appointed Scientific Director at the world's foremost therapeutic fasting clinic, launching a major clinical research programme.</p></div></div>
+      <div class="timeline-item reveal"><div class="tl-year">2025</div><div class="tl-content"><h4>Fasting, Virome &amp; Diabetes</h4><p>Publishes major findings on therapeutic fasting in type 2 diabetes and gut virome remodelling.</p></div></div>
     </div>
   </div>
 </section>
+
+<!-- CTA -->
+<section class="st-cta">
+  <div class="container">
+    <p class="section-label">Explore the research</p>
+    <h2>Dive deeper into the science</h2>
+    <p>Browse 100+ publications, read detailed research summaries, or get in touch about collaboration and consulting opportunities.</p>
+    <div class="st-cta-links">
+      <a href="/publications.html" class="btn btn-primary">All Publications</a>
+      <a href="/research-fasting.html" class="btn btn-outline">Fasting Research</a>
+      <a href="/research-pesticides.html" class="btn btn-outline">Pesticide Research</a>
+      <a href="/consulting.html" class="btn btn-outline">Consulting</a>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ---- Scroll progress bar ---- */
+(function () {
+  var bar = document.getElementById('scroll-progress');
+  if (!bar) return;
+  function update() {
+    var h = document.documentElement;
+    var pct = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.min(pct * 100, 100) + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}());
+
+/* ---- Step activation & panel slide switching ---- */
+(function () {
+  function activateStep(step) {
+    var narrative = step.closest('.narrative');
+    if (!narrative) return;
+    narrative.querySelectorAll('.step').forEach(function (s) { s.classList.remove('active'); });
+    step.classList.add('active');
+    var panelId = narrative.getAttribute('data-panel');
+    if (!panelId) return;
+    var panel = document.getElementById(panelId);
+    if (!panel) return;
+    var idx = step.getAttribute('data-step');
+    panel.querySelectorAll('.panel-slide').forEach(function (sl) { sl.classList.remove('active'); });
+    var target = panel.querySelector('[data-slide="' + idx + '"]');
+    if (target) target.classList.add('active');
+  }
+  document.querySelectorAll('.narrative').forEach(function (narrative) {
+    var first = narrative.querySelector('.step');
+    if (first) activateStep(first);
+  });
+  var steps = document.querySelectorAll('.step');
+  if (!steps.length) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) activateStep(e.target); });
+  }, { threshold: 0.5, rootMargin: '-8% 0px -8% 0px' });
+  steps.forEach(function (s) { io.observe(s); });
+}());
+</script>
