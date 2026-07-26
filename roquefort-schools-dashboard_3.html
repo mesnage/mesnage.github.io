@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schools around Roquefort-les-Pins — Family Dashboard</title>
+<style>
+.viz-root, :root {
+  color-scheme: light;
+  --page:      #f9f9f7;
+  --surface:   #fcfcfb;
+  --ink:       #0b0b0b;
+  --ink-2:     #52514e;
+  --muted:     #898781;
+  --grid:      #e1e0d9;
+  --baseline:  #c3c2b7;
+  --border:    rgba(11,11,11,0.10);
+  --c-public:  #2a78d6;
+  --c-contrat: #eb6834;
+  --c-intl:    #1baf7a;
+  --c-alt:     #eda100;
+  --sea:       rgba(42,120,214,0.09);
+  --sea-line:  rgba(42,120,214,0.35);
+  --chip-bg:   #f0efec;
+  --accent-wash: rgba(42,120,214,0.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page:      #0d0d0d;
+    --surface:   #1a1a19;
+    --ink:       #ffffff;
+    --ink-2:     #c3c2b7;
+    --muted:     #898781;
+    --grid:      #2c2c2a;
+    --baseline:  #383835;
+    --border:    rgba(255,255,255,0.10);
+    --c-public:  #3987e5;
+    --c-contrat: #d95926;
+    --c-intl:    #199e70;
+    --c-alt:     #c98500;
+    --sea:       rgba(57,135,229,0.12);
+    --sea-line:  rgba(57,135,229,0.40);
+    --chip-bg:   #262624;
+    --accent-wash: rgba(57,135,229,0.12);
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--page); color: var(--ink);
+  line-height: 1.45; font-size: 14px;
+  padding: 28px clamp(14px, 4vw, 48px) 60px;
+}
+a { color: inherit; }
+h1 { font-size: 24px; font-weight: 650; letter-spacing: -0.01em; }
+h2 { font-size: 16px; font-weight: 650; margin-bottom: 2px; }
+.sub { color: var(--ink-2); font-size: 13px; }
+header.top { max-width: 1200px; margin: 0 auto 18px; }
+.wrap { max-width: 1200px; margin: 0 auto; }
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 20px; margin-bottom: 18px;
+}
+.card-head { margin-bottom: 12px; }
+.card-head .sub { max-width: 72ch; }
+/* ---- stat tiles ---- */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 12px; margin: 16px 0 20px; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.tile .lbl { font-size: 12px; color: var(--ink-2); }
+.tile .val { font-size: 26px; font-weight: 650; margin-top: 2px; }
+.tile .note { font-size: 12px; color: var(--muted); margin-top: 2px; }
+/* ---- filters ---- */
+.filters { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 14px; position: sticky; top: 8px; z-index: 40; }
+.fgroup { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.fgroup .glbl { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-right: 2px; }
+.chip {
+  border: 1px solid var(--border); background: var(--chip-bg); color: var(--ink-2);
+  border-radius: 999px; padding: 4px 11px; font-size: 12.5px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px; user-select: none;
+}
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.chip.on { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.chip.on .dot { outline: 2px solid var(--surface); outline-offset: 0; }
+.filters input[type="search"] {
+  border: 1px solid var(--border); background: var(--chip-bg); color: var(--ink);
+  border-radius: 8px; padding: 5px 10px; font-size: 13px; width: 150px;
+}
+.filters input[type="range"] { accent-color: var(--c-public); vertical-align: middle; }
+.count { margin-left: auto; font-size: 12.5px; color: var(--muted); }
+/* ---- map ---- */
+.map-box { position: relative; }
+.map-box svg { width: 100%; height: auto; display: block; border-radius: 8px; background: var(--surface); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 12.5px; color: var(--ink-2); align-items: center; }
+.legend .key { display: inline-flex; align-items: center; gap: 6px; }
+.legend .sw { width: 11px; height: 11px; border-radius: 50%; }
+.legend .dm { width: 10px; height: 10px; background: var(--ink); transform: rotate(45deg); }
+.legend .vg { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+/* map text */
+.m-lbl { font-size: 11px; fill: var(--ink-2); }
+.m-lbl-sm { font-size: 10px; fill: var(--muted); }
+.m-road { fill: none; stroke: var(--baseline); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.m-ring { fill: none; stroke: var(--grid); stroke-width: 1; }
+.pin { cursor: pointer; }
+.pin circle.core { stroke: var(--surface); stroke-width: 2; }
+.pin.dim { opacity: 0.18; }
+.pin.hot circle.core { stroke: var(--ink); }
+/* ---- table ---- */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; padding: 8px 10px 6px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+td { padding: 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr.hl td { background: var(--accent-wash); }
+td.nm { min-width: 200px; }
+td .snm { font-weight: 600; }
+td .scm { color: var(--muted); font-size: 12px; }
+td .det { color: var(--ink-2); font-size: 12.5px; margin-top: 3px; max-width: 46ch; }
+.badge { display: inline-block; font-size: 10.5px; border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; margin-left: 6px; color: var(--ink-2); background: var(--chip-bg); vertical-align: 1px; white-space: nowrap; }
+.badge.star { color: #8a6d00; border-color: rgba(237,161,0,.45); background: rgba(237,161,0,.10); }
+.tdot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: 0; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.drv { color: var(--ink-2); }
+.res { max-width: 26ch; }
+.cost { max-width: 24ch; }
+/* ---- charts ---- */
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 18px; }
+.bar-row { display: grid; grid-template-columns: 168px 1fr; align-items: center; gap: 10px; padding: 3px 0; }
+.bar-row .bl { font-size: 12.5px; color: var(--ink-2); text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar-track { position: relative; height: 22px; display: flex; align-items: center; }
+.bar { height: 15px; border-radius: 0 4px 4px 0; min-width: 2px; }
+.bar-val { font-size: 12px; color: var(--ink-2); margin-left: 7px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.axis-note { font-size: 11.5px; color: var(--muted); margin-top: 8px; }
+.chart-legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-2); margin: 2px 0 10px; flex-wrap: wrap; }
+.chart-legend .key { display: inline-flex; gap: 6px; align-items: center; }
+.chart-legend .sw { width: 10px; height: 10px; border-radius: 3px; }
+/* ---- villages ---- */
+.vil-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; }
+@media (max-width: 900px) { .vil-grid { grid-template-columns: 1fr; } }
+/* ---- notes ---- */
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.notes .card { margin-bottom: 0; }
+.notes ul { margin: 6px 0 0 16px; color: var(--ink-2); font-size: 13px; }
+.notes li { margin-bottom: 6px; }
+.notes b { color: var(--ink); font-weight: 600; }
+.pathway { border-left: 3px solid var(--c-public); }
+/* ---- tooltip ---- */
+#tip {
+  position: fixed; pointer-events: none; z-index: 99; display: none;
+  background: var(--ink); color: var(--surface); border-radius: 8px;
+  padding: 8px 11px; font-size: 12px; max-width: 280px; line-height: 1.4;
+  box-shadow: 0 4px 14px rgba(0,0,0,.25);
+}
+#tip .t { font-weight: 650; font-size: 12.5px; }
+#tip .s { opacity: .75; }
+footer { max-width: 1200px; margin: 26px auto 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+footer h3 { font-size: 12px; color: var(--ink-2); margin-bottom: 4px; }
+footer a { color: var(--ink-2); }
+.src-cols { columns: 2; column-gap: 30px; }
+@media (max-width: 760px) { .src-cols { columns: 1; } .bar-row { grid-template-columns: 120px 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Schools around Roquefort-les-Pins</h1>
+  <div class="sub">Maternelle · primaire · collège within ~30 min drive — public, private (sous contrat), international &amp; Montessori. Compiled July 2026 from 2025 brevet results and 2025–27 published fees. Drive times are off-peak estimates from the Roquefort-les-Pins centre / clinic (295 Ch. des Roches d'Or).</div>
+  <div class="tiles" id="tiles"></div>
+</header>
+
+<div class="wrap">
+
+  <div class="filters" id="filters">
+    <div class="fgroup" id="f-type"><span class="glbl">Type</span></div>
+    <div class="fgroup" id="f-level"><span class="glbl">Level</span></div>
+    <div class="fgroup"><span class="glbl">Drive</span>
+      <input type="range" id="f-drive" min="5" max="35" step="1" value="35">
+      <span id="f-drive-lbl" class="sub">≤ 35 min</span>
+    </div>
+    <div class="fgroup"><input type="search" id="f-q" placeholder="Search school / commune"></div>
+    <span class="count" id="f-count"></span>
+  </div>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Map</h2>
+      <div class="sub">Coastline and commune boundaries from official French administrative data (Etalab/IGN); principal roads (A8, D2085, D6007, D2210, D3, D4, D35, D6185…) traced from the real network — indicative, not navigation-grade. Pins are schools, colour = type; grey dots are villages; numbered circles are A8 exits; the ring marks ~15 min typical driving from Roquefort-les-Pins (the ~30 min envelope covers the whole mapped area). Hover a pin for details, click to highlight the school below.</div>
+    </div>
+    <div class="map-box"><svg id="map" viewBox="0 0 1000 760" role="img" aria-label="Schematic map of schools around Roquefort-les-Pins"></svg></div>
+    <div class="legend">
+      <span class="key"><span class="dm"></span> Roquefort-les-Pins (clinic)</span>
+      <span class="key"><span class="sw" style="background:var(--c-public)"></span> Public (free)</span>
+      <span class="key"><span class="sw" style="background:var(--c-contrat)"></span> Private sous contrat</span>
+      <span class="key"><span class="sw" style="background:var(--c-intl)"></span> International / bilingual</span>
+      <span class="key"><span class="sw" style="background:var(--c-alt)"></span> Montessori &amp; alternative</span>
+      <span class="key"><span class="vg"></span> Village / town</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>School explorer</h2>
+      <div class="sub">★ = shortlisted in your Schools Guide. Public collège "results" = brevet (DNB) 2025 pass rate, share of passes with a mention, and IPS social-position index where published. Public schools are free; figures in <i>italics</i> are unpublished estimates.</div>
+    </div>
+    <div style="overflow-x:auto">
+    <table id="tbl">
+      <thead><tr>
+        <th>School · classes &amp; curriculum</th><th>Commune</th><th>Levels · ages</th><th>Results / accreditation</th><th>Cost / year</th><th>Drive</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="charts">
+    <div class="card">
+      <div class="card-head">
+        <h2>Annual tuition — fee-paying schools</h2>
+        <div class="sub">Published rates, typical primary year (Life Bloom = collège). Income-banded sous contrat schools shown at mid-band. All public schools: €0.</div>
+      </div>
+      <div class="chart-legend">
+        <span class="key"><span class="sw" style="background:var(--c-contrat)"></span> Sous contrat</span>
+        <span class="key"><span class="sw" style="background:var(--c-intl)"></span> International</span>
+        <span class="key"><span class="sw" style="background:var(--c-alt)"></span> Montessori / alternative</span>
+      </div>
+      <div id="chart-fees"></div>
+      <div class="axis-note">Excludes one-time registration fees (€200–3,500) and extras (meals, bus, trips). * = dated figure. Fénelon / Mont St-Jean / Maria Mater / Ste-Marie Antibes don't publish fees — see table estimates.</div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h2>Collège results — brevet 2025 pass rate</h2>
+        <div class="sub">Public collèges within the radius. Hover for mentions &amp; IPS. Scale 0–100%.</div>
+      </div>
+      <div id="chart-brevet"></div>
+      <div class="axis-note">Highlighted: César (your sector collège) and CIV (selective, entry by international-section test). Source: DEPP session 2025.</div>
+    </div>
+  </section>
+
+  <section class="vil-grid">
+    <div class="card">
+      <div class="card-head">
+        <h2>Main villages &amp; towns</h2>
+        <div class="sub">Sorted by driving time from Roquefort-les-Pins. House prices = commune-wide average €/m², spring 2026 (MeilleursAgents).</div>
+      </div>
+      <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Village</th><th>Drive</th><th>Pop.</th><th>€/m² house</th><th>Character</th></tr></thead>
+        <tbody id="vil-body"></tbody>
+      </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <h2>Driving from Roquefort-les-Pins</h2>
+        <div class="sub">Typical off-peak minutes; hover for rush-hour range and route.</div>
+      </div>
+      <div id="chart-dests"></div>
+      <div class="axis-note">Main axis = D2085; expect +10–20 min at peak (07:15–09:00 towards the coast, 17:00–19:30 back) and summer beach traffic.</div>
+    </div>
+  </section>
+
+  <section class="card" id="visit">
+    <div class="card-head">
+      <h2>September 2026 visit planner — 4 days, whole family</h2>
+      <div class="sub">La rentrée is <b>Tuesday 1 September 2026</b>, so from the first week of September every school is in normal session — the best possible time to see them for real. Suggested window: <b>Wednesday 16 – Saturday 19 September</b> (or 23–26): shoulder-season prices, warm sea, no summer traffic, and the days line up with the local market calendar below. Book the two school tours 3–4 weeks ahead.</div>
+    </div>
+    <div class="notes" style="margin-bottom:14px">
+      <div class="card">
+        <h2>Day 1 · Wed — Roquefort-les-Pins &amp; next-door villages</h2>
+        <ul>
+          <li><b>Morning:</b> Roquefort-les-Pins <b>Wednesday market</b> (halles, 8–12) — feel the village with the kids; walk the Plans/Notre-Dame centre and the clinic surroundings.</li>
+          <li><b>Drive-bys:</b> village primaries (Jean Camp / Roger Baud), Collège César, École Maria Mater — all within 5 min.</li>
+          <li><b>Afternoon:</b> loop Le Rouret → Opio → Châteauneuf (Pré-du-Lac) on the D2085/D4 — the three quiet-village alternatives; stop at a Le Rouret agency (Nestenn / Opio Rouret Immobilier).</li>
+          <li><b>Evening:</b> dinner in Roquefort-les-Pins — test the "living here" feel.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Day 2 · Thu — Schools day in Sophia / Valbonne</h2>
+        <ul>
+          <li><b>08:00:</b> drive Roquefort → Sophia via D3 — the real school-run commute test (~15 min off-peak, 25–35 at peak).</li>
+          <li><b>Morning:</b> booked individual tour at <b>ICS Côte d'Azur</b> (60–90 min); drive past CIV campus and Les Colibris Montessori (5 min apart). Optional: EIB Cagnes receives visitors <b>Tue/Thu mornings only</b> — alternative slot.</li>
+          <li><b>Lunch:</b> Valbonne old village square; walk the arcaded streets.</li>
+          <li><b>Afternoon:</b> Parc de la Valmasque playgrounds + Fontmerle pond for the kids; estate agents in Valbonne (Blue Square / John Taylor).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Day 3 · Fri — Valbonne market, Mougins &amp; the west</h2>
+        <ul>
+          <li><b>Morning:</b> Valbonne <b>Friday market</b> (8–13) — the family-life benchmark; then booked visit at <b>Mougins British International School</b> (late morning).</li>
+          <li><b>Lunch:</b> Mougins old village (Picasso's village — kid-tolerant, short walk).</li>
+          <li><b>Afternoon:</b> Verrerie de Biot glassblowers (free to watch, great with a 3- and 5-year-old, 10–13/14–18) or the Mougins bike park; drive-by Mouans-Sartoux (organic-canteen town) and Les Pouces Verts on the way back.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Day 4 · Sat — The east: La Colle, St-Paul, Vence + sea</h2>
+        <ul>
+          <li><b>Morning:</b> La Colle-sur-Loup <b>Saturday market</b> + village (best-value option); short hop to Saint-Paul-de-Vence ramparts walk.</li>
+          <li><b>Midday:</b> Vence — market square lunch, drive past École Freinet and La Sine.</li>
+          <li><b>Afternoon:</b> beach time at Cros-de-Cagnes or Parc de Vaugrenier playground (Villeneuve-Loubet); note Marineland is <b>permanently closed</b> (since Jan 2025) — don't plan around it.</li>
+          <li><b>Evening:</b> family debrief — score the villages against your criteria (commute, schools, nature, budget).</li>
+        </ul>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Book / contact before you fly</th><th>How</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="nm"><span class="snm">ICS Côte d'Azur tour</span></td><td>contact@icscotedazur.com · +33 4 93 64 32 84 · "book a visit" form</td><td class="det">Individual tours any school day; next open morning 15 Oct 2026. Ask about 2028-29 waitlist for KG2 + PY entry.</td></tr>
+        <tr><td class="nm"><span class="snm">Mougins BIS visit</span></td><td>Online "Book a Visit" form · +33 4 22 53 53 70</td><td class="det">60–90 min with admissions, classes in action.</td></tr>
+        <tr><td class="nm"><span class="snm">APEG (CIV German section)</span></td><td>contact@apeg.eu</td><td class="det">No Sept open day (annual JPO is in March) — ask for a call or campus meeting; confirm the German-section primary feeder school.</td></tr>
+        <tr><td class="nm"><span class="snm">CIV secretariat</span></td><td>ce.0061642c@ac-nice.fr · +33 4 92 96 52 00</td><td class="det">State school — visits only by arrangement.</td></tr>
+        <tr><td class="nm"><span class="snm">Optional schools</span></td><td>EIB: cagnes@eibschools.fr (Tue/Thu am) · Colibris: info@ecole-montessori-colibris.com · Maria Mater: secretariat@ecolemariamater.fr</td><td class="det">Pick per shortlist.</td></tr>
+        <tr><td class="nm"><span class="snm">Estate agents</span></td><td>Century 21 / Orpi (Roquefort) · Blue Square, John Taylor (Valbonne) · M. Zingraf (Opio) · Nestenn (Le Rouret)</td><td class="det">Send budget + brief ahead (4-bed, garden, €0.9–1.5M) and ask for 2–3 viewings on Days 1–2.</td></tr>
+        <tr><td class="nm"><span class="snm">Travel &amp; base</span></td><td>ZRH→NCE nonstop ~1h25 (SWISS/easyJet) · hire car at NCE T2 · base 4 nights: Château de la Bégude (Opio), Mouratoglou Resort (Sophia) or La Bastide de Valbonne</td><td class="det">Airport → Roquefort-les-Pins ~25–30 min. September = shoulder season, availability generally good.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="notes">
+    <div class="card">
+      <h2>How enrolment works</h2>
+      <ul>
+        <li><b>Public primary:</b> enrol at the <b>mairie</b> of your commune (proof of address, livret de famille, vaccinations); school assigned by catchment (carte scolaire).</li>
+        <li><b>Public collège:</b> automatic sectorisation by home address — Roquefort-les-Pins → <b>Collège César</b>; Le Rouret/Opio/Châteauneuf → Pré des Roures; La Colle/St-Paul → Yves Klein; Biot → l'Éganaude.</li>
+        <li><b>International sections (ASEICA English / APEG German):</b> academy-run language tests override the catchment — register ~Dec–Jan, tests in March, results late March. CIV collège admits <b>only</b> via these tests.</li>
+        <li><b>Private schools</b> (sous contrat &amp; international): apply directly, any commune — no catchment. Popular year groups at ICS &amp; Mougins BIS carry waitlists; apply ~18 months ahead.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Costs at a glance</h2>
+      <ul>
+        <li><b>Public:</b> free from age 3; cantine ≈ <b>€3–6/meal</b> (often income-indexed), périscolaire a few €/session.</li>
+        <li><b>Language-section associations:</b> ASEICA English — primary €2,846–3,683/yr, collège €1,900–2,459/yr; APEG German at CIV ≈ €1,350/yr.</li>
+        <li><b>Sous contrat:</b> roughly €340–2,240/yr, usually income-banded (published: Stanislas, Ste-Marie de Chavagnes) + demi-pension.</li>
+        <li><b>International private:</b> €9,400–25,600/yr + registration €1,800–3,500 + application ≈ €690; Montessori €9,300–11,200/yr.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Getting there &amp; school transport</h2>
+      <ul>
+        <li><b>D2085</b> is the spine — everything in Roquefort-les-Pins hangs off it; pinch points at Pré-du-Lac and the Cagnes descent to the A8 (exit 47, 11 min).</li>
+        <li><b>School buses:</b> Envibus (CASA) line 26 to Valbonne/Sophia + dedicated scolaire lines (4S, 5S, 17S, 20S…) and named primary circuits inside the village; enrol via the mairie's Portail Famille.</li>
+        <li><b>Sophia school run:</b> 10–11 km, ~15 min off-peak via D3; 25–35 min at the 08:00 inflow.</li>
+        <li><b>Regional links:</b> ZOU 650 bus Nice↔Grasse along the D2085; TER at Cagnes-sur-Mer (17 min); TGV at Antibes (25 min); airport 25 min.</li>
+      </ul>
+    </div>
+    <div class="card pathway">
+      <h2>Your pathway (from your Schools Guide)</h2>
+      <ul>
+        <li><b>Phase 1 — arrival 2028–29:</b> both children at <b>ICS Côte d'Azur</b> (bilingual FR/EN, IB PYP, ~13 min) — son into PY2–PY3, daughter into KG2/PY1.</li>
+        <li><b>Phase 2 — from age 11:</b> transition to the <b>CIV German section</b> (APEG, free, ~15 min) → French Bac (OIB) + German qualification.</li>
+        <li><b>Nearby fallbacks:</b> public sector schools in Roquefort-les-Pins itself (village primaries + Collège César, 96% brevet, English int'l section) cost €0 and rank among the best in the département.</li>
+        <li><b>Before the move:</b> ICS waitlist registration; APEG/CIV open day; note the March SI test window for collège entry.</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <h3>Method &amp; caveats</h3>
+  <p>Compiled 26 July 2026. Brevet (DNB) rates, mentions and IPS: DEPP session 2025 via lucyol.fr / enseigna.fr / Onisep. Fees: school websites and international-schools-database.com (2025–26 or 2026–27 schedules as noted); sous contrat estimates in italics where schools don't publish. Map base: coastline &amp; commune boundaries from official Etalab/IGN administrative data (france-geojson); principal roads hand-traced from the real network (indicative — live OSM/IGN road services are not reachable from this workspace); school coordinates approximate; driving times are typical off-peak estimates — verify live before committing. Google-review scores were not used (not reliably retrievable). Ratings for private schools rest on accreditation and inspection status, as France publishes no league tables for primary or private-hors-contrat schools.</p>
+  <h3 style="margin-top:10px">Key sources</h3>
+  <div class="src-cols" id="srcs"></div>
+  <script>
+  document.getElementById("srcs").innerHTML = ["civfrance.com","ac-nice.fr (sections internationales)","aseica.org","apeg.eu","icscotedazur.com","mougins.britishinternationalschool.com","isn-nice.com","eibcagnes.fr","lifebloomacademy.com","ecole-montessori-colibris.com","montessori-les-pouces-verts.fr","ecolemariamater.fr","stanislas-cannes.com","sainte-marie-cannes.org","msjantibes.fr","institut-fenelon.org","lucyol.fr","enseigna.fr","onisep.fr","annuaire-education.fr","meilleursagents.com","envibus.fr","ville-roquefort-les-pins.fr","zou.maregionsud.fr"].map(s=>`<span style="white-space:nowrap">${s}</span>`).join(" · ");
+  </script>
+</footer>
+
+<div id="tip"></div>
+
+<script>
+/* ================= DATA ================= */
+const CAT = {
+  public:  { label: "Public",                 color: "var(--c-public)"  },
+  contrat: { label: "Private sous contrat",   color: "var(--c-contrat)" },
+  intl:    { label: "International / bilingual", color: "var(--c-intl)" },
+  alt:     { label: "Montessori & alternative",  color: "var(--c-alt)"  }
+};
+/* levels: m = maternelle, p = primaire/élémentaire, c = collège */
+const SCHOOLS = [
+ /* ---- PUBLIC PRIMARIES ---- */
+ {name:"Écoles publiques de Roquefort-les-Pins", sub:"Jean Camp · Roger Baud · mat. Layet Boutonnier", commune:"Roquefort-les-Pins", cat:"public", lv:"mp", ages:"3–11", lat:43.6668, lon:7.0462, drive:3,
+  cls:"French national curriculum; périscolaire via SEEJ; named village school-bus circuits", res:"—", cost:"Free · cantine ≈€3–6/meal", url:"https://annuaire-education.fr"},
+ {name:"Groupe scolaire du Rouret", commune:"Le Rouret", cat:"public", lv:"mp", ages:"3–11", lat:43.6760, lon:7.0100, drive:6,
+  cls:"French national curriculum; well-regarded village school", res:"—", cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Écoles d'Opio", sub:"La Tour d'Opio + mat. Mistral", commune:"Opio", cat:"public", lv:"mp", ages:"3–11", lat:43.6690, lon:6.9838, drive:10,
+  cls:"Small village schools; feed Collège Le Pré des Roures", res:"—", cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Écoles de Châteauneuf-Grasse", sub:"élém. Monier + mat. Lei Pichouns", commune:"Châteauneuf-Grasse", cat:"public", lv:"mp", ages:"3–11", lat:43.6722, lon:6.9718, drive:12,
+  cls:"Feed Collège Le Pré des Roures", res:"—", cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Écoles de Valbonne village", sub:"Les Campouns · Île Verte · mat. Daudet", commune:"Valbonne", cat:"public", lv:"mp", ages:"3–11", lat:43.6408, lon:7.0086, drive:13,
+  cls:"Standard catchment schools of the old village", res:"—", cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"École Les Sartoux", sub:"ASEICA international primary section", commune:"Valbonne · Sophia", cat:"public", lv:"p", ages:"6–11", lat:43.6285, lon:7.0400, drive:15,
+  cls:"Hosts the ASEICA anglophone international section (native-English hours, entry by test) alongside standard classes; Garbejaïre group nearby serves the Sophia catchment", res:"Feeder to SI collèges (César / Niki / CIV)", cost:"Free · ASEICA €2,846–3,683/yr", url:"https://www.aseica.org"},
+ {name:"École Trois Collines", sub:"ASEICA international primary section", commune:"Mougins-le-Haut", cat:"public", lv:"p", ages:"6–11", lat:43.6050, lon:7.0300, drive:22,
+  cls:"Second ASEICA anglophone primary section; bilingual test entry", res:"Feeder to SI collèges", cost:"Free · ASEICA €2,846–3,683/yr", url:"https://www.aseica.org"},
+ {name:"École Freinet (Le Pioulier)", commune:"Vence", cat:"public", lv:"mp", ages:"3–11", lat:43.7245, lon:7.1050, drive:20,
+  cls:"Historic public experimental school founded 1935 by Célestin Freinet — child-led pédagogie Freinet; heavily oversubscribed", res:"National pedagogical landmark", cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Écoles de La Colle-sur-Loup", sub:"Lanza · Pennac · Teisseire · mat. Les Brusquets", commune:"La Colle-sur-Loup", cat:"public", lv:"mp", ages:"3–11", lat:43.6862, lon:7.1040, drive:11,
+  cls:"Feed Collège Yves Klein", res:"—", cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Écoles de Saint-Paul-de-Vence", sub:"élém. La Fontette + maternelle", commune:"Saint-Paul-de-Vence", cat:"public", lv:"mp", ages:"3–11", lat:43.7000, lon:7.1180, drive:13,
+  cls:"Feed Collège Yves Klein", res:"—", cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Écoles de Biot", sub:"Olivari · Moulin Neuf · Langevin · La Calade", commune:"Biot", cat:"public", lv:"mp", ages:"3–11", lat:43.6292, lon:7.0958, drive:20,
+  cls:"Feed Collège de l'Éganaude", res:"—", cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Écoles de Villeneuve-Loubet", sub:"Les Plans · St-Georges · Les Maurettes…", commune:"Villeneuve-Loubet", cat:"public", lv:"mp", ages:"3–11", lat:43.6580, lon:7.1215, drive:15,
+  cls:"Feed Collège Romée de Villeneuve", res:"—", cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Écoles de Mouans-Sartoux", sub:"Aimé Legall · François Jacob · L'Orée du Bois", commune:"Mouans-Sartoux", cat:"public", lv:"mp", ages:"3–11", lat:43.6212, lon:6.9700, drive:22,
+  cls:"Nationally famous 100% organic canteens supplied by the town's own farm", res:"—", cost:"Free · organic cantine", url:"https://mouans-sartoux.net"},
+ /* ---- PUBLIC COLLÈGES ---- */
+ {name:"Collège César", commune:"Roquefort-les-Pins", cat:"public", lv:"c", ages:"11–15", lat:43.6580, lon:7.0310, drive:3, star:false,
+  cls:"Section internationale anglophone (ASEICA) · LV2 ES/IT/DE · Latin · aeronautics (BIA) · ~703 pupils",
+  res:"Brevet 2025: 96% · 87% mentions · IPS 143.7 (top 0.4%)", brevet:96, tb:"47.8% mention TB", ips:143.7, cost:"Free · SI: ASEICA €1,900–2,459/yr", url:"https://www.aseica.org"},
+ {name:"Collège Le Pré des Roures", commune:"Le Rouret", cat:"public", lv:"c", ages:"11–15", lat:43.6728, lon:7.0208, drive:6,
+  cls:"Euro-Italian language pathway · Latin · BIA · ~707 pupils",
+  res:"Brevet 2025: 95% · 81% mentions · IPS 123.2", brevet:95, tb:"47.6% mention TB", ips:123.2, cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"CIV — Collège international de Valbonne", commune:"Valbonne · Sophia", cat:"public", lv:"c", ages:"11–15", lat:43.6215, lon:7.0458, drive:15, star:true,
+  cls:"Sections internationales English · German (APEG, since 1988) · Spanish · Italian · Chinese → brevet international; entry ONLY by academy language test (register Dec–Jan, tests March)",
+  res:"Brevet 2025: 100% · ~99% mentions · IPS 144.7", brevet:100, tb:"78.3% mention TB — 5th nationally", ips:144.7, cost:"Free · ASEICA €1,900–2,459 or APEG ≈€1,350/yr", url:"https://civfrance.com"},
+ {name:"Collège Niki de Saint Phalle", commune:"Valbonne · Sophia", cat:"public", lv:"c", ages:"11–15", lat:43.6320, lon:7.0260, drive:15,
+  cls:"Section internationale anglophone (ASEICA) · bilangue EN-IT · Latin · BIA · ~817 pupils",
+  res:"Brevet 2025: 96% · 88% mentions · IPS 141.3", brevet:96, tb:"34.5% mention TB", ips:141.3, cost:"Free · SI: ASEICA €1,900–2,459/yr", url:"https://www.aseica.org"},
+ {name:"Collège de l'Éganaude", commune:"Biot · Sophia", cat:"public", lv:"c", ages:"11–15", lat:43.6170, lon:7.0620, drive:18,
+  cls:"SI anglophone + italienne · section sportive climbing · Latin/Greek · BIA · ~820 pupils",
+  res:"Brevet 2025: 92% · 76% mentions · IPS 134.3", brevet:92, tb:"38.3% mention TB", ips:134.3, cost:"Free · SI: ASEICA €1,900–2,459/yr", url:"https://www.aseica.org"},
+ {name:"Collège Yves Klein", commune:"La Colle-sur-Loup", cat:"public", lv:"c", ages:"11–15", lat:43.6850, lon:7.1028, drive:11,
+  cls:"Latin & Ancient Greek · LV2 ES/IT · ~731 pupils · sector for La Colle + Saint-Paul",
+  res:"Brevet 2025: 90% · 67% mentions · IPS 127.2", brevet:90, tb:"29.8% mention TB", ips:127.2, cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Collège La Sine", commune:"Vence", cat:"public", lv:"c", ages:"11–15", lat:43.7188, lon:7.0988, drive:20,
+  cls:"Bilangues EN-IT & EN-DE · Latin/Greek · ~817 pupils",
+  res:"Brevet 2025: 85% · 66% mentions · IPS 110.3", brevet:85, tb:"31.6% mention TB", ips:110.3, cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Collège Les Campelières", commune:"Mougins", cat:"public", lv:"c", ages:"11–15", lat:43.6010, lon:6.9890, drive:24,
+  cls:"Bilangue EN-DE (German-track) · section européenne · SEGPA · ~801 pupils",
+  res:"Brevet 2025: 91% · 67% mentions · IPS 98.7", brevet:91, tb:"mentions 67%", ips:98.7, cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Collège La Chênaie", commune:"Mouans-Sartoux", cat:"public", lv:"c", ages:"11–15", lat:43.6178, lon:6.9722, drive:22,
+  cls:"Bilangue EN-IT · Latin · BIA · ~686 pupils",
+  res:"Brevet 2025: 94% · 81% mentions · IPS 116.4", brevet:94, tb:"33.1% mention TB", ips:116.4, cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Collège Romée de Villeneuve", commune:"Villeneuve-Loubet", cat:"public", lv:"c", ages:"11–15", lat:43.6572, lon:7.1192, drive:16,
+  cls:"Section sportive table tennis · Latin · ~642 pupils",
+  res:"Brevet 2025: 83% · 64% mentions · IPS 116.1", brevet:83, tb:"25.7% mention TB", ips:116.1, cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Collège Canteperdrix", commune:"Grasse", cat:"public", lv:"c", ages:"11–15", lat:43.6510, lon:6.9330, drive:22,
+  cls:"Bilangue EN-DE · Latin/Greek · SEGPA · ~772 pupils · best-positioned of Grasse's five public collèges",
+  res:"Brevet 2025: 85% · 64% mentions · IPS 111.0", brevet:85, tb:"mentions 64%", ips:111.0, cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Collège Sidney Bechet", commune:"Antibes · Juan-les-Pins", cat:"public", lv:"c", ages:"11–15", lat:43.5738, lon:7.0925, drive:28,
+  cls:"Bilangue EN-IT · section sportive gymnastics · small (~449 pupils)",
+  res:"Brevet 2025: 93% · 67% mentions · IPS 100.9", brevet:93, tb:"strong value-added (+7)", ips:100.9, cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Collège Pierre Bertone", commune:"Antibes", cat:"public", lv:"c", ages:"11–15", lat:43.5960, lon:7.1010, drive:22,
+  cls:"SEGPA · Latin · ~797 pupils · closest Antibes collège to Roquefort",
+  res:"Brevet 2025: 83% · 64% mentions · IPS 105.1", brevet:83, tb:"mentions 64%", ips:105.1, cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Collège Les Bréguières", commune:"Cagnes-sur-Mer", cat:"public", lv:"c", ages:"11–15", lat:43.6712, lon:7.1438, drive:19,
+  cls:"Bilangue EN-ES · section sportive football · Latin · ~610 pupils",
+  res:"Brevet 2025: 99% · 78% mentions · IPS 102.2", brevet:99, tb:"27.4% mention TB — top value-added", ips:102.2, cost:"Free", url:"https://annuaire-education.fr"},
+ {name:"Collège André Malraux", commune:"Cagnes-sur-Mer", cat:"public", lv:"c", ages:"11–15", lat:43.6790, lon:7.1560, drive:20,
+  cls:"~558 pupils · highest-IPS collège of Cagnes",
+  res:"Brevet 2025: 90% · 72% mentions · IPS 116.5", brevet:90, tb:"mentions 72%", ips:116.5, cost:"Free", url:"https://annuaire-education.fr"},
+ /* ---- PRIVATE SOUS CONTRAT ---- */
+ {name:"École Maria Mater", commune:"Roquefort-les-Pins", cat:"contrat", lv:"mp", ages:"3–11", lat:43.6620, lon:7.0330, drive:4,
+  cls:"Catholic, one class per level; English + German taught; ULIS inclusion unit; the only private school in the village",
+  res:"Sous contrat (state-recognised)", cost:"Not published — est. €600–1,500/yr", est:true, url:"https://www.ecolemariamater.fr"},
+ {name:"Institut Fénelon", commune:"Grasse", cat:"contrat", lv:"mpc", ages:"3–18", lat:43.6620, lon:6.9270, drive:26,
+  cls:"Full French curriculum maternelle→lycée (~2,200 pupils); reinforced-English international stream; EN/DE/ES/IT + Latin",
+  res:"Sous contrat · founded 1919", cost:"Not published — est. €900–1,800/yr", est:true, url:"http://www.institut-fenelon.org"},
+ {name:"Institution du Mont Saint-Jean", commune:"Antibes", cat:"contrat", lv:"mpc", ages:"3–18", lat:43.5850, lon:7.1090, drive:23,
+  cls:"Maternelle→lycée (~511 pupils); EN/IT LV1, DE/ES/IT LV2 · Latin",
+  res:"Sous contrat · main Catholic ensemble in Antibes", cost:"Not published — est. €800–1,700/yr", est:true, url:"https://msjantibes.fr"},
+ {name:"École Sainte-Marie", commune:"Antibes", cat:"contrat", lv:"mp", ages:"3–11", lat:43.5810, lon:7.1250, drive:25,
+  cls:"Catholic primary in the old town; typical feeder to Mont Saint-Jean",
+  res:"Sous contrat", cost:"Not published — est. €600–1,200/yr", est:true, url:"http://www.ecole-ste-marie.com"},
+ {name:"Institut Stanislas", commune:"Cannes", cat:"contrat", lv:"mpc", ages:"3–18", lat:43.5560, lon:7.0100, drive:33,
+  cls:"Historic maternelle→lycée(+prépa) ensemble in central Cannes",
+  res:"Sous contrat", cost:"€340–2,099/yr income-banded (2025–26)", feeNum:945, url:"https://www.stanislas-cannes.com"},
+ {name:"Sainte-Marie de Chavagnes", commune:"Cannes", cat:"contrat", lv:"mpc", ages:"3–18", lat:43.5570, lon:7.0330, drive:33,
+  cls:"Maternelle→lycée; optional International English Programme (€546–573/yr); Erasmus+",
+  res:"Sous contrat since 1879", cost:"€798–1,830/yr income-banded + meals (2025–26)", feeNum:1140, url:"https://www.sainte-marie-cannes.org"},
+ /* ---- INTERNATIONAL ---- */
+ {name:"ICS Côte d'Azur", commune:"Valbonne · Sophia", cat:"intl", lv:"mp", ages:"2–11", lat:43.6160, lon:7.0690, drive:13, star:true,
+  cls:"IB Primary Years Programme, 50:50 bilingual French/English; ~220 pupils, 37+ nationalities; new 2-year-old class for 2026; primary only — no collège",
+  res:"IB World School · Globeducate (ex-EBICA)", cost:"€12,780–16,995/yr + €1,800 reg + €690 app (2026–27)", feeNum:16995, url:"https://www.icscotedazur.com"},
+ {name:"Mougins British International School", commune:"Mougins", cat:"intl", lv:"mpc", ages:"3–18", lat:43.6080, lon:6.9990, drive:24, star:true,
+  cls:"English National Curriculum → IGCSE → A-levels; ~550 pupils; founded 1964 — oldest British school on the Riviera; bus network",
+  res:"COBIS · Cambridge · Pearson Edexcel · ISC", cost:"€15,960–25,600/yr + €3,500 reg + €690 app (2026–27)", feeNum:20580, url:"https://mougins.britishinternationalschool.com"},
+ {name:"International School of Nice (ISN)", commune:"Nice", cat:"intl", lv:"mpc", ages:"3–18", lat:43.6800, lon:7.2100, drive:32, star:true,
+  cls:"IB PYP → IGCSE → IB Diploma; English-medium; ~480 pupils, 65 nationalities; US + European accreditation",
+  res:"IB World since 1990 · MSA (USA)", cost:"€11,700–25,884/yr + reg ≈€3,200–3,500 (2026–27)", feeNum:18840, url:"https://www.isn-nice.com"},
+ {name:"EIB Cagnes — Le Pain de Sucre", commune:"Cagnes-sur-Mer", cat:"intl", lv:"mp", ages:"2–11", lat:43.6742, lon:7.1408, drive:16,
+  cls:"50:50 bilingual FR/EN following both French and English curricula; Cambridge exams; sister schools in Nice & Pégomas; bus + lunch",
+  res:"Cambridge English centre · declared since 1989", cost:"€9,400/yr flat (2026–27)", feeNum:9400, url:"https://eibcagnes.fr"},
+ /* ---- MONTESSORI & ALTERNATIVE ---- */
+ {name:"Les Colibris — Montessori internationale", commune:"Biot · Sophia", cat:"alt", lv:"mpc", ages:"2–15", lat:43.6172, lon:7.0762, drive:15,
+  cls:"Bilingual FR/EN Montessori, toddler → collège (12–15); 8:00–17:50 + holiday club",
+  res:"AMF + ISMM accredited (one of ~14 in France)", cost:"€10,200–11,220/yr + €500 reg (2025–26)", feeNum:10610, url:"https://www.ecole-montessori-colibris.com"},
+ {name:"Les Pouces Verts — Montessori", commune:"Mouans-Sartoux", cat:"alt", lv:"mpc", ages:"2–16", lat:43.6070, lon:6.9630, drive:24,
+  cls:"French Montessori full cycle incl. one of France's few Montessori collèges; organic meals included 3–9",
+  res:"AMF-criteria school, long-established", cost:"€9,340–10,340/yr + €622 first reg (2026–27)", feeNum:10340, url:"https://www.montessori-les-pouces-verts.fr"},
+ {name:"École Montessori d'Antibes (Terre Enfantine)", commune:"Antibes", cat:"alt", lv:"mp", ages:"3–12", lat:43.5680, lon:7.1180, drive:26,
+  cls:"Bilingual Montessori 3–6 and 6–12; forest campus with animals; AMI-trained director; founded 2010",
+  res:"Hors contrat", cost:"On request (−10% 2nd child)", url:"https://www.montessori06.com"},
+ {name:"Little Philo School", commune:"Antibes · Juan-les-Pins", cat:"alt", lv:"mp", ages:"2–11", lat:43.5720, lon:7.1070, drive:26,
+  cls:"50:50 bilingual FR/EN classes with native English teachers; philosophy-flavoured pedagogy; care to 18:00",
+  res:"Hors contrat", cost:"On request (monthly plans)", url:"https://en.little-philo-school.com"},
+ {name:"My School Montessori", commune:"Cagnes-sur-Mer", cat:"alt", lv:"mp", ages:"2–9", lat:43.6580, lon:7.1440, drive:18,
+  cls:"Bilingual Montessori 2–9 with anglophone educator per class; ecology focus; Wednesday/holiday bilingual club",
+  res:"Hors contrat", cost:"≈€7,500/yr (2018 figure — dated)", est:true, feeNum:7500, url:"https://recreanice.fr/my-school-montessori-cagnes-ecole-bilingue-ecologique"},
+ {name:"École La Fontaine", commune:"Cagnes-sur-Mer", cat:"alt", lv:"mp", ages:"3–11", lat:43.6670, lon:7.1520, drive:18,
+  cls:"Montessori/Freinet-inspired; ~145 pupils in 8 small classes; on-site organic kitchen",
+  res:"Hors contrat", cost:"On request", url:"https://ecolelafontaine.com"},
+ {name:"Life Bloom Academy", commune:"Cagnes-sur-Mer", cat:"alt", lv:"c", ages:"11–15", lat:43.6612, lon:7.1508, drive:18,
+  cls:"Project-based alternative collège (+lycée), bilingual afternoons FR/EN; suits profiles incl. gifted children",
+  res:"Hors contrat", cost:"€4,990–8,500/yr income-scaled + €250 reg (2026–27)", feeNum:8160, url:"https://www.lifebloomacademy.com"}
+];
+
+const VILLAGES = [
+ {n:"Roquefort-les-Pins", lat:43.6647, lon:7.0499, d:0,  pop:"7,300",  pm2:"5,650", ch:"Garden commune of villas in pine woodland along the D2085 — the clinic's own village; no dense old core but strong year-round community"},
+ {n:"Le Rouret",          lat:43.6740, lon:7.0106, d:5,  pop:"4,200",  pm2:"5,310", ch:"Small Provençal hillside village next door; quiet, family-oriented, good schools"},
+ {n:"Opio",               lat:43.6693, lon:6.9829, d:8,  pop:"2,400",  pm2:"6,420", ch:"Rural-chic hamlets among olive groves; golf; large-plot villas, maximum quiet"},
+ {n:"La Colle-sur-Loup",  lat:43.6867, lon:7.1046, d:9,  pop:"8,100",  pm2:"6,020", ch:"Lively small town in the Loup valley — antiques, restaurants; best-value 'real high street' nearby"},
+ {n:"Châteauneuf-Grasse", lat:43.6717, lon:6.9722, d:9,  pop:"3,800",  pm2:"6,580", ch:"Perched old village with sea views + the practical Pré-du-Lac crossroads"},
+ {n:"Valbonne",           lat:43.6414, lon:7.0089, d:11, pop:"12,400", pm2:"6,450", ch:"16th-c. arcaded village + Sophia Antipolis; the international family hub, best infrastructure"},
+ {n:"Saint-Paul-de-Vence",lat:43.6969, lon:7.1224, d:12, pop:"3,200",  pm2:"6,740", ch:"Iconic walled artists' village (Fondation Maeght); touristed, prestige pricing"},
+ {n:"Villeneuve-Loubet",  lat:43.6584, lon:7.1220, d:13, pop:"16,700", pm2:"6,440", ch:"Old village on the Loup + Marina Baie des Anges beach strip; downhill neighbour"},
+ {n:"Biot",               lat:43.6288, lon:7.0955, d:16, pop:"10,200", pm2:"5,970", ch:"Perched medieval glassblowers' village between Sophia and the sea"},
+ {n:"Cagnes-sur-Mer",     lat:43.6636, lon:7.1489, d:16, pop:"52,900", pm2:"5,470", ch:"Working seaside town at the foot of the D2085 — A8 access, TER station, Polygone mall"},
+ {n:"Vence",              lat:43.7225, lon:7.1119, d:18, pop:"19,900", pm2:"5,000", ch:"Genuine market town, medieval core, Matisse chapel; fullest services inland, cheaper"},
+ {n:"Tourrettes-sur-Loup",lat:43.7147, lon:7.0592, d:19, pop:"4,100",  pm2:"5,640", ch:"Dramatic perched 'city of violets'; artisan ateliers, more isolated feel"},
+ {n:"Mouans-Sartoux",     lat:43.6211, lon:6.9706, d:20, pop:"10,800", pm2:"5,760", ch:"Flat practical town on the Cannes–Grasse rail line; organic-canteen and book-festival pioneer"},
+ {n:"Grasse",             lat:43.6589, lon:6.9239, d:21, pop:"48,700", pm2:"4,250", ch:"Perfume capital, sub-prefecture; grand but partly faded old town — cheapest of the list"},
+ {n:"Mougins",            lat:43.6008, lon:6.9955, d:24, pop:"19,500", pm2:"6,900", ch:"Gastronomic hilltop village + upscale suburbs; best MTB (Valmasque); Cannes hinterland"},
+ {n:"Antibes",            lat:43.5770, lon:7.1300, d:25, pop:"76,600", pm2:"7,660", ch:"Second town of the 06 — old town, Port Vauban, sandy beaches, TGV station"}
+];
+
+const DESTS = [
+ {n:"A8 motorway (exit 47)", min:11, rush:"15–25", km:8,    r:"D2085 downhill all the way"},
+ {n:"Sophia Antipolis",      min:15, rush:"25–35", km:10,   r:"D3 via Valbonne — school-run congestion 8–9 am"},
+ {n:"Cagnes (Polygone)",     min:15, rush:"25–30", km:9.5,  r:"D2085; mall at the A8 interchange"},
+ {n:"Cagnes TER station",    min:17, rush:"25–30", km:10.5, r:"D2085 → centre; usual park-and-ride"},
+ {n:"Vence",                 min:18, rush:"22–28", km:11,   r:"D2085 → La Colle → D6/D436"},
+ {n:"Villeneuve-Loubet beach",min:18,rush:"25–35", km:11.5, r:"D2085 → D2 → D6007; summer beach traffic"},
+ {n:"Grasse",                min:20, rush:"30–40", km:13,   r:"D2085 west via Le Rouret & Pré-du-Lac"},
+ {n:"Cap 3000 (St-Laurent)", min:20, rush:"30–40", km:14.5, r:"A8 exit 49 or coastal D6007"},
+ {n:"Nice airport (NCE)",    min:25, rush:"40–55", km:22,   r:"D2085 → A8 → exit 50/51"},
+ {n:"Antibes centre & TGV",  min:25, rush:"35–45", km:16,   r:"through Sophia (D35) or A8 44"},
+ {n:"Nice centre",           min:35, rush:"50–70", km:28,   r:"D2085 → A8 → Promenade des Anglais"},
+ {n:"Cannes (Croisette)",    min:35, rush:"50–65", km:26,   r:"D3 → Mougins → A8 42 or pénétrante"},
+ {n:"Monaco",                min:50, rush:"65–90", km:48,   r:"A8 east → A500"}
+];
+
+/* ================= HELPERS ================= */
+const $ = s => document.querySelector(s);
+const tip = $("#tip");
+function showTip(html, ev){ tip.innerHTML = html; tip.style.display = "block"; moveTip(ev); }
+function moveTip(ev){
+  const pad = 14, w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = ev.clientX + pad, y = ev.clientY + pad;
+  if (x + w > innerWidth - 8) x = ev.clientX - w - pad;
+  if (y + h > innerHeight - 8) y = ev.clientY - h - pad;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function hideTip(){ tip.style.display = "none"; }
+const esc = s => (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const LV_LABEL = { m:"Mat", p:"Prim", c:"Coll" };
+function lvText(lv){ return lv.split("").map(l=>LV_LABEL[l]).join(" · "); }
+
+/* ================= STATE & FILTERS ================= */
+const state = { types: new Set(Object.keys(CAT)), levels: new Set(["m","p","c"]), drive: 35, q: "" };
+SCHOOLS.forEach((s,i)=> s.id = "s"+i);
+
+function makeChip(label, on, dotColor){
+  const b = document.createElement("button");
+  b.className = "chip" + (on ? " on" : "");
+  b.innerHTML = (dotColor ? `<span class="dot" style="background:${dotColor}"></span>` : "") + label;
+  return b;
+}
+const typeWrap = $("#f-type");
+Object.entries(CAT).forEach(([k,v])=>{
+  const c = makeChip(v.label, true, v.color);
+  c.onclick = ()=>{ state.types.has(k) ? state.types.delete(k) : state.types.add(k);
+    if (!state.types.size) state.types.add(k);
+    c.classList.toggle("on", state.types.has(k)); render(); };
+  typeWrap.appendChild(c);
+});
+const lvlWrap = $("#f-level");
+[["m","Maternelle"],["p","Primaire"],["c","Collège"]].forEach(([k,label])=>{
+  const c = makeChip(label, true);
+  c.onclick = ()=>{ state.levels.has(k) ? state.levels.delete(k) : state.levels.add(k);
+    if (!state.levels.size) state.levels.add(k);
+    c.classList.toggle("on", state.levels.has(k)); render(); };
+  lvlWrap.appendChild(c);
+});
+$("#f-drive").oninput = e => { state.drive = +e.target.value; $("#f-drive-lbl").textContent = "≤ " + state.drive + " min"; render(); };
+$("#f-q").oninput = e => { state.q = e.target.value.trim().toLowerCase(); render(); };
+
+function visible(s){
+  if (!state.types.has(s.cat)) return false;
+  if (![...s.lv].some(l => state.levels.has(l))) return false;
+  if (s.drive > state.drive) return false;
+  if (state.q && !(s.name + " " + (s.sub||"") + " " + s.commune).toLowerCase().includes(state.q)) return false;
+  return true;
+}
+
+/* ================= MAP ================= */
+const MAP = { lon0: 6.895, lon1: 7.235, lat0: 43.520, lat1: 43.745, w: 1000 };
+MAP.h = 760;
+function px(lon){ return (lon - MAP.lon0) / (MAP.lon1 - MAP.lon0) * MAP.w; }
+function py(lat){ return (MAP.lat1 - lat) / (MAP.lat1 - MAP.lat0) * MAP.h; }
+const PXKM = MAP.w / ((MAP.lon1 - MAP.lon0) * 80.4);   // ≈ px per km horizontally
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent){
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+const svg = $("#map");
+/* note: vertical scale — lat degrees are larger in km than lon·cos, so y uses its own scale; rings drawn as ellipses */
+const PYKM = MAP.h / ((MAP.lat1 - MAP.lat0) * 111);
+
+const GEO = {"coast":[[-51.0,466.4],[-41.7,469.4],[-28.4,467.1],[-19.2,463.3],[-15.4,458.4],[-2.1,450.8],[0.7,458.1],[8.4,461.8],[10.8,469.7],[16.8,473.2],[23.6,481.0],[31.6,481.2],[36.0,486.3],[38.3,492.9],[42.6,495.2],[50.0,495.4],[41.1,508.1],[31.3,513.3],[24.6,526.2],[23.2,532.4],[19.7,535.7],[20.1,540.8],[10.1,552.1],[11.1,558.7],[21.2,570.8],[27.6,573.4],[30.9,578.6],[37.8,582.0],[40.8,599.9],[38.9,611.7],[23.3,608.7],[17.8,611.9],[9.2,624.8],[7.7,633.5],[-21.2,649.4],[-29.5,662.9],[-34.4,678.3],[-34.9,688.4],[-40.1,701.5],[-45.5,708.1],[-46.6,717.9],[-44.7,721.0],[-47.8,729.0],[-40.9,727.1],[-32.9,730.6],[-28.9,728.9],[-25.8,732.9],[-20.2,734.4],[-4.5,733.6],[4.1,735.8],[0.1,738.9],[2.3,749.2],[1.1,764.8],[-5.7,770.8],[-11.4,790.7],[-15.9,792.5],[-19.0,798.7],[-23.2,798.8],[-24.9,806.8],[-30.2,813.7],[-31.7,819.0],[-27.5,819.7],[-24.4,823.9],[-19.4,822.8],[-6.1,824.1],[-1.8,829.6],[7.6,833.3],[12.3,837.0],[13.9,842.2],[26.2,844.2],[30.8,846.7],[41.5,845.2],[51.9,848.9],[51.7,854.9],[48.9,862.8],[55.6,879.4],[55.3,885.8],[74.7,887.5],[82.6,892.5],[88.1,890.9],[97.4,891.4],[113.9,894.9],[107.4,891.7],[106.1,882.8],[110.9,880.4],[128.9,879.4],[138.0,880.5],[140.6,878.8],[149.5,885.1],[150.8,879.4],[157.9,876.7],[157.1,869.8],[153.1,865.9],[155.4,857.4],[159.5,854.5],[160.9,845.6],[165.5,839.6],[174.9,840.5],[180.0,837.8],[176.3,832.5],[177.1,828.4],[182.5,824.9],[175.8,818.9],[175.1,809.9],[169.0,806.5],[163.4,808.1],[152.1,807.6],[139.8,803.8],[137.1,798.4],[132.0,798.4],[126.0,795.6],[125.6,784.9],[127.6,772.2],[134.2,768.4],[136.6,762.6],[137.3,754.8],[149.8,739.0],[162.0,734.2],[162.6,728.5],[156.4,722.8],[176.9,702.0],[201.0,685.1],[226.0,674.0],[256.0,666.7],[290.4,662.4],[320.6,663.3],[334.4,664.8],[344.5,667.9],[347.0,664.4],[346.4,657.0],[357.6,656.1],[358.6,664.0],[363.9,659.1],[378.4,660.5],[387.1,663.4],[404.5,672.7],[403.6,678.3],[409.7,684.8],[405.8,694.7],[413.0,697.8],[416.4,702.3],[414.6,706.6],[419.8,710.3],[423.9,706.1],[422.8,701.9],[426.8,688.4],[429.2,685.4],[436.7,682.5],[451.1,670.3],[469.6,668.4],[478.4,658.8],[484.2,648.5],[491.7,642.8],[502.8,624.8],[513.0,614.8],[528.6,605.2],[538.5,603.8],[556.8,592.7],[591.9,588.1],[602.5,588.3],[616.7,591.3],[641.0,601.1],[645.9,605.2],[653.7,620.3],[660.6,621.3],[666.9,626.6],[667.4,635.1],[665.0,640.8],[668.0,645.8],[666.6,652.2],[659.7,654.6],[652.7,665.8],[657.5,667.7],[662.4,674.0],[659.3,675.9],[658.8,682.7],[665.1,687.1],[671.0,683.3],[664.4,678.1],[671.6,672.3],[688.7,672.4],[690.9,680.6],[709.9,677.0],[716.5,668.7],[713.1,665.9],[717.0,661.6],[722.3,661.4],[725.4,655.7],[735.5,653.1],[732.9,648.7],[726.5,643.2],[721.7,641.7],[711.8,644.9],[704.9,640.0],[707.1,638.3],[706.7,631.6],[718.8,615.1],[714.9,601.0],[722.2,594.7],[719.1,590.7],[704.4,591.6],[702.1,590.1],[696.2,594.0],[690.9,591.8],[683.6,580.8],[676.5,578.2],[682.5,562.3],[686.6,558.5],[689.6,552.8],[689.7,545.7],[685.1,546.6],[680.7,543.8],[670.0,541.5],[667.1,533.6],[670.6,529.3],[680.2,530.2],[689.4,526.6],[691.9,522.6],[689.0,515.0],[680.7,515.7],[678.9,508.1],[680.8,471.9],[691.4,429.7],[711.8,381.4],[718.9,377.0],[717.8,374.0],[711.8,372.8],[712.6,367.0],[721.1,371.6],[721.5,367.6],[728.6,354.9],[733.1,349.2],[738.7,348.5],[737.2,343.5],[740.6,337.2],[753.1,323.4],[770.5,309.1],[802.0,295.9],[811.6,296.8],[813.5,300.6],[825.5,302.1],[837.0,301.2],[857.5,295.7],[881.0,294.1],[893.1,300.7],[898.3,310.7],[905.5,316.5],[904.4,322.1],[894.7,329.7],[895.2,333.5],[899.2,337.1],[916.1,335.6],[921.1,329.3],[931.2,329.9],[935.3,326.2],[931.1,321.4],[936.5,311.3],[950.3,305.3],[951.2,300.5],[959.7,294.9],[962.9,296.1],[971.4,289.1],[973.2,279.5],[986.2,268.7],[982.3,256.9],[984.5,246.5],[983.4,241.8],[988.7,235.8],[990.0,230.7],[987.2,224.5],[993.5,214.6],[1016.6,193.3],[1038.1,182.2]],"communes":[{"n":"Gatti\u00e8res","r":[[[694.3,-152.8],[700.0,-154.8],[703.9,-150.5],[703.9,-145.0],[707.6,-137.7],[711.0,-137.8],[716.5,-132.4],[735.3,-120.8],[740.8,-123.4],[747.7,-113.1],[772.3,-100.4],[784.6,-98.0],[785.5,-95.4],[799.0,-95.0],[807.4,-92.1],[815.4,-94.7],[820.0,-99.3],[832.4,-101.0],[837.5,-96.8],[844.0,-96.8],[850.1,-93.9],[858.2,-94.4],[860.9,-87.6],[867.2,-86.3],[867.2,-76.2],[869.3,-72.1],[874.5,-70.6],[893.7,-75.9],[908.2,-66.8],[890.3,-49.7],[882.6,-37.6],[853.4,-5.7],[802.6,-29.6],[796.7,-21.4],[777.1,-34.4],[772.1,-35.0],[761.6,-44.1],[759.2,-57.7],[744.6,-66.3],[739.7,-79.2],[710.9,-110.1],[711.2,-116.5],[706.9,-117.9],[703.5,-123.9],[700.7,-144.3],[694.3,-152.8]]]},{"n":"Nice","r":[[[851.1,88.9],[843.8,27.0],[849.4,1.6],[853.4,-5.7],[882.6,-37.6],[890.3,-49.7],[895.3,-53.5],[917.3,-42.8],[926.4,-42.2],[931.0,-38.9],[940.5,-37.2],[945.5,-28.0],[945.5,-21.6],[950.8,-22.7],[956.1,-20.0],[955.6,8.1],[962.2,12.6],[966.7,6.4],[983.9,-1.9],[991.8,-1.6],[1011.8,-20.3],[1021.3,-17.5],[1021.9,-21.3],[1040.1,-22.2],[1040.1,-9.4],[1043.5,-5.9],[1051.2,-3.5],[1051.1,1.9],[1047.5,9.2],[1048.5,16.1],[1060.6,10.6],[1067.2,10.3],[1080.6,-1.5],[1084.4,5.3],[1095.6,2.3],[1107.2,4.1],[1111.2,0.1],[1115.2,0.2],[1120.0,6.9],[1125.6,8.7],[1130.9,6.6],[1132.2,9.5],[1130.1,16.8],[1137.7,28.4],[1136.2,30.8],[1149.7,37.5],[1163.9,34.3],[1176.3,29.0],[1178.7,23.3],[1187.5,18.4],[1181.3,8.3],[1177.1,-4.3],[1176.7,-11.7],[1179.8,-16.4],[1182.9,-31.4],[1181.1,-33.9],[1180.1,-46.3],[1182.7,-43.9],[1185.2,-36.0],[1197.9,-29.6],[1212.3,-28.5],[1214.5,-20.0],[1226.9,-1.8],[1219.6,3.9],[1219.9,14.2],[1213.5,26.7],[1208.1,31.2],[1200.9,34.0],[1170.1,38.3],[1169.0,40.8],[1173.8,47.1],[1186.4,54.5],[1192.9,70.7],[1197.8,78.9],[1201.1,80.7],[1206.5,76.7],[1208.2,64.0],[1220.6,67.5],[1229.7,74.9],[1239.4,76.7],[1252.5,72.8],[1260.1,74.5],[1249.5,75.7],[1234.2,83.2],[1228.1,93.7],[1230.9,100.0],[1229.5,103.0],[1219.3,105.1],[1209.8,112.4],[1210.6,118.2],[1207.3,121.7],[1197.5,125.3],[1193.4,147.9],[1207.3,171.0],[1212.8,177.4],[1216.9,177.8],[1213.4,194.5],[1208.7,199.7],[1176.2,199.6],[1172.4,197.2],[1173.9,189.9],[1170.7,183.1],[1164.9,181.2],[1161.3,175.7],[1147.8,172.9],[1149.0,159.6],[1144.6,159.4],[1144.7,168.2],[1142.0,170.8],[1146.9,176.5],[1134.5,177.0],[1128.8,175.5],[1123.1,171.1],[1080.7,171.4],[1038.1,182.2],[1025.9,187.9],[1008.6,199.3],[993.5,214.6],[987.2,224.5],[990.0,230.7],[988.7,235.8],[983.4,241.8],[984.5,246.5],[982.3,256.9],[986.2,268.7],[973.2,279.5],[971.4,289.1],[962.9,296.1],[959.7,294.9],[951.2,300.5],[950.3,305.3],[936.5,311.3],[931.1,321.4],[935.3,326.2],[931.2,329.9],[921.1,329.3],[916.1,335.6],[899.2,337.1],[894.7,329.7],[904.4,322.1],[905.5,316.5],[898.3,310.7],[894.9,304.5],[897.1,301.5],[898.4,291.3],[896.9,283.8],[862.9,189.4],[859.1,170.0],[851.1,88.9]]]},{"n":"Saint-Jeannet","r":[[[711.5,38.0],[708.2,36.4],[704.1,29.8],[706.0,22.6],[709.2,21.2],[709.4,13.1],[707.2,5.6],[689.5,-16.1],[687.2,-22.0],[688.2,-25.8],[675.9,-32.8],[673.6,-36.5],[659.1,-38.6],[656.5,-40.9],[657.7,-50.0],[653.4,-56.9],[648.1,-56.3],[638.5,-60.5],[641.1,-65.8],[639.1,-78.8],[642.1,-81.5],[636.4,-85.3],[633.6,-90.6],[635.2,-116.2],[652.9,-127.4],[663.3,-127.0],[678.8,-134.7],[687.3,-141.0],[694.3,-152.8],[700.7,-144.3],[703.5,-123.9],[706.9,-117.9],[711.2,-116.5],[710.9,-110.1],[739.7,-79.2],[744.6,-66.3],[759.2,-57.7],[761.6,-44.1],[772.1,-35.0],[777.1,-34.4],[796.7,-21.4],[802.6,-29.6],[853.4,-5.7],[846.4,12.1],[821.7,9.3],[815.0,15.0],[794.8,13.7],[775.0,22.6],[767.5,19.9],[759.6,12.8],[728.8,24.0],[713.9,33.9],[711.5,38.0]]]},{"n":"Saint-Laurent-du-Var","r":[[[894.9,304.5],[893.1,300.7],[881.0,294.1],[857.5,295.7],[837.0,301.2],[833.1,300.5],[830.6,281.7],[834.9,279.1],[836.9,272.3],[835.8,261.0],[824.7,244.8],[824.1,238.2],[833.0,226.4],[830.1,220.1],[834.7,212.7],[835.8,204.6],[828.2,200.8],[826.7,178.4],[814.1,173.1],[791.1,175.7],[790.9,169.4],[798.4,168.1],[795.6,159.7],[803.5,159.7],[803.4,148.1],[799.6,135.6],[799.4,125.3],[807.9,115.4],[809.5,107.0],[805.7,100.6],[809.6,95.7],[818.0,91.8],[851.1,88.9],[859.1,170.0],[862.9,189.4],[896.9,283.8],[898.4,291.3],[897.1,301.5],[894.9,304.5]]]},{"n":"Tourrettes-sur-Loup","r":[[[414.9,151.1],[409.3,149.5],[392.1,151.9],[386.5,157.0],[380.4,158.8],[353.2,159.6],[348.0,162.0],[336.1,160.1],[330.1,161.4],[324.8,158.1],[321.1,151.4],[311.7,150.5],[307.9,144.2],[309.1,139.7],[304.4,130.7],[300.1,129.7],[295.1,122.6],[290.7,123.3],[283.4,111.5],[282.0,92.0],[285.4,86.1],[287.6,72.3],[291.4,69.1],[295.8,61.3],[296.5,55.7],[303.0,43.9],[321.8,47.3],[331.8,53.2],[357.3,43.9],[373.6,43.6],[384.9,48.9],[389.6,32.1],[390.0,19.6],[421.6,11.9],[457.7,-9.6],[461.7,-5.8],[465.3,2.6],[463.5,6.9],[473.6,11.1],[479.1,17.9],[483.3,14.6],[506.3,19.3],[502.1,24.3],[506.1,31.9],[511.1,33.3],[520.7,50.8],[533.7,60.1],[541.5,69.6],[541.7,98.7],[543.8,107.8],[540.0,116.7],[539.8,128.0],[542.9,134.2],[539.3,142.9],[531.0,152.1],[530.2,156.3],[534.8,177.0],[522.6,189.4],[516.3,191.3],[508.5,187.8],[505.4,191.7],[502.8,174.5],[489.9,173.9],[489.6,169.3],[493.9,168.1],[494.1,163.4],[487.8,161.6],[484.7,164.5],[474.6,161.3],[467.4,164.9],[446.0,158.4],[437.9,154.0],[428.9,154.4],[420.7,151.0],[414.9,151.1]]]},{"n":"Vence","r":[[[635.2,-116.2],[633.6,-90.6],[636.4,-85.3],[642.1,-81.5],[639.1,-78.8],[641.1,-65.8],[638.5,-60.5],[648.1,-56.3],[653.4,-56.9],[657.7,-50.0],[656.5,-40.9],[659.1,-38.6],[673.6,-36.5],[675.9,-32.8],[688.2,-25.8],[687.2,-22.0],[689.5,-16.1],[707.2,5.6],[709.4,13.1],[709.2,21.2],[706.0,22.6],[704.1,29.8],[708.2,36.4],[711.5,38.0],[710.6,46.4],[713.8,50.7],[712.1,63.2],[715.3,70.5],[723.4,78.0],[724.6,70.6],[728.9,64.7],[733.8,62.6],[741.6,68.6],[738.4,74.1],[738.1,86.4],[728.9,95.6],[727.9,104.6],[729.7,109.7],[726.1,124.8],[730.6,125.2],[729.6,131.3],[721.7,138.2],[727.4,140.1],[729.2,146.1],[726.2,151.8],[719.6,157.3],[723.1,160.7],[722.7,166.2],[725.2,173.3],[729.4,176.2],[730.1,180.3],[703.6,169.6],[698.8,160.3],[698.9,153.7],[695.0,148.7],[691.7,138.1],[684.6,130.6],[669.6,123.0],[665.8,114.7],[661.6,110.7],[654.4,113.4],[648.7,110.7],[634.0,111.8],[631.6,115.6],[617.6,124.5],[603.8,131.6],[593.9,132.1],[584.6,140.8],[569.1,145.6],[560.2,140.9],[547.7,139.0],[539.8,128.0],[540.0,116.7],[543.8,107.8],[541.7,98.7],[541.5,69.6],[533.7,60.1],[520.7,50.8],[511.1,33.3],[506.1,31.9],[502.1,24.3],[506.3,19.3],[483.3,14.6],[479.1,17.9],[473.6,11.1],[463.5,6.9],[465.3,2.6],[461.7,-5.8],[465.6,-11.8],[464.4,-15.8],[482.4,-27.9],[492.1,-28.8],[507.9,-39.5],[515.5,-47.2],[529.3,-55.5],[530.1,-61.4],[526.4,-72.1],[523.3,-74.1],[524.0,-79.7],[541.8,-98.8],[555.0,-102.3],[566.1,-107.8],[569.4,-122.0],[581.6,-120.5],[597.6,-125.8],[623.6,-127.9],[633.2,-121.1],[635.2,-116.2]]]},{"n":"Antibes","r":[[[507.6,467.5],[502.9,464.7],[506.4,460.8],[507.3,455.8],[515.3,448.6],[541.0,456.3],[546.9,456.5],[546.7,464.1],[557.8,462.3],[559.7,455.7],[564.9,456.9],[567.9,452.5],[579.6,455.0],[589.6,444.1],[599.2,438.5],[604.2,437.6],[608.9,432.1],[623.4,432.5],[632.7,437.3],[635.8,433.3],[640.1,435.4],[647.7,428.4],[648.9,419.8],[653.6,417.8],[655.9,413.6],[665.5,421.4],[678.9,424.4],[691.4,429.7],[680.8,471.9],[678.9,508.1],[680.7,515.7],[689.0,515.0],[691.9,522.6],[689.4,526.6],[680.2,530.2],[670.6,529.3],[667.1,533.6],[670.0,541.5],[680.7,543.8],[685.1,546.6],[689.7,545.7],[689.6,552.8],[682.5,562.3],[676.5,578.2],[683.6,580.8],[690.9,591.8],[696.2,594.0],[704.4,591.6],[719.1,590.7],[722.2,594.7],[714.9,601.0],[718.8,615.1],[706.7,631.6],[707.1,638.3],[711.8,644.9],[721.7,641.7],[726.5,643.2],[735.5,653.1],[725.4,655.7],[722.3,661.4],[717.0,661.6],[713.1,665.9],[716.5,668.7],[709.9,677.0],[690.9,680.6],[688.7,672.4],[671.6,672.3],[664.4,678.1],[671.0,683.3],[665.1,687.1],[658.8,682.7],[659.3,675.9],[662.4,674.0],[657.5,667.7],[652.7,665.8],[659.7,654.6],[666.6,652.2],[668.0,645.8],[665.0,640.8],[667.4,635.1],[666.9,626.6],[660.6,621.3],[653.7,620.3],[645.9,605.2],[641.0,601.1],[616.7,591.3],[602.5,588.3],[563.2,591.7],[566.0,582.7],[554.9,575.2],[549.1,573.7],[545.2,567.9],[543.4,557.0],[536.4,549.7],[530.6,547.1],[526.2,541.1],[521.5,541.1],[509.6,535.5],[504.5,531.0],[501.4,514.5],[502.0,492.7],[498.2,482.7],[498.5,478.4],[507.7,473.3],[507.6,467.5]]]},{"n":"Auribeau-sur-Siagne","r":[[[50.0,495.4],[42.6,495.2],[38.3,492.9],[36.0,486.3],[31.6,481.2],[23.6,481.0],[16.8,473.2],[10.8,469.7],[8.4,461.8],[0.7,458.1],[-1.6,452.6],[5.7,434.3],[18.9,427.5],[22.0,410.7],[26.9,411.6],[36.4,409.2],[42.6,414.5],[50.4,410.2],[55.3,410.4],[64.6,404.6],[71.8,411.5],[71.5,415.4],[82.1,427.6],[86.8,424.8],[93.5,425.3],[100.4,432.3],[102.3,438.8],[101.2,444.5],[87.8,455.3],[69.1,483.6],[67.5,489.9],[56.9,503.1],[54.0,495.6],[50.0,495.4]]]},{"n":"Biot","r":[[[462.7,350.4],[489.7,348.8],[507.4,351.2],[533.8,349.7],[552.1,343.9],[555.8,345.7],[572.7,334.1],[576.8,335.5],[596.6,331.4],[617.5,347.8],[622.1,359.3],[638.4,375.4],[637.7,394.7],[655.9,413.6],[653.6,417.8],[648.9,419.8],[647.7,428.4],[640.1,435.4],[635.8,433.3],[632.7,437.3],[623.4,432.5],[608.9,432.1],[604.2,437.6],[599.2,438.5],[589.6,444.1],[579.6,455.0],[567.9,452.5],[564.9,456.9],[559.7,455.7],[557.8,462.3],[546.7,464.1],[546.9,456.5],[541.0,456.3],[515.3,448.6],[499.4,439.0],[492.2,439.9],[476.8,432.1],[479.4,421.5],[470.3,412.8],[470.9,404.7],[467.7,401.0],[471.8,381.0],[469.3,377.1],[460.5,372.1],[456.0,372.0],[445.8,363.2],[462.7,350.4]]]},{"n":"Cagnes-sur-Mer","r":[[[663.5,251.4],[664.1,245.0],[699.6,237.5],[696.8,230.3],[696.1,221.4],[705.1,215.8],[698.8,212.3],[702.9,205.0],[723.0,187.7],[717.5,184.4],[730.1,180.3],[729.4,176.2],[725.2,173.3],[722.7,166.2],[723.1,160.7],[719.6,157.3],[726.2,151.8],[751.4,153.5],[764.9,171.1],[774.5,174.8],[791.1,175.7],[814.1,173.1],[826.7,178.4],[828.2,200.8],[835.8,204.6],[834.7,212.7],[830.1,220.1],[833.0,226.4],[824.1,238.2],[824.7,244.8],[835.8,261.0],[836.9,272.3],[834.9,279.1],[830.6,281.7],[833.1,300.5],[825.5,302.1],[813.5,300.6],[811.6,296.8],[802.0,295.9],[770.5,309.1],[753.1,323.4],[740.6,337.2],[736.7,348.4],[721.7,331.6],[713.2,327.0],[709.5,322.4],[700.7,323.5],[701.4,318.1],[692.9,314.8],[690.5,310.7],[701.6,297.1],[687.9,287.4],[672.2,271.0],[663.5,251.4]]]},{"n":"Cannes","r":[[[200.5,578.6],[203.6,578.7],[215.1,589.6],[220.5,598.1],[204.5,603.6],[206.3,621.0],[213.2,622.8],[221.1,616.7],[227.6,616.0],[229.6,618.5],[246.5,618.7],[251.8,610.8],[261.6,603.1],[293.6,603.2],[299.0,601.0],[304.4,606.8],[324.0,594.6],[329.7,601.8],[340.6,606.6],[366.4,608.5],[378.4,598.4],[389.3,593.7],[412.2,594.8],[417.5,600.1],[449.3,613.2],[449.1,625.8],[447.0,631.0],[455.3,650.6],[465.5,655.9],[478.8,657.6],[469.6,668.4],[451.1,670.3],[436.7,682.5],[429.2,685.4],[422.8,701.9],[423.9,706.1],[419.8,710.3],[414.6,706.6],[416.4,702.3],[413.0,697.8],[405.8,694.7],[409.7,684.8],[403.6,678.3],[404.5,672.7],[378.4,660.5],[363.9,659.1],[358.6,664.0],[357.6,656.1],[346.4,657.0],[347.0,664.4],[344.5,667.9],[320.6,663.3],[290.4,662.4],[256.0,666.7],[226.0,674.0],[201.0,685.1],[188.3,693.1],[166.4,712.3],[165.9,705.0],[170.6,696.1],[178.7,690.8],[178.7,686.3],[183.2,681.6],[183.1,677.0],[178.3,676.5],[170.4,679.8],[160.7,677.5],[162.1,665.1],[165.3,663.1],[166.5,656.8],[175.4,659.6],[177.9,657.5],[177.3,650.2],[181.2,645.9],[183.4,639.0],[174.2,637.2],[174.1,630.2],[170.7,620.5],[175.9,619.0],[178.6,612.1],[168.9,604.7],[167.3,600.5],[157.0,599.9],[146.4,590.8],[145.8,587.3],[180.1,575.5],[200.5,578.6]],[[506.2,781.4],[504.9,777.6],[488.7,773.9],[486.0,776.1],[453.9,774.1],[450.3,775.7],[436.6,774.6],[414.0,768.5],[401.7,756.5],[403.6,748.4],[418.2,754.9],[426.2,753.1],[438.3,746.1],[451.0,747.3],[465.5,756.7],[488.4,760.2],[495.9,759.7],[502.3,764.7],[517.3,768.9],[514.0,773.9],[508.9,773.8],[506.2,781.4]],[[449.5,812.4],[447.6,809.7],[427.4,807.5],[417.9,804.6],[417.9,798.8],[447.9,795.7],[460.9,797.3],[471.9,801.1],[469.1,804.8],[457.7,806.1],[449.5,812.4]]]},{"n":"Ch\u00e2teauneuf-Grasse","r":[[[275.1,350.8],[266.4,346.1],[259.9,345.3],[253.4,340.5],[243.9,339.6],[240.0,334.8],[226.6,327.8],[222.1,315.4],[224.2,309.0],[206.8,293.6],[199.6,283.5],[201.9,274.4],[195.4,265.4],[195.4,260.1],[188.7,246.7],[194.7,242.3],[204.8,239.4],[219.4,222.4],[218.6,215.1],[211.2,208.9],[212.0,205.9],[191.7,198.1],[219.0,194.6],[222.2,197.7],[229.6,198.7],[232.6,203.2],[246.6,209.2],[256.3,210.3],[272.2,201.0],[287.4,200.0],[292.7,208.2],[305.4,215.7],[311.8,223.3],[302.9,228.2],[289.2,230.3],[287.6,251.7],[289.7,255.4],[285.9,255.1],[269.0,245.3],[266.3,248.2],[255.6,244.8],[252.4,248.8],[247.2,246.5],[244.5,251.8],[238.4,256.5],[236.4,263.1],[245.4,278.6],[258.4,280.7],[261.1,279.5],[265.7,286.6],[275.4,293.7],[275.0,296.8],[280.0,301.6],[285.4,311.1],[291.1,315.9],[298.6,329.5],[310.3,341.7],[312.7,351.8],[306.0,351.7],[302.1,355.1],[282.6,354.8],[275.1,350.8]]]},{"n":"Grasse","r":[[[101.2,444.5],[102.3,438.8],[100.4,432.3],[93.5,425.3],[86.8,424.8],[82.1,427.6],[71.5,415.4],[71.8,411.5],[64.6,404.6],[55.3,410.4],[50.4,410.2],[42.6,414.5],[36.4,409.2],[26.9,411.6],[18.2,410.8],[13.1,405.8],[13.6,401.1],[10.1,398.3],[3.1,402.7],[-5.3,391.0],[-0.3,384.5],[-4.8,372.9],[-0.3,364.1],[-1.1,358.6],[-5.2,351.4],[-3.7,322.9],[-6.9,315.0],[-5.0,304.7],[1.8,298.2],[-3.0,288.3],[-1.1,283.1],[-6.6,282.1],[-16.9,273.7],[-22.3,263.9],[-25.9,261.7],[-18.9,245.9],[-14.7,243.8],[-9.3,235.4],[-0.6,238.2],[9.0,245.1],[11.9,241.5],[11.0,233.3],[34.3,229.0],[48.5,217.0],[59.1,214.6],[62.6,210.1],[60.3,206.6],[62.4,202.2],[62.7,190.3],[52.8,179.6],[49.4,178.3],[46.3,172.2],[32.4,166.9],[42.0,162.7],[38.1,156.5],[42.8,158.8],[76.6,161.0],[80.2,165.4],[85.6,168.2],[95.5,165.1],[107.6,165.5],[126.3,170.9],[133.9,177.8],[145.7,177.1],[155.4,179.5],[157.9,183.7],[189.4,194.7],[191.7,198.1],[212.0,205.9],[211.2,208.9],[218.6,215.1],[219.4,222.4],[204.8,239.4],[194.7,242.3],[188.7,246.7],[195.4,260.1],[195.4,265.4],[201.9,274.4],[199.6,283.5],[206.8,293.6],[224.2,309.0],[222.1,315.4],[226.6,327.8],[240.0,334.8],[243.9,339.6],[253.4,340.5],[259.9,345.3],[266.4,346.1],[275.1,350.8],[263.3,351.2],[259.1,353.9],[250.3,354.7],[248.5,359.9],[240.7,369.7],[240.9,372.2],[231.8,375.8],[225.9,380.6],[211.4,381.3],[208.6,384.4],[208.4,393.5],[211.4,402.8],[208.9,408.4],[202.0,407.5],[180.9,398.9],[161.2,400.9],[138.1,400.4],[127.1,406.3],[121.1,412.0],[110.9,427.5],[112.5,435.7],[115.2,437.3],[101.2,444.5]]]},{"n":"Mandelieu-la-Napoule","r":[[[-31.7,819.0],[-30.2,813.7],[-24.9,806.8],[-23.2,798.8],[-19.0,798.7],[-15.9,792.5],[-11.4,790.7],[-5.7,770.8],[1.1,764.8],[2.3,749.2],[0.1,738.9],[4.1,735.8],[-4.5,733.6],[-20.2,734.4],[-25.8,732.9],[-28.9,728.9],[-32.9,730.6],[-40.9,727.1],[-47.8,729.0],[-44.7,721.0],[-46.6,717.9],[-45.5,708.1],[-40.1,701.5],[-34.9,688.4],[-34.4,678.3],[-29.5,662.9],[-21.2,649.4],[7.7,633.5],[9.2,624.8],[17.8,611.9],[23.3,608.7],[34.2,610.9],[52.1,619.2],[61.3,615.2],[70.6,603.9],[85.8,592.4],[89.4,587.2],[112.4,587.1],[135.1,590.9],[137.5,588.3],[145.8,587.3],[146.4,590.8],[157.0,599.9],[167.3,600.5],[168.9,604.7],[178.6,612.1],[175.9,619.0],[170.7,620.5],[174.1,630.2],[174.2,637.2],[183.4,639.0],[181.2,645.9],[177.3,650.2],[177.9,657.5],[175.4,659.6],[166.5,656.8],[165.3,663.1],[162.1,665.1],[160.7,677.5],[170.4,679.8],[178.3,676.5],[183.1,677.0],[183.2,681.6],[178.7,686.3],[178.7,690.8],[170.6,696.1],[165.9,705.0],[166.4,712.3],[156.4,722.8],[162.6,728.5],[162.0,734.2],[149.8,739.0],[137.3,754.8],[134.2,768.4],[127.6,772.2],[120.2,768.0],[108.4,767.0],[62.9,780.4],[55.9,788.9],[59.3,798.8],[49.5,808.7],[39.5,828.1],[31.7,834.9],[26.2,844.2],[13.9,842.2],[12.3,837.0],[-1.8,829.6],[-6.1,824.1],[-19.4,822.8],[-24.4,823.9],[-27.5,819.7],[-31.7,819.0]]]},{"n":"Mouans-Sartoux","r":[[[115.2,437.3],[112.5,435.7],[110.9,427.5],[121.1,412.0],[127.1,406.3],[138.1,400.4],[161.2,400.9],[180.9,398.9],[202.0,407.5],[208.9,408.4],[211.4,402.8],[208.4,393.5],[208.6,384.4],[211.4,381.3],[225.9,380.6],[231.8,375.8],[240.9,372.2],[240.7,369.7],[248.5,359.9],[250.3,354.7],[259.1,353.9],[263.3,351.2],[275.1,350.8],[278.8,356.3],[274.3,369.8],[286.6,397.5],[306.4,406.9],[302.1,419.7],[303.4,424.1],[317.4,430.6],[309.1,429.3],[303.0,435.4],[300.6,442.6],[279.1,439.0],[265.9,442.2],[258.9,446.0],[246.2,448.2],[240.5,448.0],[227.8,428.2],[221.4,442.5],[193.3,475.5],[175.3,490.5],[159.9,497.2],[143.5,501.3],[141.8,491.6],[116.2,470.4],[121.1,446.5],[119.1,440.5],[115.2,437.3]]]},{"n":"Mougins","r":[[[200.5,578.6],[196.7,557.4],[202.1,555.0],[200.6,550.4],[207.4,544.1],[200.7,537.9],[208.9,533.3],[204.8,526.7],[207.7,507.7],[206.1,498.2],[198.9,493.7],[175.3,490.5],[193.3,475.5],[221.4,442.5],[227.8,428.2],[240.5,448.0],[258.9,446.0],[265.9,442.2],[279.1,439.0],[300.6,442.6],[303.0,435.4],[309.1,429.3],[327.6,433.1],[365.4,448.1],[374.2,445.1],[416.6,451.8],[419.0,450.3],[432.5,458.2],[456.2,482.0],[468.7,486.1],[469.1,488.8],[461.5,495.8],[457.3,505.9],[440.4,508.3],[438.3,523.6],[434.1,534.2],[424.9,541.4],[424.2,547.6],[419.3,553.4],[401.9,555.7],[391.0,552.6],[387.2,544.9],[380.3,541.5],[377.0,536.2],[364.4,529.1],[354.1,542.9],[355.0,559.2],[347.0,553.8],[338.4,551.4],[335.4,555.1],[316.8,560.0],[304.6,557.6],[289.8,560.7],[279.7,572.4],[261.7,577.1],[259.0,579.5],[250.1,581.0],[244.6,579.6],[230.1,590.9],[226.6,597.6],[220.5,598.1],[215.1,589.6],[203.6,578.7],[200.5,578.6]]]},{"n":"Opio","r":[[[310.9,347.0],[310.3,341.7],[298.6,329.5],[291.1,315.9],[285.4,311.1],[280.0,301.6],[275.0,296.8],[275.4,293.7],[265.7,286.6],[261.1,279.5],[258.4,280.7],[245.4,278.6],[240.6,272.0],[236.4,263.1],[238.4,256.5],[244.5,251.8],[247.2,246.5],[252.4,248.8],[255.6,244.8],[266.3,248.2],[269.0,245.3],[285.9,255.1],[298.6,254.2],[307.8,257.4],[319.2,255.3],[323.5,263.7],[327.5,267.2],[353.3,274.1],[358.6,272.1],[366.9,272.8],[375.4,268.0],[390.4,267.7],[394.2,273.3],[394.1,279.8],[399.6,278.9],[417.2,286.3],[421.2,290.7],[426.9,291.0],[436.1,307.6],[436.4,315.9],[425.0,314.7],[421.0,317.1],[399.3,319.1],[388.0,317.5],[380.7,319.7],[376.6,323.0],[371.4,332.4],[353.6,342.0],[336.1,328.4],[331.0,332.4],[329.9,347.2],[310.9,347.0]]]},{"n":"P\u00e9gomas","r":[[[34.2,610.9],[38.9,611.7],[40.8,599.9],[37.8,582.0],[30.9,578.6],[27.6,573.4],[21.2,570.8],[11.1,558.7],[10.1,552.1],[20.1,540.8],[19.7,535.7],[23.2,532.4],[31.3,513.3],[41.1,508.1],[50.0,495.4],[54.0,495.6],[56.9,503.1],[67.5,489.9],[69.1,483.6],[87.8,455.3],[101.2,444.5],[115.2,437.3],[119.1,440.5],[121.1,446.5],[116.2,470.4],[141.8,491.6],[144.8,508.9],[132.4,512.5],[122.2,528.2],[102.0,547.3],[113.9,557.5],[112.8,562.9],[120.1,564.5],[121.1,571.5],[127.0,570.7],[132.3,576.5],[128.7,583.1],[137.5,588.3],[135.1,590.9],[112.4,587.1],[89.4,587.2],[85.8,592.4],[70.6,603.9],[61.3,615.2],[52.1,619.2],[34.2,610.9]]]},{"n":"Roquefort-les-Pins","r":[[[381.9,171.8],[398.2,159.6],[399.3,154.8],[414.9,151.1],[420.7,151.0],[428.9,154.4],[437.9,154.0],[446.0,158.4],[467.4,164.9],[474.6,161.3],[484.7,164.5],[487.8,161.6],[494.1,163.4],[493.9,168.1],[489.6,169.3],[489.9,173.9],[502.8,174.5],[505.4,191.7],[508.5,187.8],[516.3,191.3],[522.6,189.4],[519.3,197.7],[527.6,203.4],[530.0,209.5],[536.0,212.3],[541.5,217.9],[547.4,218.4],[550.9,221.9],[555.8,219.4],[558.2,213.7],[565.2,214.5],[570.0,217.0],[579.9,229.7],[588.5,235.1],[583.4,235.2],[576.6,232.0],[569.8,235.9],[562.4,236.7],[560.7,245.0],[564.0,251.0],[563.5,257.7],[552.0,260.3],[545.4,264.2],[533.9,282.2],[532.4,307.4],[528.5,316.4],[519.1,326.9],[509.3,328.4],[504.0,327.1],[496.7,333.6],[481.3,328.0],[469.1,330.0],[463.4,333.6],[460.5,339.8],[447.9,326.8],[437.5,319.9],[436.1,307.6],[426.9,291.0],[421.2,290.7],[417.2,286.3],[399.6,278.9],[394.1,279.8],[394.2,273.3],[391.6,268.8],[393.1,266.1],[379.1,225.7],[380.5,212.2],[371.9,207.9],[364.2,194.1],[363.9,182.9],[368.3,177.3],[381.9,171.8]]]},{"n":"Saint-Paul-de-Vence","r":[[[590.2,136.0],[593.9,132.1],[603.8,131.6],[617.6,124.5],[631.6,115.6],[634.0,111.8],[648.7,110.7],[654.4,113.4],[661.6,110.7],[665.8,114.7],[669.6,123.0],[684.6,130.6],[691.7,138.1],[695.0,148.7],[698.9,153.7],[698.8,160.3],[703.6,169.6],[730.1,180.3],[717.5,184.4],[723.0,187.7],[702.9,205.0],[698.8,212.3],[705.1,215.8],[696.1,221.4],[696.8,230.3],[699.6,237.5],[678.6,242.5],[672.8,242.2],[668.2,228.6],[664.6,225.9],[653.3,206.6],[645.7,201.0],[645.1,196.3],[639.5,186.3],[647.5,180.5],[642.9,173.0],[635.5,166.3],[626.4,164.1],[614.3,152.2],[606.0,149.3],[590.2,136.0]]]},{"n":"Valbonne","r":[[[275.1,350.8],[282.6,354.8],[302.1,355.1],[306.0,351.7],[312.7,351.8],[310.9,347.0],[329.9,347.2],[331.0,332.4],[336.1,328.4],[353.6,342.0],[371.4,332.4],[376.6,323.0],[380.7,319.7],[388.0,317.5],[399.3,319.1],[421.0,317.1],[425.0,314.7],[436.4,315.9],[437.5,319.9],[447.9,326.8],[460.5,339.8],[462.7,350.4],[445.8,363.2],[456.0,372.0],[460.5,372.1],[469.3,377.1],[471.8,381.0],[467.7,401.0],[470.9,404.7],[470.3,412.8],[479.4,421.5],[476.8,432.1],[492.2,439.9],[499.4,439.0],[515.3,448.6],[507.3,455.8],[506.4,460.8],[502.9,464.7],[507.6,467.5],[493.3,475.9],[489.1,477.2],[481.7,475.9],[479.4,479.7],[472.5,481.4],[468.7,486.1],[456.2,482.0],[432.5,458.2],[419.0,450.3],[416.6,451.8],[374.2,445.1],[365.4,448.1],[303.4,424.1],[302.1,419.7],[306.4,406.9],[286.6,397.5],[274.3,369.8],[278.8,356.3],[275.1,350.8]]]},{"n":"Vallauris","r":[[[412.2,594.8],[408.3,582.6],[408.2,574.3],[405.3,571.2],[407.4,567.0],[419.5,557.9],[419.3,553.4],[424.2,547.6],[424.9,541.4],[434.1,534.2],[438.3,523.6],[440.4,508.3],[457.3,505.9],[461.5,495.8],[469.1,488.8],[468.7,486.1],[472.5,481.4],[479.4,479.7],[481.7,475.9],[489.1,477.2],[493.3,475.9],[507.6,467.5],[507.7,473.3],[498.5,478.4],[498.2,482.7],[502.0,492.7],[501.4,514.5],[504.5,531.0],[509.6,535.5],[521.5,541.1],[526.2,541.1],[530.6,547.1],[536.4,549.7],[543.4,557.0],[545.2,567.9],[549.1,573.7],[554.9,575.2],[566.0,582.7],[563.2,591.7],[550.0,595.7],[538.5,603.8],[528.6,605.2],[513.0,614.8],[502.8,624.8],[491.7,642.8],[484.2,648.5],[478.8,657.6],[465.5,655.9],[455.3,650.6],[447.0,631.0],[449.1,625.8],[449.3,613.2],[417.5,600.1],[412.2,594.8]]]},{"n":"Villeneuve-Loubet","r":[[[462.7,350.4],[460.5,339.8],[463.4,333.6],[469.1,330.0],[481.3,328.0],[496.7,333.6],[504.0,327.1],[509.3,328.4],[519.1,326.9],[528.5,316.4],[532.4,307.4],[533.9,282.2],[545.4,264.2],[552.0,260.3],[563.5,257.7],[564.0,251.0],[560.7,245.0],[562.4,236.7],[569.8,235.9],[576.6,232.0],[583.4,235.2],[588.5,235.1],[594.8,242.3],[601.9,241.5],[606.4,250.1],[612.1,253.5],[627.4,253.9],[634.0,259.2],[641.1,253.8],[651.2,255.3],[663.5,251.4],[672.2,271.0],[687.9,287.4],[701.6,297.1],[690.5,310.7],[692.9,314.8],[701.4,318.1],[700.7,323.5],[709.5,322.4],[713.2,327.0],[721.7,331.6],[736.7,348.4],[733.1,349.2],[728.6,354.9],[721.5,367.6],[721.1,371.6],[712.6,367.0],[711.8,372.8],[718.9,377.0],[711.8,381.4],[691.4,429.7],[678.9,424.4],[665.5,421.4],[655.9,413.6],[637.7,394.7],[638.4,375.4],[622.1,359.3],[617.5,347.8],[596.6,331.4],[576.8,335.5],[572.7,334.1],[555.8,345.7],[552.1,343.9],[533.8,349.7],[507.4,351.2],[489.7,348.8],[462.7,350.4]]]}]}; /* official coastline + commune boundaries: Etalab/IGN admin data via france-geojson, projected & simplified */
+const ROADS = [
+ {id:"A8", w:3.2, lbl:[[6.947,43.5615],[7.185,43.677]], p:[[6.895,43.558],[6.93,43.564],[6.965,43.572],[6.985,43.578],[7.01,43.585],[7.04,43.594],[7.073,43.6035],[7.094,43.617],[7.11,43.632],[7.133,43.652],[7.157,43.666],[7.183,43.668],[7.205,43.673],[7.235,43.678]]},
+ {id:"D6007", w:1.6, lbl:[[7.188,43.645]], p:[[6.94,43.549],[6.99,43.554],[7.03,43.559],[7.078,43.566],[7.105,43.578],[7.120,43.590],[7.127,43.603],[7.132,43.618],[7.138,43.632],[7.143,43.643],[7.152,43.654],[7.166,43.660],[7.187,43.667],[7.215,43.672]]},
+ {id:"D2085", w:2.2, lbl:[[6.988,43.6765],[7.098,43.673]], p:[[6.937,43.652],[6.951,43.6605],[6.9715,43.6685],[6.99,43.672],[7.011,43.674],[7.03,43.669],[7.0475,43.6645],[7.07,43.666],[7.095,43.6685],[7.118,43.667],[7.135,43.6655],[7.148,43.664]]},
+ {id:"D2210", w:1.4, lbl:[[7.028,43.7135]], p:[[6.951,43.6605],[6.955,43.675],[6.958,43.688],[6.962,43.700],[6.990,43.7055],[7.02,43.710],[7.059,43.7145],[7.085,43.716],[7.112,43.7225]]},
+ {id:"", w:1.4, p:[[7.112,43.7225],[7.119,43.710],[7.1224,43.6975],[7.113,43.692],[7.1046,43.6867],[7.108,43.678],[7.117,43.670],[7.128,43.6655],[7.140,43.662],[7.148,43.664]]},
+ {id:"", w:1.4, p:[[7.124,43.658],[7.113,43.670],[7.1046,43.6867]]},
+ {id:"", w:1.4, p:[[7.124,43.658],[7.132,43.650],[7.140,43.6425]]},
+ {id:"D3", w:1.6, lbl:[[7.004,43.6495]], p:[[6.9715,43.6685],[6.98,43.657],[6.999,43.649],[7.009,43.6414],[7.015,43.634],[7.028,43.628],[7.046,43.622],[7.052,43.616],[7.062,43.610],[7.073,43.6035]]},
+ {id:"D4", w:1.4, lbl:[[7.056,43.6415]], p:[[7.130,43.617],[7.112,43.618],[7.0955,43.6285],[7.083,43.632],[7.068,43.636],[7.05,43.639],[7.03,43.641],[7.009,43.6414],[7.000,43.652],[6.9865,43.660],[6.983,43.666],[6.9715,43.6685]]},
+ {id:"D35", w:1.8, p:[[7.073,43.6035],[7.082,43.596],[7.092,43.588],[7.105,43.582],[7.122,43.579]]},
+ {id:"", w:1.1, p:[[7.046,43.622],[7.058,43.618],[7.069,43.616],[7.079,43.618],[7.089,43.624],[7.0955,43.6285]]},
+ {id:"D6185", w:2.2, lbl:[[6.9645,43.598]], p:[[6.955,43.549],[6.952,43.570],[6.955,43.590],[6.960,43.608],[6.963,43.616],[6.955,43.630],[6.945,43.640],[6.937,43.652]]},
+ {id:"", w:1.3, p:[[6.965,43.552],[6.982,43.573],[6.9955,43.588],[6.9955,43.6008],[6.99,43.610],[6.975,43.615]]},
+ {id:"", w:1.2, p:[[6.9955,43.6008],[7.010,43.607],[7.025,43.612],[7.040,43.617]]}
+];
+const EXITS = [[6.985,43.578,"42"],[7.073,43.6035,"44"],[7.133,43.652,"47"],[7.157,43.666,"48"]];
+const LOUP = [[7.141,43.637],[7.130,43.649],[7.124,43.658],[7.113,43.670],[7.1046,43.6867],[7.093,43.694],[7.075,43.700],[7.05,43.703],[7.02,43.705],[6.990,43.7055],[6.985,43.712],[6.988,43.720]];
+const pts = a => a.map(p => px(p[0]).toFixed(1) + "," + py(p[1]).toFixed(1)).join(" ");
+
+function drawMap(){
+  svg.innerHTML = "";
+  // sea + coastline from the official department boundary
+  const coast = GEO.coast.filter(p => p[0] > -25 && p[0] < 1030);
+  const cstr = coast.map(p => p.join(",")).join(" ");
+  el("polygon", { points: cstr + " 1030,900 -25,900", fill: "var(--sea)" }, svg);
+  el("polyline", { points: cstr, fill: "none", stroke: "var(--sea-line)", "stroke-width": 1.5 }, svg);
+  const seaLbl = el("text", { x: px(7.05), y: py(43.528), class: "m-lbl-sm", "font-style": "italic" }, svg);
+  seaLbl.textContent = "Mediterranean Sea";
+  // commune boundaries (official)
+  GEO.communes.forEach(c => c.r.forEach(r => {
+    el("polygon", { points: r.map(p => p.join(",")).join(" "), fill: "none", stroke: "var(--grid)", "stroke-width": 1, opacity: 0.8 }, svg);
+  }));
+  // Loup river
+  el("polyline", { points: pts(LOUP), fill: "none", stroke: "var(--sea-line)", "stroke-width": 1.2, opacity: 0.65 }, svg);
+  const rl = el("text", { x: px(7.062), y: py(43.7075), class: "m-lbl-sm", "font-style": "italic" }, svg);
+  rl.textContent = "le Loup";
+  // principal roads
+  ROADS.forEach(r => {
+    el("polyline", { points: pts(r.p), class: "m-road", "stroke-width": r.w }, svg);
+    (r.lbl || []).forEach(L => { const t = el("text", { x: px(L[0]), y: py(L[1]), class: "m-lbl-sm" }, svg); t.textContent = r.id; });
+  });
+  // A8 exits
+  EXITS.forEach(([lo, la, n]) => {
+    el("circle", { cx: px(lo), cy: py(la), r: 6, fill: "var(--surface)", stroke: "var(--muted)", "stroke-width": 1 }, svg);
+    const t = el("text", { x: px(lo), y: py(la) + 2.8, "text-anchor": "middle", "font-size": "8", fill: "var(--ink-2)" }, svg);
+    t.textContent = n;
+  });
+  // drive ring (~15 min ≈ 9 km); the ~30 min envelope extends beyond the mapped area
+  const cx = px(7.0453), cy = py(43.6640);
+  el("ellipse", { cx, cy, rx: 9 * PXKM, ry: 9 * PYKM, class: "m-ring" }, svg);
+  const rt = el("text", { x: cx + 9 * PXKM * 0.72, y: cy - 9 * PYKM * 0.66, class: "m-lbl-sm" }, svg);
+  rt.textContent = "~15 min";
+  // villages
+  VILLAGES.forEach(v => {
+    el("circle", { cx: px(v.lon), cy: py(v.lat), r: 3.4, fill: "var(--muted)" }, svg);
+    const anchorLeft = ["Grasse","Mouans-Sartoux","Opio","Châteauneuf-Grasse","Le Rouret"].includes(v.n);
+    const lbl = el("text", {
+      x: px(v.lon) + (anchorLeft ? -7 : 7) + ({"Cagnes-sur-Mer":-5}[v.n] ?? 0),
+      y: py(v.lat) + ({"Valbonne":12,"Roquefort-les-Pins":-9,"Villeneuve-Loubet":17,"Cagnes-sur-Mer":44,"Biot":13,"La Colle-sur-Loup":-7,"Saint-Paul-de-Vence":-7,"Mougins":13,"Antibes":12}[v.n] ?? 4),
+      class: "m-lbl", "text-anchor": anchorLeft ? "end" : "start"
+    }, svg);
+    lbl.textContent = v.n;
+  });
+  // clinic marker (diamond)
+  const cxc = px(7.0453), cyc = py(43.6640);
+  el("rect", { x: cxc - 6, y: cyc - 6, width: 12, height: 12, fill: "var(--ink)", stroke: "var(--surface)", "stroke-width": 2, transform: `rotate(45 ${cxc} ${cyc})` }, svg);
+  // school pins
+  const pinLayer = el("g", {}, svg);
+  SCHOOLS.forEach(s => {
+    const g = el("g", { class: "pin", id: "pin-" + s.id }, pinLayer);
+    el("circle", { cx: px(s.lon), cy: py(s.lat), r: 14, fill: "transparent" }, g); // hit area
+    el("circle", { class: "core", cx: px(s.lon), cy: py(s.lat), r: 6.5, fill: CAT[s.cat].color }, g);
+    if (s.star) { const st = el("text", { x: px(s.lon), y: py(s.lat) - 10, "text-anchor": "middle", "font-size": "11", fill: "var(--ink)" }, g); st.textContent = "★"; }
+    g.addEventListener("mousemove", ev => { showTip(pinTip(s), ev); });
+    g.addEventListener("mouseleave", hideTip);
+    g.addEventListener("click", () => focusSchool(s.id));
+  });
+  // scale bar (5 km)
+  const sx = px(6.905), sy = MAP.h - 18;
+  el("line", { x1: sx, y1: sy, x2: sx + 5 * PXKM, y2: sy, stroke: "var(--ink-2)", "stroke-width": 2 }, svg);
+  const skt = el("text", { x: sx, y: sy - 6, class: "m-lbl-sm" }, svg); skt.textContent = "5 km";
+}
+function pinTip(s){
+  return `<div class="t">${esc(s.name)}${s.star ? " ★" : ""}</div>
+  <div class="s">${esc(s.commune)} · ${CAT[s.cat].label} · ${lvText(s.lv)} (${s.ages})</div>
+  <div>${esc(s.res !== "—" ? s.res : s.cls)}</div>
+  <div class="s">${esc(s.cost)} · ~${s.drive} min drive</div>`;
+}
+function focusSchool(id){
+  document.querySelectorAll("#tbody tr").forEach(r => r.classList.toggle("hl", r.dataset.id === id));
+  const row = document.querySelector(`#tbody tr[data-id="${id}"]`);
+  if (row) row.scrollIntoView({ behavior: "smooth", block: "center" });
+  document.querySelectorAll(".pin").forEach(p => p.classList.toggle("hot", p.id === "pin-" + id));
+}
+
+/* ================= TABLE ================= */
+function render(){
+  const tb = $("#tbody");
+  tb.innerHTML = "";
+  let shown = 0;
+  SCHOOLS.forEach(s => {
+    const vis = visible(s);
+    const pin = document.getElementById("pin-" + s.id);
+    if (pin) pin.classList.toggle("dim", !vis);
+    if (!vis) return;
+    shown++;
+    const tr = document.createElement("tr");
+    tr.dataset.id = s.id;
+    const costHtml = s.est ? `<i>${esc(s.cost)}</i>` : esc(s.cost);
+    tr.innerHTML = `
+      <td class="nm"><span class="tdot" style="background:${CAT[s.cat].color}"></span><span class="snm">${esc(s.name)}</span>${s.star ? '<span class="badge star">★ your guide</span>' : ""}${s.sub ? `<div class="scm">${esc(s.sub)}</div>` : ""}<div class="det">${esc(s.cls)}${s.url ? ` — <a href="${s.url}" target="_blank" rel="noopener">site ↗</a>` : ""}</div></td>
+      <td>${esc(s.commune)}<div class="scm">${CAT[s.cat].label}</div></td>
+      <td class="num">${lvText(s.lv)}<div class="scm">${s.ages}</div></td>
+      <td class="res">${esc(s.res)}</td>
+      <td class="cost">${costHtml}</td>
+      <td class="num drv">${s.drive} min</td>`;
+    tr.onclick = () => focusSchool(s.id);
+    tb.appendChild(tr);
+  });
+  $("#f-count").textContent = `showing ${shown} of ${SCHOOLS.length}`;
+}
+
+/* ================= CHARTS ================= */
+function barChart(elSel, rows, maxV, fmt){
+  const box = $(elSel); box.innerHTML = "";
+  rows.forEach(r => {
+    const row = document.createElement("div"); row.className = "bar-row";
+    const wPct = Math.max(1.5, r.v / maxV * 100);
+    row.innerHTML = `<div class="bl" title="${esc(r.l)}">${esc(r.l)}</div>
+      <div class="bar-track"><div class="bar" style="width:${wPct}%;background:${r.c}"></div><span class="bar-val">${fmt(r.v)}${r.suffix||""}</span></div>`;
+    if (r.tip) {
+      row.addEventListener("mousemove", ev => showTip(r.tip, ev));
+      row.addEventListener("mouseleave", hideTip);
+    }
+    box.appendChild(row);
+  });
+}
+/* fees chart */
+const feeRows = SCHOOLS.filter(s => s.feeNum).map(s => ({
+  l: s.name.replace(" — Montessori internationale"," (Montessori)").replace("École Montessori d'Antibes (Terre Enfantine)","Montessori d'Antibes").replace("Mougins British International School","Mougins British Int'l").replace("International School of Nice (ISN)","ISN Nice").replace("EIB Cagnes — Le Pain de Sucre","EIB Cagnes").replace("Les Pouces Verts — Montessori","Les Pouces Verts").replace("Sainte-Marie de Chavagnes","Ste-Marie de Chavagnes"),
+  v: s.feeNum, c: CAT[s.cat].color, suffix: s.est ? " *" : "",
+  tip: `<div class="t">${esc(s.name)}</div><div>${esc(s.cost)}</div><div class="s">${CAT[s.cat].label} · ${esc(s.commune)}</div>`
+})).sort((a,b) => b.v - a.v);
+barChart("#chart-fees", feeRows, 26000, v => "€" + v.toLocaleString("en-US"));
+
+/* brevet chart */
+const brevetRows = SCHOOLS.filter(s => s.brevet).map(s => {
+  const emph = s.name === "Collège César" || s.name.startsWith("CIV");
+  return {
+    l: s.name.replace("CIV — Collège international de Valbonne","CIV (Valbonne)").replace("Collège ",""),
+    v: s.brevet, c: emph ? "var(--c-public)" : "var(--baseline)", suffix: "%",
+    tip: `<div class="t">${esc(s.name)}</div><div>${esc(s.res)}</div><div class="s">${esc(s.tb||"")} · ${esc(s.commune)} · ~${s.drive} min</div>`
+  };
+}).sort((a,b) => b.v - a.v);
+barChart("#chart-brevet", brevetRows, 100, v => v);
+
+/* destinations chart */
+barChart("#chart-dests", DESTS.map(d => ({
+  l: d.n, v: d.min, c: "var(--c-public)", suffix: " min",
+  tip: `<div class="t">${esc(d.n)}</div><div>${d.km} km · rush hour ${d.rush} min</div><div class="s">${esc(d.r)}</div>`
+})), 55, v => v);
+
+/* ================= VILLAGES TABLE ================= */
+(function(){
+  const tb = $("#vil-body");
+  VILLAGES.forEach(v => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td><span class="snm">${esc(v.n)}</span></td><td class="num drv">${v.d} min</td><td class="num">${v.pop}</td><td class="num">€${v.pm2}</td><td class="det" style="max-width:40ch">${esc(v.ch)}</td>`;
+    tb.appendChild(tr);
+  });
+})();
+
+/* ================= TILES ================= */
+(function(){
+  const tiles = [
+    { lbl: "Schools & school groups mapped", val: String(SCHOOLS.length), note: "public · sous contrat · international · Montessori" },
+    { lbl: "Your sector collège (César, 3 min)", val: "96%", note: "brevet 2025 · IPS top 0.4% of France" },
+    { lbl: "Public school tuition", val: "€0", note: "free from age 3 · cantine ≈€3–6/meal" },
+    { lbl: "International fees 2026–27", val: "€9.4–25.6K", note: "per year + registration €1.8–3.5K" }
+  ];
+  $("#tiles").innerHTML = tiles.map(t => `<div class="tile"><div class="lbl">${t.lbl}</div><div class="val">${t.val}</div><div class="note">${t.note}</div></div>`).join("");
+})();
+
+drawMap();
+render();
+</script>
+</body>
+</html>
