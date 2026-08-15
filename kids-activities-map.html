@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kids' Activities around Roquefort-les-Pins</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10); --chip-bg: #f0efec;
+  --accent-wash: rgba(42,120,214,0.08);
+  --c-gym: #2a78d6; --c-foot: #eb6834; --c-swim: #1baf7a; --c-martial: #eda100;
+  --c-skate: #e87ba4; --c-nature: #008300; --c-sail: #4a3aa7; --c-music: #e34948; --c-play: #898781;
+  --sea: rgba(42,120,214,0.09); --sea-line: rgba(42,120,214,0.35); --rail: #6b6a64;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #ffffff; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10); --chip-bg: #262624;
+    --accent-wash: rgba(57,135,229,0.12);
+    --c-gym: #3987e5; --c-foot: #d95926; --c-swim: #199e70; --c-martial: #c98500;
+    --c-skate: #d55181; --c-nature: #008300; --c-sail: #9085e9; --c-music: #e66767; --c-play: #898781;
+    --sea: rgba(57,135,229,0.12); --sea-line: rgba(57,135,229,0.40); --rail: #a5a49c;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--page); color: var(--ink);
+  line-height: 1.45; font-size: 14px; padding: 28px clamp(14px, 4vw, 48px) 60px; }
+a { color: inherit; }
+h1 { font-size: 24px; font-weight: 650; letter-spacing: -0.01em; }
+h2 { font-size: 16px; font-weight: 650; margin-bottom: 2px; }
+.sub { color: var(--ink-2); font-size: 13px; }
+.wrap, header.top, footer { max-width: 1200px; margin: 0 auto; }
+header.top { margin-bottom: 18px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; margin-bottom: 18px; }
+.card-head { margin-bottom: 12px; }
+.card-head .sub { max-width: 76ch; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: 12px; margin: 16px 0 20px; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.tile .lbl { font-size: 12px; color: var(--ink-2); }
+.tile .val { font-size: 26px; font-weight: 650; margin-top: 2px; }
+.tile .note { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; padding: 12px 16px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 14px;
+  position: sticky; top: 8px; z-index: 40; }
+.chip { border: 1px solid var(--border); background: var(--chip-bg); color: var(--ink-2); border-radius: 999px;
+  padding: 4px 11px; font-size: 12.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; user-select: none; }
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.chip.on { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.filters input[type="search"] { border: 1px solid var(--border); background: var(--chip-bg); color: var(--ink);
+  border-radius: 8px; padding: 5px 10px; font-size: 13px; width: 160px; }
+.count { margin-left: auto; font-size: 12.5px; color: var(--muted); }
+.map-box svg { width: 100%; height: auto; display: block; border-radius: 8px; background: var(--surface); }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; font-size: 12.5px; color: var(--ink-2); align-items: center; }
+.legend .key { display: inline-flex; align-items: center; gap: 6px; }
+.legend .sw { width: 11px; height: 11px; border-radius: 50%; }
+.legend .dm { width: 10px; height: 10px; background: var(--ink); transform: rotate(45deg); }
+.m-lbl { font-size: 11px; fill: var(--ink-2); }
+.m-lbl-sm { font-size: 10px; fill: var(--muted); }
+.m-city { font-size: 12px; font-weight: 600; fill: var(--ink-2); }
+.m-road { fill: none; stroke: var(--baseline); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.m-ring { fill: none; stroke: var(--grid); stroke-width: 1; }
+.pin { cursor: pointer; }
+.pin .core { stroke: var(--surface); stroke-width: 2; }
+.pin text.glyph { font-size: 8.5px; font-weight: 700; pointer-events: none; }
+.pin.dim { opacity: 0.15; }
+.pin.hot .core { stroke: var(--ink); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted);
+  font-weight: 600; padding: 8px 10px 6px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+td { padding: 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr.hl td { background: var(--accent-wash); }
+td .snm { font-weight: 600; }
+td .scm { color: var(--muted); font-size: 12px; }
+td .det { color: var(--ink-2); font-size: 12.5px; margin-top: 3px; max-width: 44ch; }
+.tdot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.badge { display: inline-block; font-size: 10.5px; border: 1px solid var(--border); border-radius: 5px;
+  padding: 1px 6px; margin-left: 6px; color: var(--ink-2); background: var(--chip-bg); white-space: nowrap; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.notes .card { margin-bottom: 0; }
+.notes ul { margin: 6px 0 0 16px; color: var(--ink-2); font-size: 13px; }
+.notes li { margin-bottom: 6px; }
+.notes b { color: var(--ink); font-weight: 600; }
+#tip { position: fixed; pointer-events: none; z-index: 99; display: none; background: var(--ink); color: var(--surface);
+  border-radius: 8px; padding: 8px 11px; font-size: 12px; max-width: 280px; line-height: 1.4; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+#tip .t { font-weight: 650; font-size: 12.5px; }
+#tip .s { opacity: .75; }
+footer { margin-top: 26px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+footer h3 { font-size: 12px; color: var(--ink-2); margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Kids' Activities around Roquefort-les-Pins</h1>
+  <div class="sub">Clubs, lessons and free family spots within ~30 min of the village — gymnastics, football, swimming, martial arts, skate parks, sailing, music, nature &amp; water spaces, playgrounds. Built for children ~4–8 (your two, at the 2028–29 move). Same map base as your Schools Dashboard: official coastline &amp; commune boundaries, principal roads, railways. Compiled July 2026.</div>
+  <div class="tiles" id="tiles"></div>
+</header>
+
+<div class="wrap">
+
+  <div class="filters" id="filters">
+    <span style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">Category</span>
+    <span id="f-cats"></span>
+    <input type="search" id="f-q" placeholder="Search place / commune">
+    <span class="count" id="f-count"></span>
+  </div>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Map</h2>
+      <div class="sub">Each pin carries its category colour and letter (see legend). Green triangles are nature &amp; water spaces; grey squares are playgrounds. Roads, railway + stations, A8 exits and the ~15 min drive ring as on the Schools Dashboard. Hover for details, click a pin to highlight it in the list. Venue positions are approximate (place them ±200 m).</div>
+    </div>
+    <div class="map-box"><svg id="map" viewBox="0 0 1000 760" role="img" aria-label="Map of kids' activities around Roquefort-les-Pins"></svg></div>
+    <div class="legend" id="legend">
+      <span class="key"><span class="dm"></span> Roquefort-les-Pins (clinic)</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h2>Activity explorer</h2>
+      <div class="sub">Sorted by drive time. Costs are indicative annual club fees (French associations run Sept–June seasons); "verify" marks places found via directories whose details should be confirmed locally — the September Forum des Associations is the easiest place to do that in one morning.</div>
+    </div>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Place / club</th><th>Category</th><th>Commune</th><th>Ages</th><th>Cost</th><th>Drive</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="notes">
+    <div class="card">
+      <h2>How kids' activities work in France</h2>
+      <ul>
+        <li><b>The season runs September–June.</b> Sign-ups happen in the first two weeks of September — every village holds a <b>Forum des Associations</b> (usually the first or second Saturday) where all clubs have stands and take registrations. If you visit in mid-September, most clubs still take late entries and offer a <b>free trial session</b>.</li>
+        <li><b>Paperwork:</b> a licence + simple health attestation (questionnaire for minors; a médecin's certificate only in some sports), one photo, and the fee.</li>
+        <li><b>Typical cost:</b> €150–400/year for a weekly club activity — a fraction of German private-lesson pricing. Municipal écoles des sports (e.g. Cagnes "Visa Sports") are even cheaper.</li>
+        <li><b>Wednesday is the activities day</b> — no school for primaires, so clubs run children's sessions Wednesday plus Saturday morning.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Shortlist for your two (ages ~5 &amp; 8)</h2>
+      <ul>
+        <li><b>In the village (0–5 min):</b> AS Roquefort football school (from U6), the municipal dojo's judo club, the skatepark + city-stade, and the École de Musique Associative (éveil musical from ~4) — all at or near the Complexe sportif / Centre culturel on the D2085.</li>
+        <li><b>10–15 min:</b> Nautipolis swim school (jardin aquatique from 4), COV Valbonne (gym, judo and a dozen other sections), Valbonne conservatoire, Bouillides skatepark.</li>
+        <li><b>Weekend nature:</b> Valmasque forest + Fontmerle pond (lotus bloom in August), Vaugrenier's big playgrounds, Brague river shade in summer, Gorges du Loup waterfalls.</li>
+        <li><b>From ~age 7:</b> Optimist sailing at Cagnes' municipal école de voile (Jardin des Mers from 5 in summer) or YCVL at Marina Baie des Anges.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Water &amp; beach notes</h2>
+      <ul>
+        <li><b>Family beaches:</b> Plage du Ponteil (Antibes) is the classic shallow, sheltered kids' beach; Cros-de-Cagnes is the nearest sandy-gravel beach with lifeguards in season.</li>
+        <li><b>Flags:</b> green/yellow/red lifeguard system mid-June–mid-Sept; most beaches unguarded off-season.</li>
+        <li><b>Pools:</b> Nautipolis is the family flagship (lagoon, slides, lessons); municipal pools in Antibes, Cagnes, Vence and Grasse are cheaper for lengths and school-holiday swim courses.</li>
+        <li><b>Note:</b> Marineland (Antibes) closed permanently in Jan 2025 — the nearby kids' brands (Kid's Island/Adventure Golf) partially wound down too; check status before promising a visit.</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <h3>Method &amp; caveats</h3>
+  <p>Compiled 26 July 2026 from club/municipal websites and directories (helloasso, pagesjaunes, ville-data, ffgym, spotland). Coordinates are approximate venue positions, not GPS-verified; entries tagged "verify" come from directories and need local confirmation. Fees are indicative 2025–26 season figures. Map base: official Etalab/IGN coastline and commune boundaries; roads and railway traced from the real network (indicative — live OpenStreetMap tile/data services are not reachable from this workspace, so the base map is drawn from downloaded official data instead of OSM tiles). Sources: asroquefort.fr · ville-roquefort-les-pins.fr · cov-valbonne.org · nautipolis.fr · ecoledevoile.cagnes.fr · ycvl.fr · sr-antibes.fr · music06.com · ville-valbonne.fr · culture-cagnes.fr · gobabygym.fr · spotland.fr · departement06.fr (parcs départementaux) · helloasso.com · pagesjaunes.fr</p>
+</footer>
+
+<div id="tip"></div>
+
+<script>
+/* ================= CATEGORIES ================= */
+const CAT = {
+  gym:     { label: "Gymnastics",            color: "var(--c-gym)",     g: "G", ink: false },
+  foot:    { label: "Football",              color: "var(--c-foot)",    g: "F", ink: false },
+  swim:    { label: "Pools & swimming",      color: "var(--c-swim)",    g: "S", ink: true  },
+  martial: { label: "Martial arts",          color: "var(--c-martial)", g: "M", ink: true  },
+  skate:   { label: "Skate parks",           color: "var(--c-skate)",   g: "K", ink: true  },
+  sail:    { label: "Sailing & nautical",    color: "var(--c-sail)",    g: "V", ink: false },
+  music:   { label: "Music",                 color: "var(--c-music)",   g: "♪", ink: false },
+  nature:  { label: "Nature & water spaces", color: "var(--c-nature)",  g: "",  ink: false, shape: "tri" },
+  play:    { label: "Playgrounds",           color: "var(--c-play)",    g: "",  ink: false, shape: "sq" }
+};
+/* ================= PLACES ================= */
+const PLACES = [
+ /* --- Roquefort-les-Pins & next door --- */
+ {n:"AS Roquefort F.C. — école de foot", c:"foot", com:"Roquefort-les-Pins", lat:43.6560, lon:7.0340, ages:"U6+ (from ~5)", d:3,
+  det:"Village club at the Parc des Sports — Stade Jean Chiappe (1571 rte de Valbonne); école de foot Wed + Sat", cost:"~€180–250/yr", url:"https://www.asroquefort.fr"},
+ {n:"Skatepark de Roquefort (ch. du Peissault)", c:"skate", com:"Roquefort-les-Pins", lat:43.6680, lon:7.0440, ages:"~6+", d:3,
+  det:"Renovated 2025: curves, tables, ledges (open 8:00–20:00); separate city-stade by the village schools", cost:"Free", url:"https://www.ville-roquefort-les-pins.fr/menu/12/Visiter_Roquefort-Les-Pins"},
+ {n:"Dojo municipal — EAMAPE (judo) & Wadokan (karaté)", c:"martial", com:"Roquefort-les-Pins", lat:43.6630, lon:7.0465, ages:"judo kids; karaté from 5", d:2,
+  det:"Village dojo in the centre: EAMAPE Roquefortoise judo-jujitsu + Wadokan karaté club", cost:"~€200–280/yr", url:"https://www.ville-roquefort-les-pins.fr"},
+ {n:"École de Musique Associative (EMA / Music'06)", c:"music", com:"Roquefort-les-Pins", lat:43.6660, lon:7.0510, ages:"éveil from ~4", d:2,
+  det:"At the Centre Culturel on the D2085 — éveil musical, instruments, group classes", cost:"~€300–500/yr", url:"https://www.music06.com"},
+ {n:"Jardin des Décades — village playground", c:"play", com:"Roquefort-les-Pins", lat:43.6656, lon:7.0468, ages:"1–12", d:2,
+  det:"Central playground by the médiathèque/cinema: 5 zones incl. toddler area, trampoline and zip-line", cost:"Free", url:"https://loumessugo.com/playgrounds-cote-dazur/"},
+ {n:"Aire de jeux du Rouret", c:"play", com:"Le Rouret", lat:43.6748, lon:7.0115, ages:"2–12", d:6,
+  det:"Village playground near the school/centre", cost:"Free", verify:true},
+ /* --- Valbonne / Sophia --- */
+ {n:"COV — Club Omnisports de Valbonne", c:"gym", com:"Valbonne · Sophia", lat:43.6270, lon:7.0340, ages:"from ~4", d:14,
+  det:"24-section club at the Bouillides complex: rhythmic gym, swimming (at Nautipolis), sailing/kayak, climbing, baseball, dance… (no judo/football — see the dedicated clubs)", cost:"~€200–350/yr per section", url:"http://cov-valbonne.org"},
+ {n:"US Valbonne Sophia Antipolis (USVSA)", c:"foot", com:"Valbonne", lat:43.6380, lon:7.0240, ages:"U6–U17", d:13,
+  det:"The Valbonne football club — école de foot at Stade Léon Chabert (route de Biot)", cost:"~€150–250/yr", url:"https://www.ville-valbonne.fr/fiche-annuaire/union-sportive-de-valbonne-sophia-antipolis/"},
+ {n:"Nautipolis — centre aquatique", c:"swim", com:"Valbonne · Sophia", lat:43.6212, lon:7.0355, ages:"from 6 mo (bébés nageurs)", d:14,
+  det:"Flagship aquatic centre: swim school, jardin aquatique (4–6), lagoon, slides, outdoor pool", cost:"Entry ~€5–8; lessons ~€200–300/term", url:"https://www.nautipolis.fr"},
+ {n:"Skatepark des Bouillides", c:"skate", com:"Valbonne · Sophia", lat:43.6228, lon:7.0312, ages:"all", d:14,
+  det:"Bowl + street modules in the Parc des Bouillides", cost:"Free", url:"https://golden-coast.fr/le-skatepark-de-valbonne-tout-ce-quil-faut-pour-apprendre-et-progresser/"},
+ {n:"Conservatoire de musique de Valbonne", c:"music", com:"Valbonne", lat:43.6448, lon:7.0058, ages:"éveil from 4–5", d:12,
+  det:"Municipal conservatoire (Pré des Arts): éveil, instruments, orchestras", cost:"Municipal rates (QF)", url:"https://www.ville-valbonne.fr/mes-loisirs/culture/les-equipements-culturels/le-conservatoire-de-musique/"},
+ {n:"Dojo municipal de Valbonne — judo & karaté", c:"martial", com:"Valbonne", lat:43.6380, lon:7.0122, ages:"éveil judo from 4", d:12,
+  det:"Dojo Antipolis Valbonne (judo) + Karaté Valbonne Sophia Antipolis, both at the dojo, 185 av. G. Pompidou", cost:"~€200–280/yr", url:"https://www.judo-valbonne.com"},
+ {n:"Aire de jeux du Pré des Arts", c:"play", com:"Valbonne", lat:43.6432, lon:7.0132, ages:"2–12", d:12,
+  det:"Playground by the Pré des Arts halls, next to the old village", cost:"Free", verify:true},
+ /* --- Nature & water spaces --- */
+ {n:"Parc départemental de la Valmasque", c:"nature", com:"Valbonne/Mougins", lat:43.6150, lon:7.0220, ages:"all", d:13,
+  det:"561 ha forest between Sophia and Mougins: signed family trails, MTB, picnic areas", cost:"Free", url:"https://www.departement06.fr"},
+ {n:"Étang de Fontmerle", c:"nature", com:"Mougins", lat:43.5985, lon:7.0065, ages:"all", d:16,
+  det:"Lotus pond in the Valmasque (blooms August); herons, easy flat loop for small kids", cost:"Free"},
+ {n:"Parc départemental de Vaugrenier", c:"nature", com:"Villeneuve-Loubet", lat:43.6355, lon:7.1320, ages:"all", d:14,
+  det:"100 ha coastal park: big lawns, Roman ruins, ponds, popular playgrounds", cost:"Free"},
+ {n:"Parc départemental de la Brague", c:"nature", com:"Biot", lat:43.6180, lon:7.0830, ages:"all", d:16,
+  det:"Shaded river valley walk from Biot — the summer-heat refuge", cost:"Free"},
+ {n:"Gorges du Loup & Cascade du Saut du Loup", c:"nature", com:"Pont-du-Loup", lat:43.7060, lon:6.9900, ages:"all", d:18,
+  det:"Waterfalls and gorge above Pont-du-Loup; combine with the Confiserie Florian sweet factory", cost:"Waterfall ~€2, rest free"},
+ {n:"Parc des Rives du Loup", c:"nature", com:"Villeneuve/La Colle", lat:43.6640, lon:7.1150, ages:"all", d:11,
+  det:"River-bank park along the Loup: flat pram-friendly paths, picnic, herons", cost:"Free"},
+ {n:"Plage du Ponteil", c:"nature", com:"Antibes", lat:43.5760, lon:7.1250, ages:"all", d:25,
+  det:"THE sheltered shallow family beach of Antibes; lifeguards in season", cost:"Free"},
+ {n:"Plage de Cros-de-Cagnes", c:"nature", com:"Cagnes-sur-Mer", lat:43.6600, lon:7.1680, ages:"all", d:18,
+  det:"Nearest guarded beach; promenade playgrounds alongside", cost:"Free"},
+ {n:"Parc Exflora", c:"nature", com:"Antibes", lat:43.5730, lon:7.1070, ages:"all", d:25,
+  det:"Mediterranean garden park by the sea (olive grove, fountains)", cost:"Free"},
+ /* --- Pools beyond Nautipolis --- */
+ {n:"Piscine communautaire d'Antibes", c:"swim", com:"Antibes", lat:43.5878, lon:7.1108, ages:"lessons from ~5", d:24,
+  det:"Municipal pool + Cercle des Nageurs d'Antibes swim club", cost:"Entry ~€3–5", verify:true},
+ {n:"Piscine municipale de Cagnes-sur-Mer", c:"swim", com:"Cagnes-sur-Mer", lat:43.6668, lon:7.1422, ages:"lessons from ~5", d:17,
+  det:"Municipal pool; school-holiday swim courses", cost:"Entry ~€3–5", verify:true},
+ {n:"Piscine Le Grand Bleu", c:"swim", com:"Vence", lat:43.7158, lon:7.1042, ages:"lessons from ~5", d:19,
+  det:"Vence municipal pool", cost:"Entry ~€3–5", verify:true},
+ {n:"Piscine Harjès", c:"swim", com:"Grasse", lat:43.6550, lon:6.9250, ages:"lessons from ~5", d:22,
+  det:"Grasse municipal pool", cost:"Entry ~€3–5", verify:true},
+ /* --- Football beyond RLP --- */
+ {n:"FC La Colle-sur-Loup", c:"foot", com:"La Colle-sur-Loup", lat:43.6845, lon:7.1000, ages:"U6+", d:11,
+  det:"Village football school at the stade", cost:"~€200/yr", url:"https://footlacollesurloup.wixsite.com/fclacollesurloup/accueil"},
+ {n:"US Biot football", c:"foot", com:"Biot", lat:43.6250, lon:7.0890, ages:"U6+", d:17,
+  det:"Football school, stade Pierre Operto", cost:"~€200/yr", verify:true},
+ {n:"ES Villeneuve-Loubet football", c:"foot", com:"Villeneuve-Loubet", lat:43.6505, lon:7.1272, ages:"U6+", d:14,
+  det:"Football school at the Parc des Sports", cost:"~€200/yr", verify:true},
+ /* --- Gym / multisport beyond COV --- */
+ {n:"GoBabyGym Antibes", c:"gym", com:"Antibes", lat:43.5880, lon:7.0950, ages:"10 mo–10 yrs", d:23,
+  det:"Private motor-skills gym franchise — drop-in and courses", cost:"~€40/month", url:"https://www.gobabygym.fr/antibes/"},
+ {n:"École municipale Visa Sports (Baby Sport)", c:"gym", com:"Cagnes-sur-Mer", lat:43.6632, lon:7.1462, ages:"3–5 (baby), 6+ (multi)", d:17,
+  det:"Cheap municipal multisport discovery school (gym, ball games…)", cost:"Municipal rates (low)", url:"https://ville.cagnes.fr/ecole-municipale-visas-sports/visa-baby-sport/"},
+ {n:"Éveil multisports — Centre Culturel de Cagnes", c:"gym", com:"Cagnes-sur-Mer", lat:43.6602, lon:7.1498, ages:"3–6", d:17,
+  det:"Weekly éveil multisport sessions", cost:"~€150–250/yr", url:"https://www.culture-cagnes.fr/eveil-activite/eveil-multisports/"},
+ /* --- Martial arts beyond RLP/Valbonne --- */
+ {n:"Judo Club de Cagnes (complexe sportif)", c:"martial", com:"Cagnes-sur-Mer", lat:43.6702, lon:7.1398, ages:"from ~4", d:17,
+  det:"Judo/karaté sections at the Cagnes sports complex", cost:"~€200–280/yr", verify:true},
+ /* --- Sailing --- */
+ {n:"École de voile municipale de Cagnes", c:"sail", com:"Cros-de-Cagnes", lat:43.6620, lon:7.1700, ages:"Jardin des Mers 5–7 (summer); Optimist 7+", d:18,
+  det:"Municipal sailing school at the Cros base: year-round Saturday classes + summer stages", cost:"Municipal rates, ~€150–250/stage", url:"https://ecoledevoile.cagnes.fr"},
+ {n:"Yacht Club de Villeneuve-Loubet (YCVL)", c:"sail", com:"Villeneuve-Loubet", lat:43.6340, lon:7.1395, ages:"Optimist from ~7", d:15,
+  det:"École de voile at Marina Baie des Anges", cost:"~€200–350/yr", url:"http://ycvl.fr/ecole-de-voile/"},
+ {n:"Société des Régates d'Antibes — école de voile", c:"sail", com:"Antibes", lat:43.5848, lon:7.1308, ages:"from ~7", d:25,
+  det:"Historic club at Port Vauban; Optimist school + summer stages", cost:"~€250–400/yr", url:"https://www.sr-antibes.fr/ecole-de-voile/"},
+ /* --- Music beyond RLP/Valbonne --- */
+ {n:"Conservatoire de musique d'Antibes", c:"music", com:"Antibes", lat:43.5812, lon:7.1172, ages:"éveil from 5", d:24,
+  det:"Full conservatoire (CRD): éveil, instruments, choirs", cost:"Municipal rates (QF)", verify:true},
+ {n:"École de musique de Cagnes", c:"music", com:"Cagnes-sur-Mer", lat:43.6676, lon:7.1508, ages:"éveil from ~5", d:17,
+  det:"Municipal music school", cost:"Municipal rates (QF)", verify:true},
+ /* --- Skate beyond RLP/Valbonne --- */
+ {n:"Skatepark de Cagnes (bord de mer)", c:"skate", com:"Cagnes-sur-Mer", lat:43.6570, lon:7.1550, ages:"all", d:17,
+  det:"Seafront skatepark on the promenade", cost:"Free", verify:true},
+ {n:"Skatepark d'Antibes", c:"skate", com:"Antibes", lat:43.5900, lon:7.1220, ages:"all", d:24,
+  det:"Skatepark near Fort Carré sports area", cost:"Free", verify:true},
+ {n:"Skatepark de Saint-Paul-de-Vence", c:"skate", com:"Saint-Paul-de-Vence", lat:43.6970, lon:7.1150, ages:"all", d:13,
+  det:"Small local skate spot", cost:"Free", verify:true},
+ {n:"Skatepark de Vence", c:"skate", com:"Vence", lat:43.7200, lon:7.1100, ages:"all", d:19,
+  det:"Municipal skatepark", cost:"Free", verify:true},
+ /* --- More playgrounds --- */
+ {n:"Playgrounds of Vaugrenier", c:"play", com:"Villeneuve-Loubet", lat:43.6398, lon:7.1262, ages:"2–12", d:14,
+  det:"The area's best big free playgrounds, inside the park", cost:"Free"},
+ {n:"Promenade playgrounds", c:"play", com:"Cagnes-sur-Mer", lat:43.6580, lon:7.1600, ages:"2–10", d:17,
+  det:"Seafront aires de jeux along the promenade", cost:"Free"},
+ {n:"La Pinède playground", c:"play", com:"Juan-les-Pins", lat:43.5680, lon:7.1060, ages:"2–10", d:26,
+  det:"Playground in the pine grove by the beach", cost:"Free", verify:true},
+
+ /* --- Roquefort-les-Pins: more --- */
+ {n:"Gymnastar — gym agrès", c:"gym", com:"Roquefort-les-Pins", lat:43.6684, lon:7.0538, ages:"kids (floor, vault, beam, trampoline)", d:3,
+  det:"Artistic gymnastics club at Espace Charvet (3 ch. des Courraouts)", cost:"€240–340/yr + €15", url:"https://www.ville-roquefort-les-pins.fr/articles/3218"},
+ {n:"Parc naturel départemental du Sinodon", c:"nature", com:"Roquefort-les-Pins", lat:43.6690, lon:7.0405, ages:"all", d:3,
+  det:"44 ha park at ch. du Peissaut: 3 loops (1.5–2.1 km), 11 picnic tables; village also has 7 marked trails incl. the Via Aurelia", cost:"Free", url:"https://recreanice.fr/parc-departemental-sinodon-balade-pique-nique"},
+ /* --- Valbonne: more --- */
+ {n:"Parc Arlette Gruss (Pré des Arts) — big playground", c:"play", com:"Valbonne", lat:43.6398, lon:7.0102, ages:"1–12", d:12,
+  det:"Main village playground + city-basket and ping-pong, next to the Pré des Arts car park", cost:"Free", url:"https://loumessugo.com/playgrounds-cote-dazur/"},
+ {n:"Jardin d'enfants de l'Île Verte", c:"play", com:"Valbonne", lat:43.6370, lon:7.0050, ages:"toddlers", d:12,
+  det:"Small shaded toddler playground by the old village", cost:"Free", url:"https://www.ville-valbonne.fr/point-d-interet/jardin-denfants-de-lile-verte/", verify:true},
+ {n:"Placette des Bambins (Garbejaïre)", c:"play", com:"Valbonne · Sophia", lat:43.6230, lon:7.0450, ages:"1–8", d:14,
+  det:"Neighbourhood playground, chemin des Pucets", cost:"Free", verify:true},
+ {n:"Jardin des Chalaisiens (Haut-Sartoux)", c:"play", com:"Valbonne · Sophia", lat:43.6160, lon:7.0540, ages:"2–10", d:15,
+  det:"Very shaded playground, av. de Pierrefeu — the summer pick", cost:"Free", verify:true},
+ {n:"Parc des Bouillides", c:"nature", com:"Valbonne · Sophia", lat:43.6300, lon:7.0370, ages:"all", d:14,
+  det:"Woodland park at the heart of Sophia: play areas, fitness trail, links to Valmasque paths", cost:"Free", url:"https://recreanice.fr/avis-parc-bouillides-valbonne-sortie-famille"},
+ {n:"Atelier Musical de Valbonne", c:"music", com:"Valbonne", lat:43.6420, lon:7.0094, ages:"éveil + instruments", d:12,
+  det:"Associative music school in the village — alternative to the municipal conservatoire", cost:"Assoc rates", url:"https://www.ateliermusicalvalbonne.org", verify:true},
+ {n:"Live Music School", c:"music", com:"Valbonne/Biot", lat:43.6360, lon:7.0300, ages:"from ~5", d:13,
+  det:"Private modern-music school (route de Biot side): drums, guitar, piano, singing", cost:"Private rates", url:"https://livemusicschool.fr", verify:true},
+ /* --- Mouans-Sartoux: complete --- */
+ {n:"SCMS Gymnastique Rythmique", c:"gym", com:"Mouans-Sartoux", lat:43.6150, lon:6.9730, ages:"baby-gym from ~3", d:21,
+  det:"Rhythmic gym club at Gymnase René Friard (256 av. de Cannes) — 2025/26 kids courses fill up fast", cost:"Club licence", url:"https://www.gr-mouans-sartoux.fr"},
+ {n:"SCMS Football (Sporting Club)", c:"foot", com:"Mouans-Sartoux", lat:43.6120, lon:6.9755, ages:"U6+", d:21,
+  det:"École de foot at Stade Alexandre Rebuttato, av. du Parc", cost:"~€150–250/yr", url:"https://scmsfootball.com"},
+ {n:"Judo Kwai Mouansois", c:"martial", com:"Mouans-Sartoux", lat:43.6118, lon:6.9782, ages:"éveil judo from ~4", d:21,
+  det:"Judo/jujitsu dojo, 250 route de Cannes; groups 6–8 / 9–11 / 12–14", cost:"Club licence", url:"https://judo-jujitsu.fr"},
+ {n:"Skatepark de Mouans (rte de Pégomas)", c:"skate", com:"Mouans-Sartoux", lat:43.6160, lon:6.9630, ages:"all (9:00–20:00)", d:21,
+  det:"Skatepark near the station/cinema/école Aimé Legall", cost:"Free", url:"https://www.paysdegrassetourisme.fr/skatepark-de-mouans-sartoux-7048839/", verify:true},
+ {n:"Skatepark François Jacob", c:"skate", com:"Mouans-Sartoux", lat:43.6070, lon:6.9580, ages:"8+ (pads required)", d:22,
+  det:"Second skatepark, chemin des Plaines", cost:"Free", verify:true},
+ {n:"École de musique Lucien Galliano", c:"music", com:"Mouans-Sartoux", lat:43.6228, lon:6.9672, ages:"kids + adults", d:20,
+  det:"At the Centre Culturel des Cèdres: instruments, solfège, ensembles", cost:"Annual fee", url:"http://www.centrecultureldescedres.fr"},
+ {n:"Parc du Château de Mouans + playground", c:"nature", com:"Mouans-Sartoux", lat:43.6238, lon:6.9722, ages:"all", d:20,
+  det:"Château park (Espace de l'Art Concret) + aire de jeux rue du Château in the centre", cost:"Free"},
+ {n:"Jardins du MIP (perfume-museum gardens)", c:"nature", com:"Mouans-Sartoux", lat:43.6080, lon:6.9850, ages:"all (Mar–Nov)", d:21,
+  det:"Fragrant-plant gardens of the Musée International de la Parfumerie — lovely easy family visit", cost:"~€4, kids often free", url:"https://www.museesdegrasse.com"},
+ {n:"Aire de jeux Grand'Pièce + city-stade", c:"play", com:"Mouans-Sartoux", lat:43.6130, lon:6.9728, ages:"2–14", d:21,
+  det:"Playground av. de la Grand'Pièce (sports quarter) + city-stade allée des Écoles", cost:"Free", verify:true},
+ /* --- Mougins: complete --- */
+ {n:"FC Mougins Côte d'Azur", c:"foot", com:"Mougins", lat:43.5900, lon:7.0080, ages:"from 5 (~700 players)", d:22,
+  det:"Big football school at Stade de la Valmasque, 1521 route d'Antibes", cost:"~€200–300/yr", url:"https://www.fcmougins.fr"},
+ {n:"Dojo municipal de Mougins — judo, karaté, aïkido", c:"martial", com:"Mougins", lat:43.5940, lon:6.9990, ages:"judo from 3; karaté 6–10", d:23,
+  det:"1835 av. Notre-Dame-de-Vie: Cannes Mougins Judo + École de Karaté Do Ricatti + Aïkido Club", cost:"Club licence", url:"https://ekdmougins.sportsregions.fr"},
+ {n:"Piscine des Campelières (CEC)", c:"swim", com:"Mougins", lat:43.5720, lon:6.9940, ages:"kids swim school Mon–Sat", d:24,
+  det:"Pool + école de natation at the Campelières centre — also the nearest lessons for Mouans-Sartoux (no pool there)", cost:"Entry + course fees", url:"https://lescampelieres.fr"},
+ {n:"CEC Les Campelières — gym, trampoline, circus", c:"gym", com:"Mougins", lat:43.5732, lon:6.9958, ages:"from 4", d:24,
+  det:"GRS, acro-gym, trampoline and circus school at the Campelières gymnasium", cost:"Annual fee", url:"https://lescampelieres.fr/activites/"},
+ {n:"École de musique de Mougins (Scène 55)", c:"music", com:"Mougins", lat:43.6070, lon:6.9950, ages:"éveil + instruments from 7 (~300 pupils)", d:22,
+  det:"Municipal music school in the Scène 55 building, 55 ch. de Faissole", cost:"Municipal rates", url:"https://mougins.fr/sortir/culture/ecole-de-musique/"},
+ {n:"Bike Park de Mougins", c:"skate", com:"Mougins", lat:43.6000, lon:6.9700, ages:"all levels (helmet)", d:23,
+  det:"Free 2 ha bike park, ch. des Peyroues: 4 tracks + pumptrack + dirt lines (10:00–19:00, 20:00 summer)", cost:"Free", url:"https://mougins.fr/sortir/sport/les-equipements-sportifs/"},
+ {n:"Skate Park de Mougins (Tournamy)", c:"skate", com:"Mougins", lat:43.6015, lon:6.9870, ages:"all", d:22,
+  det:"660 m² street park, avenue de Tournamy", cost:"Free", verify:true},
+ {n:"Aire de jeux Place des Arcades", c:"play", com:"Mougins-le-Haut", lat:43.6100, lon:7.0200, ages:"2–10", d:20,
+  det:"Playground on the Mougins-le-Haut square", cost:"Free", verify:true},
+ {n:"Aire de jeux Font de Currault", c:"play", com:"Mougins", lat:43.5830, lon:6.9960, ages:"2–12", d:23,
+  det:"Playground ch. de Font de Currault, near the old village", cost:"Free", verify:true},
+ {n:"Aire de jeux Font de l'Orme / Notre-Dame-de-Vie", c:"play", com:"Mougins", lat:43.5928, lon:6.9905, ages:"2–12", d:23,
+  det:"Playground by the médiathèque and sports area, av. Notre-Dame-de-Vie", cost:"Free", verify:true},
+ {n:"Le Grand Jardin", c:"play", com:"Vence", lat:43.7248, lon:7.1152, ages:"2–10", d:18,
+  det:"Town-centre public garden + playground", cost:"Free", verify:true}
+];
+const VILLAGES = [
+ {n:"Roquefort-les-Pins", lat:43.6647, lon:7.0499}, {n:"Le Rouret", lat:43.6740, lon:7.0106},
+ {n:"Opio", lat:43.6693, lon:6.9829}, {n:"La Colle-sur-Loup", lat:43.6867, lon:7.1046},
+ {n:"Châteauneuf-Grasse", lat:43.6717, lon:6.9722}, {n:"Valbonne", lat:43.6414, lon:7.0089},
+ {n:"Saint-Paul-de-Vence", lat:43.6969, lon:7.1224}, {n:"Villeneuve-Loubet", lat:43.6584, lon:7.1220},
+ {n:"Biot", lat:43.6288, lon:7.0955}, {n:"Cagnes-sur-Mer", lat:43.6636, lon:7.1489, city:true},
+ {n:"Vence", lat:43.7225, lon:7.1119, city:true}, {n:"Tourrettes-sur-Loup", lat:43.7147, lon:7.0592},
+ {n:"Mouans-Sartoux", lat:43.6211, lon:6.9706}, {n:"Grasse", lat:43.6589, lon:6.9239, city:true},
+ {n:"Mougins", lat:43.6008, lon:6.9955}, {n:"Antibes", lat:43.5770, lon:7.1300, city:true},
+ {n:"Cannes", lat:43.5530, lon:7.0140, city:true}
+];
+/* ================= HELPERS / STATE ================= */
+const $ = s => document.querySelector(s);
+const tip = $("#tip");
+function showTip(html, ev){ tip.innerHTML = html; tip.style.display = "block"; moveTip(ev); }
+function moveTip(ev){
+  const pad = 14, w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = ev.clientX + pad, y = ev.clientY + pad;
+  if (x + w > innerWidth - 8) x = ev.clientX - w - pad;
+  if (y + h > innerHeight - 8) y = ev.clientY - h - pad;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function hideTip(){ tip.style.display = "none"; }
+const esc = s => (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
+PLACES.forEach((p, i) => p.id = "p" + i);
+const state = { cats: new Set(Object.keys(CAT)), q: "" };
+const catWrap = $("#f-cats");
+Object.entries(CAT).forEach(([k, v]) => {
+  const b = document.createElement("button");
+  b.className = "chip on";
+  b.innerHTML = `<span class="dot" style="background:${v.color}"></span>${v.label}`;
+  b.onclick = () => { state.cats.has(k) ? state.cats.delete(k) : state.cats.add(k);
+    if (!state.cats.size) state.cats.add(k);
+    b.classList.toggle("on", state.cats.has(k)); render(); };
+  catWrap.appendChild(b);
+});
+$("#f-q").oninput = e => { state.q = e.target.value.trim().toLowerCase(); render(); };
+const visible = p => state.cats.has(p.c) && (!state.q || (p.n + " " + p.com).toLowerCase().includes(state.q));
+/* ================= MAP BASE (same as Schools Dashboard) ================= */
+const MAP = { lon0: 6.895, lon1: 7.235, lat0: 43.520, lat1: 43.745, w: 1000, h: 760 };
+const px = lon => (lon - MAP.lon0) / (MAP.lon1 - MAP.lon0) * MAP.w;
+const py = lat => (MAP.lat1 - lat) / (MAP.lat1 - MAP.lat0) * MAP.h;
+const PXKM = MAP.w / ((MAP.lon1 - MAP.lon0) * 80.4), PYKM = MAP.h / ((MAP.lat1 - MAP.lat0) * 111);
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+const svg = $("#map");
+const GEO = {"coast":[[-51.0,466.4],[-41.7,469.4],[-28.4,467.1],[-19.2,463.3],[-15.4,458.4],[-2.1,450.8],[0.7,458.1],[8.4,461.8],[10.8,469.7],[16.8,473.2],[23.6,481.0],[31.6,481.2],[36.0,486.3],[38.3,492.9],[42.6,495.2],[50.0,495.4],[41.1,508.1],[31.3,513.3],[24.6,526.2],[23.2,532.4],[19.7,535.7],[20.1,540.8],[10.1,552.1],[11.1,558.7],[21.2,570.8],[27.6,573.4],[30.9,578.6],[37.8,582.0],[40.8,599.9],[38.9,611.7],[23.3,608.7],[17.8,611.9],[9.2,624.8],[7.7,633.5],[-21.2,649.4],[-29.5,662.9],[-34.4,678.3],[-34.9,688.4],[-40.1,701.5],[-45.5,708.1],[-46.6,717.9],[-44.7,721.0],[-47.8,729.0],[-40.9,727.1],[-32.9,730.6],[-28.9,728.9],[-25.8,732.9],[-20.2,734.4],[-4.5,733.6],[4.1,735.8],[0.1,738.9],[2.3,749.2],[1.1,764.8],[-5.7,770.8],[-11.4,790.7],[-15.9,792.5],[-19.0,798.7],[-23.2,798.8],[-24.9,806.8],[-30.2,813.7],[-31.7,819.0],[-27.5,819.7],[-24.4,823.9],[-19.4,822.8],[-6.1,824.1],[-1.8,829.6],[7.6,833.3],[12.3,837.0],[13.9,842.2],[26.2,844.2],[30.8,846.7],[41.5,845.2],[51.9,848.9],[51.7,854.9],[48.9,862.8],[55.6,879.4],[55.3,885.8],[74.7,887.5],[82.6,892.5],[88.1,890.9],[97.4,891.4],[113.9,894.9],[107.4,891.7],[106.1,882.8],[110.9,880.4],[128.9,879.4],[138.0,880.5],[140.6,878.8],[149.5,885.1],[150.8,879.4],[157.9,876.7],[157.1,869.8],[153.1,865.9],[155.4,857.4],[159.5,854.5],[160.9,845.6],[165.5,839.6],[174.9,840.5],[180.0,837.8],[176.3,832.5],[177.1,828.4],[182.5,824.9],[175.8,818.9],[175.1,809.9],[169.0,806.5],[163.4,808.1],[152.1,807.6],[139.8,803.8],[137.1,798.4],[132.0,798.4],[126.0,795.6],[125.6,784.9],[127.6,772.2],[134.2,768.4],[136.6,762.6],[137.3,754.8],[149.8,739.0],[162.0,734.2],[162.6,728.5],[156.4,722.8],[176.9,702.0],[201.0,685.1],[226.0,674.0],[256.0,666.7],[290.4,662.4],[320.6,663.3],[334.4,664.8],[344.5,667.9],[347.0,664.4],[346.4,657.0],[357.6,656.1],[358.6,664.0],[363.9,659.1],[378.4,660.5],[387.1,663.4],[404.5,672.7],[403.6,678.3],[409.7,684.8],[405.8,694.7],[413.0,697.8],[416.4,702.3],[414.6,706.6],[419.8,710.3],[423.9,706.1],[422.8,701.9],[426.8,688.4],[429.2,685.4],[436.7,682.5],[451.1,670.3],[469.6,668.4],[478.4,658.8],[484.2,648.5],[491.7,642.8],[502.8,624.8],[513.0,614.8],[528.6,605.2],[538.5,603.8],[556.8,592.7],[591.9,588.1],[602.5,588.3],[616.7,591.3],[641.0,601.1],[645.9,605.2],[653.7,620.3],[660.6,621.3],[666.9,626.6],[667.4,635.1],[665.0,640.8],[668.0,645.8],[666.6,652.2],[659.7,654.6],[652.7,665.8],[657.5,667.7],[662.4,674.0],[659.3,675.9],[658.8,682.7],[665.1,687.1],[671.0,683.3],[664.4,678.1],[671.6,672.3],[688.7,672.4],[690.9,680.6],[709.9,677.0],[716.5,668.7],[713.1,665.9],[717.0,661.6],[722.3,661.4],[725.4,655.7],[735.5,653.1],[732.9,648.7],[726.5,643.2],[721.7,641.7],[711.8,644.9],[704.9,640.0],[707.1,638.3],[706.7,631.6],[718.8,615.1],[714.9,601.0],[722.2,594.7],[719.1,590.7],[704.4,591.6],[702.1,590.1],[696.2,594.0],[690.9,591.8],[683.6,580.8],[676.5,578.2],[682.5,562.3],[686.6,558.5],[689.6,552.8],[689.7,545.7],[685.1,546.6],[680.7,543.8],[670.0,541.5],[667.1,533.6],[670.6,529.3],[680.2,530.2],[689.4,526.6],[691.9,522.6],[689.0,515.0],[680.7,515.7],[678.9,508.1],[680.8,471.9],[691.4,429.7],[711.8,381.4],[718.9,377.0],[717.8,374.0],[711.8,372.8],[712.6,367.0],[721.1,371.6],[721.5,367.6],[728.6,354.9],[733.1,349.2],[738.7,348.5],[737.2,343.5],[740.6,337.2],[753.1,323.4],[770.5,309.1],[802.0,295.9],[811.6,296.8],[813.5,300.6],[825.5,302.1],[837.0,301.2],[857.5,295.7],[881.0,294.1],[893.1,300.7],[898.3,310.7],[905.5,316.5],[904.4,322.1],[894.7,329.7],[895.2,333.5],[899.2,337.1],[916.1,335.6],[921.1,329.3],[931.2,329.9],[935.3,326.2],[931.1,321.4],[936.5,311.3],[950.3,305.3],[951.2,300.5],[959.7,294.9],[962.9,296.1],[971.4,289.1],[973.2,279.5],[986.2,268.7],[982.3,256.9],[984.5,246.5],[983.4,241.8],[988.7,235.8],[990.0,230.7],[987.2,224.5],[993.5,214.6],[1016.6,193.3],[1038.1,182.2]],"communes":[{"n":"Gattières","r":[[[694.3,-152.8],[700.0,-154.8],[703.9,-150.5],[703.9,-145.0],[707.6,-137.7],[711.0,-137.8],[716.5,-132.4],[735.3,-120.8],[740.8,-123.4],[747.7,-113.1],[772.3,-100.4],[784.6,-98.0],[785.5,-95.4],[799.0,-95.0],[807.4,-92.1],[815.4,-94.7],[820.0,-99.3],[832.4,-101.0],[837.5,-96.8],[844.0,-96.8],[850.1,-93.9],[858.2,-94.4],[860.9,-87.6],[867.2,-86.3],[867.2,-76.2],[869.3,-72.1],[874.5,-70.6],[893.7,-75.9],[908.2,-66.8],[890.3,-49.7],[882.6,-37.6],[853.4,-5.7],[802.6,-29.6],[796.7,-21.4],[777.1,-34.4],[772.1,-35.0],[761.6,-44.1],[759.2,-57.7],[744.6,-66.3],[739.7,-79.2],[710.9,-110.1],[711.2,-116.5],[706.9,-117.9],[703.5,-123.9],[700.7,-144.3],[694.3,-152.8]]]},{"n":"La Gaude","r":[[[726.2,151.8],[729.2,146.1],[727.4,140.1],[721.7,138.2],[729.6,131.3],[730.6,125.2],[726.1,124.8],[729.7,109.7],[727.9,104.6],[728.9,95.6],[738.1,86.4],[738.4,74.1],[741.6,68.6],[733.8,62.6],[728.9,64.7],[724.6,70.6],[723.4,78.0],[715.3,70.5],[712.1,63.2],[713.8,50.7],[710.6,46.4],[711.5,38.0],[713.9,33.9],[728.8,24.0],[759.6,12.8],[767.5,19.9],[775.0,22.6],[794.8,13.7],[815.0,15.0],[821.7,9.3],[846.4,12.1],[843.8,27.0],[844.4,39.4],[851.1,88.9],[818.0,91.8],[809.6,95.7],[805.7,100.6],[809.5,107.0],[807.9,115.4],[799.4,125.3],[799.6,135.6],[803.4,148.1],[803.5,159.7],[795.6,159.7],[798.4,168.1],[790.9,169.4],[791.1,175.7],[774.5,174.8],[764.9,171.1],[751.4,153.5],[726.2,151.8]]]},{"n":"Nice","r":[[[851.1,88.9],[843.8,27.0],[849.4,1.6],[853.4,-5.7],[882.6,-37.6],[890.3,-49.7],[895.3,-53.5],[917.3,-42.8],[926.4,-42.2],[931.0,-38.9],[940.5,-37.2],[945.5,-28.0],[945.5,-21.6],[950.8,-22.7],[956.1,-20.0],[955.6,8.1],[962.2,12.6],[966.7,6.4],[983.9,-1.9],[991.8,-1.6],[1011.8,-20.3],[1021.3,-17.5],[1021.9,-21.3],[1040.1,-22.2],[1040.1,-9.4],[1043.5,-5.9],[1051.2,-3.5],[1051.1,1.9],[1047.5,9.2],[1048.5,16.1],[1060.6,10.6],[1067.2,10.3],[1080.6,-1.5],[1084.4,5.3],[1095.6,2.3],[1107.2,4.1],[1111.2,0.1],[1115.2,0.2],[1120.0,6.9],[1125.6,8.7],[1130.9,6.6],[1132.2,9.5],[1130.1,16.8],[1137.7,28.4],[1136.2,30.8],[1149.7,37.5],[1163.9,34.3],[1176.3,29.0],[1178.7,23.3],[1187.5,18.4],[1181.3,8.3],[1177.1,-4.3],[1176.7,-11.7],[1179.8,-16.4],[1182.9,-31.4],[1181.1,-33.9],[1180.1,-46.3],[1182.7,-43.9],[1185.2,-36.0],[1197.9,-29.6],[1212.3,-28.5],[1214.5,-20.0],[1226.9,-1.8],[1219.6,3.9],[1219.9,14.2],[1213.5,26.7],[1208.1,31.2],[1200.9,34.0],[1170.1,38.3],[1169.0,40.8],[1173.8,47.1],[1186.4,54.5],[1192.9,70.7],[1197.8,78.9],[1201.1,80.7],[1206.5,76.7],[1208.2,64.0],[1220.6,67.5],[1229.7,74.9],[1239.4,76.7],[1252.5,72.8],[1260.1,74.5],[1249.5,75.7],[1234.2,83.2],[1228.1,93.7],[1230.9,100.0],[1229.5,103.0],[1219.3,105.1],[1209.8,112.4],[1210.6,118.2],[1207.3,121.7],[1197.5,125.3],[1193.4,147.9],[1207.3,171.0],[1212.8,177.4],[1216.9,177.8],[1213.4,194.5],[1208.7,199.7],[1176.2,199.6],[1172.4,197.2],[1173.9,189.9],[1170.7,183.1],[1164.9,181.2],[1161.3,175.7],[1147.8,172.9],[1149.0,159.6],[1144.6,159.4],[1144.7,168.2],[1142.0,170.8],[1146.9,176.5],[1134.5,177.0],[1128.8,175.5],[1123.1,171.1],[1080.7,171.4],[1038.1,182.2],[1025.9,187.9],[1008.6,199.3],[993.5,214.6],[987.2,224.5],[990.0,230.7],[988.7,235.8],[983.4,241.8],[984.5,246.5],[982.3,256.9],[986.2,268.7],[973.2,279.5],[971.4,289.1],[962.9,296.1],[959.7,294.9],[951.2,300.5],[950.3,305.3],[936.5,311.3],[931.1,321.4],[935.3,326.2],[931.2,329.9],[921.1,329.3],[916.1,335.6],[899.2,337.1],[894.7,329.7],[904.4,322.1],[905.5,316.5],[898.3,310.7],[894.9,304.5],[897.1,301.5],[898.4,291.3],[896.9,283.8],[862.9,189.4],[859.1,170.0],[851.1,88.9]]]},{"n":"Saint-Jeannet","r":[[[711.5,38.0],[708.2,36.4],[704.1,29.8],[706.0,22.6],[709.2,21.2],[709.4,13.1],[707.2,5.6],[689.5,-16.1],[687.2,-22.0],[688.2,-25.8],[675.9,-32.8],[673.6,-36.5],[659.1,-38.6],[656.5,-40.9],[657.7,-50.0],[653.4,-56.9],[648.1,-56.3],[638.5,-60.5],[641.1,-65.8],[639.1,-78.8],[642.1,-81.5],[636.4,-85.3],[633.6,-90.6],[635.2,-116.2],[652.9,-127.4],[663.3,-127.0],[678.8,-134.7],[687.3,-141.0],[694.3,-152.8],[700.7,-144.3],[703.5,-123.9],[706.9,-117.9],[711.2,-116.5],[710.9,-110.1],[739.7,-79.2],[744.6,-66.3],[759.2,-57.7],[761.6,-44.1],[772.1,-35.0],[777.1,-34.4],[796.7,-21.4],[802.6,-29.6],[853.4,-5.7],[846.4,12.1],[821.7,9.3],[815.0,15.0],[794.8,13.7],[775.0,22.6],[767.5,19.9],[759.6,12.8],[728.8,24.0],[713.9,33.9],[711.5,38.0]]]},{"n":"Saint-Laurent-du-Var","r":[[[894.9,304.5],[893.1,300.7],[881.0,294.1],[857.5,295.7],[837.0,301.2],[833.1,300.5],[830.6,281.7],[834.9,279.1],[836.9,272.3],[835.8,261.0],[824.7,244.8],[824.1,238.2],[833.0,226.4],[830.1,220.1],[834.7,212.7],[835.8,204.6],[828.2,200.8],[826.7,178.4],[814.1,173.1],[791.1,175.7],[790.9,169.4],[798.4,168.1],[795.6,159.7],[803.5,159.7],[803.4,148.1],[799.6,135.6],[799.4,125.3],[807.9,115.4],[809.5,107.0],[805.7,100.6],[809.6,95.7],[818.0,91.8],[851.1,88.9],[859.1,170.0],[862.9,189.4],[896.9,283.8],[898.4,291.3],[897.1,301.5],[894.9,304.5]]]},{"n":"Tourrettes-sur-Loup","r":[[[414.9,151.1],[409.3,149.5],[392.1,151.9],[386.5,157.0],[380.4,158.8],[353.2,159.6],[348.0,162.0],[336.1,160.1],[330.1,161.4],[324.8,158.1],[321.1,151.4],[311.7,150.5],[307.9,144.2],[309.1,139.7],[304.4,130.7],[300.1,129.7],[295.1,122.6],[290.7,123.3],[283.4,111.5],[282.0,92.0],[285.4,86.1],[287.6,72.3],[291.4,69.1],[295.8,61.3],[296.5,55.7],[303.0,43.9],[321.8,47.3],[331.8,53.2],[357.3,43.9],[373.6,43.6],[384.9,48.9],[389.6,32.1],[390.0,19.6],[421.6,11.9],[457.7,-9.6],[461.7,-5.8],[465.3,2.6],[463.5,6.9],[473.6,11.1],[479.1,17.9],[483.3,14.6],[506.3,19.3],[502.1,24.3],[506.1,31.9],[511.1,33.3],[520.7,50.8],[533.7,60.1],[541.5,69.6],[541.7,98.7],[543.8,107.8],[540.0,116.7],[539.8,128.0],[542.9,134.2],[539.3,142.9],[531.0,152.1],[530.2,156.3],[534.8,177.0],[522.6,189.4],[516.3,191.3],[508.5,187.8],[505.4,191.7],[502.8,174.5],[489.9,173.9],[489.6,169.3],[493.9,168.1],[494.1,163.4],[487.8,161.6],[484.7,164.5],[474.6,161.3],[467.4,164.9],[446.0,158.4],[437.9,154.0],[428.9,154.4],[420.7,151.0],[414.9,151.1]]]},{"n":"Vence","r":[[[635.2,-116.2],[633.6,-90.6],[636.4,-85.3],[642.1,-81.5],[639.1,-78.8],[641.1,-65.8],[638.5,-60.5],[648.1,-56.3],[653.4,-56.9],[657.7,-50.0],[656.5,-40.9],[659.1,-38.6],[673.6,-36.5],[675.9,-32.8],[688.2,-25.8],[687.2,-22.0],[689.5,-16.1],[707.2,5.6],[709.4,13.1],[709.2,21.2],[706.0,22.6],[704.1,29.8],[708.2,36.4],[711.5,38.0],[710.6,46.4],[713.8,50.7],[712.1,63.2],[715.3,70.5],[723.4,78.0],[724.6,70.6],[728.9,64.7],[733.8,62.6],[741.6,68.6],[738.4,74.1],[738.1,86.4],[728.9,95.6],[727.9,104.6],[729.7,109.7],[726.1,124.8],[730.6,125.2],[729.6,131.3],[721.7,138.2],[727.4,140.1],[729.2,146.1],[726.2,151.8],[719.6,157.3],[723.1,160.7],[722.7,166.2],[725.2,173.3],[729.4,176.2],[730.1,180.3],[703.6,169.6],[698.8,160.3],[698.9,153.7],[695.0,148.7],[691.7,138.1],[684.6,130.6],[669.6,123.0],[665.8,114.7],[661.6,110.7],[654.4,113.4],[648.7,110.7],[634.0,111.8],[631.6,115.6],[617.6,124.5],[603.8,131.6],[593.9,132.1],[584.6,140.8],[569.1,145.6],[560.2,140.9],[547.7,139.0],[539.8,128.0],[540.0,116.7],[543.8,107.8],[541.7,98.7],[541.5,69.6],[533.7,60.1],[520.7,50.8],[511.1,33.3],[506.1,31.9],[502.1,24.3],[506.3,19.3],[483.3,14.6],[479.1,17.9],[473.6,11.1],[463.5,6.9],[465.3,2.6],[461.7,-5.8],[465.6,-11.8],[464.4,-15.8],[482.4,-27.9],[492.1,-28.8],[507.9,-39.5],[515.5,-47.2],[529.3,-55.5],[530.1,-61.4],[526.4,-72.1],[523.3,-74.1],[524.0,-79.7],[541.8,-98.8],[555.0,-102.3],[566.1,-107.8],[569.4,-122.0],[581.6,-120.5],[597.6,-125.8],[623.6,-127.9],[633.2,-121.1],[635.2,-116.2]]]},{"n":"Antibes","r":[[[507.6,467.5],[502.9,464.7],[506.4,460.8],[507.3,455.8],[515.3,448.6],[541.0,456.3],[546.9,456.5],[546.7,464.1],[557.8,462.3],[559.7,455.7],[564.9,456.9],[567.9,452.5],[579.6,455.0],[589.6,444.1],[599.2,438.5],[604.2,437.6],[608.9,432.1],[623.4,432.5],[632.7,437.3],[635.8,433.3],[640.1,435.4],[647.7,428.4],[648.9,419.8],[653.6,417.8],[655.9,413.6],[665.5,421.4],[678.9,424.4],[691.4,429.7],[680.8,471.9],[678.9,508.1],[680.7,515.7],[689.0,515.0],[691.9,522.6],[689.4,526.6],[680.2,530.2],[670.6,529.3],[667.1,533.6],[670.0,541.5],[680.7,543.8],[685.1,546.6],[689.7,545.7],[689.6,552.8],[682.5,562.3],[676.5,578.2],[683.6,580.8],[690.9,591.8],[696.2,594.0],[704.4,591.6],[719.1,590.7],[722.2,594.7],[714.9,601.0],[718.8,615.1],[706.7,631.6],[707.1,638.3],[711.8,644.9],[721.7,641.7],[726.5,643.2],[735.5,653.1],[725.4,655.7],[722.3,661.4],[717.0,661.6],[713.1,665.9],[716.5,668.7],[709.9,677.0],[690.9,680.6],[688.7,672.4],[671.6,672.3],[664.4,678.1],[671.0,683.3],[665.1,687.1],[658.8,682.7],[659.3,675.9],[662.4,674.0],[657.5,667.7],[652.7,665.8],[659.7,654.6],[666.6,652.2],[668.0,645.8],[665.0,640.8],[667.4,635.1],[666.9,626.6],[660.6,621.3],[653.7,620.3],[645.9,605.2],[641.0,601.1],[616.7,591.3],[602.5,588.3],[563.2,591.7],[566.0,582.7],[554.9,575.2],[549.1,573.7],[545.2,567.9],[543.4,557.0],[536.4,549.7],[530.6,547.1],[526.2,541.1],[521.5,541.1],[509.6,535.5],[504.5,531.0],[501.4,514.5],[502.0,492.7],[498.2,482.7],[498.5,478.4],[507.7,473.3],[507.6,467.5]]]},{"n":"Auribeau-sur-Siagne","r":[[[50.0,495.4],[42.6,495.2],[38.3,492.9],[36.0,486.3],[31.6,481.2],[23.6,481.0],[16.8,473.2],[10.8,469.7],[8.4,461.8],[0.7,458.1],[-1.6,452.6],[5.7,434.3],[18.9,427.5],[22.0,410.7],[26.9,411.6],[36.4,409.2],[42.6,414.5],[50.4,410.2],[55.3,410.4],[64.6,404.6],[71.8,411.5],[71.5,415.4],[82.1,427.6],[86.8,424.8],[93.5,425.3],[100.4,432.3],[102.3,438.8],[101.2,444.5],[87.8,455.3],[69.1,483.6],[67.5,489.9],[56.9,503.1],[54.0,495.6],[50.0,495.4]]]},{"n":"Le Bar-sur-Loup","r":[[[38.1,156.5],[31.9,153.6],[29.0,134.1],[26.1,127.4],[18.9,118.5],[12.6,115.2],[12.4,107.8],[49.9,106.1],[66.4,103.5],[68.4,100.9],[75.7,102.8],[82.4,101.1],[85.8,97.8],[92.7,130.0],[97.5,133.6],[92.4,139.8],[91.4,144.0],[93.6,160.3],[98.3,160.9],[132.3,151.5],[156.3,135.1],[165.1,131.9],[170.1,133.8],[176.3,147.1],[188.7,153.0],[193.3,152.5],[201.1,145.6],[212.2,142.7],[221.6,142.9],[231.7,136.4],[239.6,139.2],[254.3,137.4],[240.1,119.1],[239.0,111.9],[240.4,108.1],[245.7,103.7],[257.3,108.8],[282.1,106.6],[290.7,123.3],[295.1,122.6],[300.1,129.7],[304.4,130.7],[309.1,139.7],[307.9,144.2],[311.7,150.5],[321.1,151.4],[324.8,158.1],[330.1,161.4],[336.1,160.1],[348.0,162.0],[353.2,159.6],[380.4,158.8],[386.5,157.0],[392.1,151.9],[409.3,149.5],[414.9,151.1],[399.3,154.8],[398.2,159.6],[381.9,171.8],[381.4,166.5],[374.7,168.7],[333.3,166.1],[327.4,164.3],[314.4,171.5],[316.4,176.8],[308.3,183.8],[290.2,194.1],[281.0,196.1],[256.3,210.3],[246.6,209.2],[232.6,203.2],[229.6,198.7],[222.2,197.7],[219.0,194.6],[191.7,198.1],[189.4,194.7],[157.9,183.7],[155.4,179.5],[145.7,177.1],[133.9,177.8],[126.3,170.9],[107.6,165.5],[95.5,165.1],[85.6,168.2],[80.2,165.4],[76.6,161.0],[42.8,158.8],[38.1,156.5]]]},{"n":"Biot","r":[[[462.7,350.4],[489.7,348.8],[507.4,351.2],[533.8,349.7],[552.1,343.9],[555.8,345.7],[572.7,334.1],[576.8,335.5],[596.6,331.4],[617.5,347.8],[622.1,359.3],[638.4,375.4],[637.7,394.7],[655.9,413.6],[653.6,417.8],[648.9,419.8],[647.7,428.4],[640.1,435.4],[635.8,433.3],[632.7,437.3],[623.4,432.5],[608.9,432.1],[604.2,437.6],[599.2,438.5],[589.6,444.1],[579.6,455.0],[567.9,452.5],[564.9,456.9],[559.7,455.7],[557.8,462.3],[546.7,464.1],[546.9,456.5],[541.0,456.3],[515.3,448.6],[499.4,439.0],[492.2,439.9],[476.8,432.1],[479.4,421.5],[470.3,412.8],[470.9,404.7],[467.7,401.0],[471.8,381.0],[469.3,377.1],[460.5,372.1],[456.0,372.0],[445.8,363.2],[462.7,350.4]]]},{"n":"Cagnes-sur-Mer","r":[[[663.5,251.4],[664.1,245.0],[699.6,237.5],[696.8,230.3],[696.1,221.4],[705.1,215.8],[698.8,212.3],[702.9,205.0],[723.0,187.7],[717.5,184.4],[730.1,180.3],[729.4,176.2],[725.2,173.3],[722.7,166.2],[723.1,160.7],[719.6,157.3],[726.2,151.8],[751.4,153.5],[764.9,171.1],[774.5,174.8],[791.1,175.7],[814.1,173.1],[826.7,178.4],[828.2,200.8],[835.8,204.6],[834.7,212.7],[830.1,220.1],[833.0,226.4],[824.1,238.2],[824.7,244.8],[835.8,261.0],[836.9,272.3],[834.9,279.1],[830.6,281.7],[833.1,300.5],[825.5,302.1],[813.5,300.6],[811.6,296.8],[802.0,295.9],[770.5,309.1],[753.1,323.4],[740.6,337.2],[736.7,348.4],[721.7,331.6],[713.2,327.0],[709.5,322.4],[700.7,323.5],[701.4,318.1],[692.9,314.8],[690.5,310.7],[701.6,297.1],[687.9,287.4],[672.2,271.0],[663.5,251.4]]]},{"n":"Cannes","r":[[[200.5,578.6],[203.6,578.7],[215.1,589.6],[220.5,598.1],[204.5,603.6],[206.3,621.0],[213.2,622.8],[221.1,616.7],[227.6,616.0],[229.6,618.5],[246.5,618.7],[251.8,610.8],[261.6,603.1],[293.6,603.2],[299.0,601.0],[304.4,606.8],[324.0,594.6],[329.7,601.8],[340.6,606.6],[366.4,608.5],[378.4,598.4],[389.3,593.7],[412.2,594.8],[417.5,600.1],[449.3,613.2],[449.1,625.8],[447.0,631.0],[455.3,650.6],[465.5,655.9],[478.8,657.6],[469.6,668.4],[451.1,670.3],[436.7,682.5],[429.2,685.4],[422.8,701.9],[423.9,706.1],[419.8,710.3],[414.6,706.6],[416.4,702.3],[413.0,697.8],[405.8,694.7],[409.7,684.8],[403.6,678.3],[404.5,672.7],[378.4,660.5],[363.9,659.1],[358.6,664.0],[357.6,656.1],[346.4,657.0],[347.0,664.4],[344.5,667.9],[320.6,663.3],[290.4,662.4],[256.0,666.7],[226.0,674.0],[201.0,685.1],[188.3,693.1],[166.4,712.3],[165.9,705.0],[170.6,696.1],[178.7,690.8],[178.7,686.3],[183.2,681.6],[183.1,677.0],[178.3,676.5],[170.4,679.8],[160.7,677.5],[162.1,665.1],[165.3,663.1],[166.5,656.8],[175.4,659.6],[177.9,657.5],[177.3,650.2],[181.2,645.9],[183.4,639.0],[174.2,637.2],[174.1,630.2],[170.7,620.5],[175.9,619.0],[178.6,612.1],[168.9,604.7],[167.3,600.5],[157.0,599.9],[146.4,590.8],[145.8,587.3],[180.1,575.5],[200.5,578.6]],[[506.2,781.4],[504.9,777.6],[488.7,773.9],[486.0,776.1],[453.9,774.1],[450.3,775.7],[436.6,774.6],[414.0,768.5],[401.7,756.5],[403.6,748.4],[418.2,754.9],[426.2,753.1],[438.3,746.1],[451.0,747.3],[465.5,756.7],[488.4,760.2],[495.9,759.7],[502.3,764.7],[517.3,768.9],[514.0,773.9],[508.9,773.8],[506.2,781.4]],[[449.5,812.4],[447.6,809.7],[427.4,807.5],[417.9,804.6],[417.9,798.8],[447.9,795.7],[460.9,797.3],[471.9,801.1],[469.1,804.8],[457.7,806.1],[449.5,812.4]]]},{"n":"Le Cannet","r":[[[220.5,598.1],[226.6,597.6],[230.1,590.9],[244.6,579.6],[250.1,581.0],[259.0,579.5],[261.7,577.1],[279.7,572.4],[289.8,560.7],[304.6,557.6],[316.8,560.0],[335.4,555.1],[338.4,551.4],[347.0,553.8],[355.0,559.2],[354.1,542.9],[364.4,529.1],[377.0,536.2],[380.3,541.5],[387.2,544.9],[391.0,552.6],[401.9,555.7],[419.3,553.4],[419.5,557.9],[407.4,567.0],[405.3,571.2],[408.2,574.3],[408.3,582.6],[412.2,594.8],[389.3,593.7],[378.4,598.4],[366.4,608.5],[340.6,606.6],[329.7,601.8],[324.0,594.6],[304.4,606.8],[299.0,601.0],[293.6,603.2],[261.6,603.1],[251.8,610.8],[246.5,618.7],[229.6,618.5],[227.6,616.0],[221.1,616.7],[213.2,622.8],[206.3,621.0],[204.5,603.6],[220.5,598.1]]]},{"n":"Châteauneuf-Grasse","r":[[[275.1,350.8],[266.4,346.1],[259.9,345.3],[253.4,340.5],[243.9,339.6],[240.0,334.8],[226.6,327.8],[222.1,315.4],[224.2,309.0],[206.8,293.6],[199.6,283.5],[201.9,274.4],[195.4,265.4],[195.4,260.1],[188.7,246.7],[194.7,242.3],[204.8,239.4],[219.4,222.4],[218.6,215.1],[211.2,208.9],[212.0,205.9],[191.7,198.1],[219.0,194.6],[222.2,197.7],[229.6,198.7],[232.6,203.2],[246.6,209.2],[256.3,210.3],[272.2,201.0],[287.4,200.0],[292.7,208.2],[305.4,215.7],[311.8,223.3],[302.9,228.2],[289.2,230.3],[287.6,251.7],[289.7,255.4],[285.9,255.1],[269.0,245.3],[266.3,248.2],[255.6,244.8],[252.4,248.8],[247.2,246.5],[244.5,251.8],[238.4,256.5],[236.4,263.1],[245.4,278.6],[258.4,280.7],[261.1,279.5],[265.7,286.6],[275.4,293.7],[275.0,296.8],[280.0,301.6],[285.4,311.1],[291.1,315.9],[298.6,329.5],[310.3,341.7],[312.7,351.8],[306.0,351.7],[302.1,355.1],[282.6,354.8],[275.1,350.8]]]},{"n":"La Colle-sur-Loup","r":[[[522.6,189.4],[534.8,177.0],[530.2,156.3],[531.0,152.1],[539.3,142.9],[542.9,134.2],[547.7,139.0],[560.2,140.9],[569.1,145.6],[584.6,140.8],[590.2,136.0],[606.0,149.3],[614.3,152.2],[626.4,164.1],[635.5,166.3],[642.9,173.0],[647.5,180.5],[639.5,186.3],[645.1,196.3],[645.7,201.0],[653.3,206.6],[664.6,225.9],[668.2,228.6],[672.8,242.2],[664.1,245.0],[663.5,251.4],[651.2,255.3],[641.1,253.8],[634.0,259.2],[627.4,253.9],[612.1,253.5],[606.4,250.1],[601.9,241.5],[594.8,242.3],[588.5,235.1],[579.9,229.7],[570.0,217.0],[565.2,214.5],[558.2,213.7],[555.8,219.4],[550.9,221.9],[547.4,218.4],[541.5,217.9],[536.0,212.3],[530.0,209.5],[527.6,203.4],[519.3,197.7],[522.6,189.4]]]},{"n":"Grasse","r":[[[101.2,444.5],[102.3,438.8],[100.4,432.3],[93.5,425.3],[86.8,424.8],[82.1,427.6],[71.5,415.4],[71.8,411.5],[64.6,404.6],[55.3,410.4],[50.4,410.2],[42.6,414.5],[36.4,409.2],[26.9,411.6],[18.2,410.8],[13.1,405.8],[13.6,401.1],[10.1,398.3],[3.1,402.7],[-5.3,391.0],[-0.3,384.5],[-4.8,372.9],[-0.3,364.1],[-1.1,358.6],[-5.2,351.4],[-3.7,322.9],[-6.9,315.0],[-5.0,304.7],[1.8,298.2],[-3.0,288.3],[-1.1,283.1],[-6.6,282.1],[-16.9,273.7],[-22.3,263.9],[-25.9,261.7],[-18.9,245.9],[-14.7,243.8],[-9.3,235.4],[-0.6,238.2],[9.0,245.1],[11.9,241.5],[11.0,233.3],[34.3,229.0],[48.5,217.0],[59.1,214.6],[62.6,210.1],[60.3,206.6],[62.4,202.2],[62.7,190.3],[52.8,179.6],[49.4,178.3],[46.3,172.2],[32.4,166.9],[42.0,162.7],[38.1,156.5],[42.8,158.8],[76.6,161.0],[80.2,165.4],[85.6,168.2],[95.5,165.1],[107.6,165.5],[126.3,170.9],[133.9,177.8],[145.7,177.1],[155.4,179.5],[157.9,183.7],[189.4,194.7],[191.7,198.1],[212.0,205.9],[211.2,208.9],[218.6,215.1],[219.4,222.4],[204.8,239.4],[194.7,242.3],[188.7,246.7],[195.4,260.1],[195.4,265.4],[201.9,274.4],[199.6,283.5],[206.8,293.6],[224.2,309.0],[222.1,315.4],[226.6,327.8],[240.0,334.8],[243.9,339.6],[253.4,340.5],[259.9,345.3],[266.4,346.1],[275.1,350.8],[263.3,351.2],[259.1,353.9],[250.3,354.7],[248.5,359.9],[240.7,369.7],[240.9,372.2],[231.8,375.8],[225.9,380.6],[211.4,381.3],[208.6,384.4],[208.4,393.5],[211.4,402.8],[208.9,408.4],[202.0,407.5],[180.9,398.9],[161.2,400.9],[138.1,400.4],[127.1,406.3],[121.1,412.0],[110.9,427.5],[112.5,435.7],[115.2,437.3],[101.2,444.5]]]},{"n":"Mandelieu-la-Napoule","r":[[[-31.7,819.0],[-30.2,813.7],[-24.9,806.8],[-23.2,798.8],[-19.0,798.7],[-15.9,792.5],[-11.4,790.7],[-5.7,770.8],[1.1,764.8],[2.3,749.2],[0.1,738.9],[4.1,735.8],[-4.5,733.6],[-20.2,734.4],[-25.8,732.9],[-28.9,728.9],[-32.9,730.6],[-40.9,727.1],[-47.8,729.0],[-44.7,721.0],[-46.6,717.9],[-45.5,708.1],[-40.1,701.5],[-34.9,688.4],[-34.4,678.3],[-29.5,662.9],[-21.2,649.4],[7.7,633.5],[9.2,624.8],[17.8,611.9],[23.3,608.7],[34.2,610.9],[52.1,619.2],[61.3,615.2],[70.6,603.9],[85.8,592.4],[89.4,587.2],[112.4,587.1],[135.1,590.9],[137.5,588.3],[145.8,587.3],[146.4,590.8],[157.0,599.9],[167.3,600.5],[168.9,604.7],[178.6,612.1],[175.9,619.0],[170.7,620.5],[174.1,630.2],[174.2,637.2],[183.4,639.0],[181.2,645.9],[177.3,650.2],[177.9,657.5],[175.4,659.6],[166.5,656.8],[165.3,663.1],[162.1,665.1],[160.7,677.5],[170.4,679.8],[178.3,676.5],[183.1,677.0],[183.2,681.6],[178.7,686.3],[178.7,690.8],[170.6,696.1],[165.9,705.0],[166.4,712.3],[156.4,722.8],[162.6,728.5],[162.0,734.2],[149.8,739.0],[137.3,754.8],[134.2,768.4],[127.6,772.2],[120.2,768.0],[108.4,767.0],[62.9,780.4],[55.9,788.9],[59.3,798.8],[49.5,808.7],[39.5,828.1],[31.7,834.9],[26.2,844.2],[13.9,842.2],[12.3,837.0],[-1.8,829.6],[-6.1,824.1],[-19.4,822.8],[-24.4,823.9],[-27.5,819.7],[-31.7,819.0]]]},{"n":"Mouans-Sartoux","r":[[[115.2,437.3],[112.5,435.7],[110.9,427.5],[121.1,412.0],[127.1,406.3],[138.1,400.4],[161.2,400.9],[180.9,398.9],[202.0,407.5],[208.9,408.4],[211.4,402.8],[208.4,393.5],[208.6,384.4],[211.4,381.3],[225.9,380.6],[231.8,375.8],[240.9,372.2],[240.7,369.7],[248.5,359.9],[250.3,354.7],[259.1,353.9],[263.3,351.2],[275.1,350.8],[278.8,356.3],[274.3,369.8],[286.6,397.5],[306.4,406.9],[302.1,419.7],[303.4,424.1],[317.4,430.6],[309.1,429.3],[303.0,435.4],[300.6,442.6],[279.1,439.0],[265.9,442.2],[258.9,446.0],[246.2,448.2],[240.5,448.0],[227.8,428.2],[221.4,442.5],[193.3,475.5],[175.3,490.5],[159.9,497.2],[143.5,501.3],[141.8,491.6],[116.2,470.4],[121.1,446.5],[119.1,440.5],[115.2,437.3]]]},{"n":"Mougins","r":[[[200.5,578.6],[196.7,557.4],[202.1,555.0],[200.6,550.4],[207.4,544.1],[200.7,537.9],[208.9,533.3],[204.8,526.7],[207.7,507.7],[206.1,498.2],[198.9,493.7],[175.3,490.5],[193.3,475.5],[221.4,442.5],[227.8,428.2],[240.5,448.0],[258.9,446.0],[265.9,442.2],[279.1,439.0],[300.6,442.6],[303.0,435.4],[309.1,429.3],[327.6,433.1],[365.4,448.1],[374.2,445.1],[416.6,451.8],[419.0,450.3],[432.5,458.2],[456.2,482.0],[468.7,486.1],[469.1,488.8],[461.5,495.8],[457.3,505.9],[440.4,508.3],[438.3,523.6],[434.1,534.2],[424.9,541.4],[424.2,547.6],[419.3,553.4],[401.9,555.7],[391.0,552.6],[387.2,544.9],[380.3,541.5],[377.0,536.2],[364.4,529.1],[354.1,542.9],[355.0,559.2],[347.0,553.8],[338.4,551.4],[335.4,555.1],[316.8,560.0],[304.6,557.6],[289.8,560.7],[279.7,572.4],[261.7,577.1],[259.0,579.5],[250.1,581.0],[244.6,579.6],[230.1,590.9],[226.6,597.6],[220.5,598.1],[215.1,589.6],[203.6,578.7],[200.5,578.6]]]},{"n":"Opio","r":[[[310.9,347.0],[310.3,341.7],[298.6,329.5],[291.1,315.9],[285.4,311.1],[280.0,301.6],[275.0,296.8],[275.4,293.7],[265.7,286.6],[261.1,279.5],[258.4,280.7],[245.4,278.6],[240.6,272.0],[236.4,263.1],[238.4,256.5],[244.5,251.8],[247.2,246.5],[252.4,248.8],[255.6,244.8],[266.3,248.2],[269.0,245.3],[285.9,255.1],[298.6,254.2],[307.8,257.4],[319.2,255.3],[323.5,263.7],[327.5,267.2],[353.3,274.1],[358.6,272.1],[366.9,272.8],[375.4,268.0],[390.4,267.7],[394.2,273.3],[394.1,279.8],[399.6,278.9],[417.2,286.3],[421.2,290.7],[426.9,291.0],[436.1,307.6],[436.4,315.9],[425.0,314.7],[421.0,317.1],[399.3,319.1],[388.0,317.5],[380.7,319.7],[376.6,323.0],[371.4,332.4],[353.6,342.0],[336.1,328.4],[331.0,332.4],[329.9,347.2],[310.9,347.0]]]},{"n":"Pégomas","r":[[[34.2,610.9],[38.9,611.7],[40.8,599.9],[37.8,582.0],[30.9,578.6],[27.6,573.4],[21.2,570.8],[11.1,558.7],[10.1,552.1],[20.1,540.8],[19.7,535.7],[23.2,532.4],[31.3,513.3],[41.1,508.1],[50.0,495.4],[54.0,495.6],[56.9,503.1],[67.5,489.9],[69.1,483.6],[87.8,455.3],[101.2,444.5],[115.2,437.3],[119.1,440.5],[121.1,446.5],[116.2,470.4],[141.8,491.6],[144.8,508.9],[132.4,512.5],[122.2,528.2],[102.0,547.3],[113.9,557.5],[112.8,562.9],[120.1,564.5],[121.1,571.5],[127.0,570.7],[132.3,576.5],[128.7,583.1],[137.5,588.3],[135.1,590.9],[112.4,587.1],[89.4,587.2],[85.8,592.4],[70.6,603.9],[61.3,615.2],[52.1,619.2],[34.2,610.9]]]},{"n":"Roquefort-les-Pins","r":[[[381.9,171.8],[398.2,159.6],[399.3,154.8],[414.9,151.1],[420.7,151.0],[428.9,154.4],[437.9,154.0],[446.0,158.4],[467.4,164.9],[474.6,161.3],[484.7,164.5],[487.8,161.6],[494.1,163.4],[493.9,168.1],[489.6,169.3],[489.9,173.9],[502.8,174.5],[505.4,191.7],[508.5,187.8],[516.3,191.3],[522.6,189.4],[519.3,197.7],[527.6,203.4],[530.0,209.5],[536.0,212.3],[541.5,217.9],[547.4,218.4],[550.9,221.9],[555.8,219.4],[558.2,213.7],[565.2,214.5],[570.0,217.0],[579.9,229.7],[588.5,235.1],[583.4,235.2],[576.6,232.0],[569.8,235.9],[562.4,236.7],[560.7,245.0],[564.0,251.0],[563.5,257.7],[552.0,260.3],[545.4,264.2],[533.9,282.2],[532.4,307.4],[528.5,316.4],[519.1,326.9],[509.3,328.4],[504.0,327.1],[496.7,333.6],[481.3,328.0],[469.1,330.0],[463.4,333.6],[460.5,339.8],[447.9,326.8],[437.5,319.9],[436.1,307.6],[426.9,291.0],[421.2,290.7],[417.2,286.3],[399.6,278.9],[394.1,279.8],[394.2,273.3],[391.6,268.8],[393.1,266.1],[379.1,225.7],[380.5,212.2],[371.9,207.9],[364.2,194.1],[363.9,182.9],[368.3,177.3],[381.9,171.8]]]},{"n":"La Roquette-sur-Siagne","r":[[[137.5,588.3],[128.7,583.1],[132.3,576.5],[127.0,570.7],[121.1,571.5],[120.1,564.5],[112.8,562.9],[113.9,557.5],[102.0,547.3],[122.2,528.2],[132.4,512.5],[144.8,508.9],[143.5,501.3],[159.9,497.2],[175.3,490.5],[198.9,493.7],[206.1,498.2],[207.7,507.7],[204.8,526.7],[208.9,533.3],[200.7,537.9],[207.4,544.1],[200.6,550.4],[202.1,555.0],[196.7,557.4],[200.5,578.6],[180.1,575.5],[145.8,587.3],[137.5,588.3]]]},{"n":"Le Rouret","r":[[[272.2,201.0],[281.0,196.1],[290.2,194.1],[308.3,183.8],[316.4,176.8],[314.4,171.5],[327.4,164.3],[333.3,166.1],[374.7,168.7],[381.4,166.5],[381.9,171.8],[368.3,177.3],[363.9,182.9],[364.2,194.1],[371.9,207.9],[380.5,212.2],[379.1,225.7],[393.1,266.1],[391.6,268.8],[375.4,268.0],[366.9,272.8],[358.6,272.1],[353.3,274.1],[327.5,267.2],[323.5,263.7],[319.2,255.3],[307.8,257.4],[298.6,254.2],[289.7,255.4],[287.6,251.7],[289.2,230.3],[302.9,228.2],[311.8,223.3],[305.4,215.7],[292.7,208.2],[287.4,200.0],[272.2,201.0]]]},{"n":"Saint-Paul-de-Vence","r":[[[590.2,136.0],[593.9,132.1],[603.8,131.6],[617.6,124.5],[631.6,115.6],[634.0,111.8],[648.7,110.7],[654.4,113.4],[661.6,110.7],[665.8,114.7],[669.6,123.0],[684.6,130.6],[691.7,138.1],[695.0,148.7],[698.9,153.7],[698.8,160.3],[703.6,169.6],[730.1,180.3],[717.5,184.4],[723.0,187.7],[702.9,205.0],[698.8,212.3],[705.1,215.8],[696.1,221.4],[696.8,230.3],[699.6,237.5],[678.6,242.5],[672.8,242.2],[668.2,228.6],[664.6,225.9],[653.3,206.6],[645.7,201.0],[645.1,196.3],[639.5,186.3],[647.5,180.5],[642.9,173.0],[635.5,166.3],[626.4,164.1],[614.3,152.2],[606.0,149.3],[590.2,136.0]]]},{"n":"Valbonne","r":[[[275.1,350.8],[282.6,354.8],[302.1,355.1],[306.0,351.7],[312.7,351.8],[310.9,347.0],[329.9,347.2],[331.0,332.4],[336.1,328.4],[353.6,342.0],[371.4,332.4],[376.6,323.0],[380.7,319.7],[388.0,317.5],[399.3,319.1],[421.0,317.1],[425.0,314.7],[436.4,315.9],[437.5,319.9],[447.9,326.8],[460.5,339.8],[462.7,350.4],[445.8,363.2],[456.0,372.0],[460.5,372.1],[469.3,377.1],[471.8,381.0],[467.7,401.0],[470.9,404.7],[470.3,412.8],[479.4,421.5],[476.8,432.1],[492.2,439.9],[499.4,439.0],[515.3,448.6],[507.3,455.8],[506.4,460.8],[502.9,464.7],[507.6,467.5],[493.3,475.9],[489.1,477.2],[481.7,475.9],[479.4,479.7],[472.5,481.4],[468.7,486.1],[456.2,482.0],[432.5,458.2],[419.0,450.3],[416.6,451.8],[374.2,445.1],[365.4,448.1],[303.4,424.1],[302.1,419.7],[306.4,406.9],[286.6,397.5],[274.3,369.8],[278.8,356.3],[275.1,350.8]]]},{"n":"Vallauris","r":[[[412.2,594.8],[408.3,582.6],[408.2,574.3],[405.3,571.2],[407.4,567.0],[419.5,557.9],[419.3,553.4],[424.2,547.6],[424.9,541.4],[434.1,534.2],[438.3,523.6],[440.4,508.3],[457.3,505.9],[461.5,495.8],[469.1,488.8],[468.7,486.1],[472.5,481.4],[479.4,479.7],[481.7,475.9],[489.1,477.2],[493.3,475.9],[507.6,467.5],[507.7,473.3],[498.5,478.4],[498.2,482.7],[502.0,492.7],[501.4,514.5],[504.5,531.0],[509.6,535.5],[521.5,541.1],[526.2,541.1],[530.6,547.1],[536.4,549.7],[543.4,557.0],[545.2,567.9],[549.1,573.7],[554.9,575.2],[566.0,582.7],[563.2,591.7],[550.0,595.7],[538.5,603.8],[528.6,605.2],[513.0,614.8],[502.8,624.8],[491.7,642.8],[484.2,648.5],[478.8,657.6],[465.5,655.9],[455.3,650.6],[447.0,631.0],[449.1,625.8],[449.3,613.2],[417.5,600.1],[412.2,594.8]]]},{"n":"Villeneuve-Loubet","r":[[[462.7,350.4],[460.5,339.8],[463.4,333.6],[469.1,330.0],[481.3,328.0],[496.7,333.6],[504.0,327.1],[509.3,328.4],[519.1,326.9],[528.5,316.4],[532.4,307.4],[533.9,282.2],[545.4,264.2],[552.0,260.3],[563.5,257.7],[564.0,251.0],[560.7,245.0],[562.4,236.7],[569.8,235.9],[576.6,232.0],[583.4,235.2],[588.5,235.1],[594.8,242.3],[601.9,241.5],[606.4,250.1],[612.1,253.5],[627.4,253.9],[634.0,259.2],[641.1,253.8],[651.2,255.3],[663.5,251.4],[672.2,271.0],[687.9,287.4],[701.6,297.1],[690.5,310.7],[692.9,314.8],[701.4,318.1],[700.7,323.5],[709.5,322.4],[713.2,327.0],[721.7,331.6],[736.7,348.4],[733.1,349.2],[728.6,354.9],[721.5,367.6],[721.1,371.6],[712.6,367.0],[711.8,372.8],[718.9,377.0],[711.8,381.4],[691.4,429.7],[678.9,424.4],[665.5,421.4],[655.9,413.6],[637.7,394.7],[638.4,375.4],[622.1,359.3],[617.5,347.8],[596.6,331.4],[576.8,335.5],[572.7,334.1],[555.8,345.7],[552.1,343.9],[533.8,349.7],[507.4,351.2],[489.7,348.8],[462.7,350.4]]]}]};
+const ROADS = [
+ {id:"A8", w:3.2, lbl:[[6.947,43.5615],[7.185,43.677]], p:[[6.895,43.558],[6.93,43.564],[6.965,43.572],[6.985,43.578],[7.01,43.585],[7.04,43.594],[7.073,43.6035],[7.094,43.617],[7.11,43.632],[7.133,43.652],[7.157,43.666],[7.183,43.668],[7.205,43.673],[7.235,43.678]]},
+ {id:"D6007", w:1.6, lbl:[[7.188,43.645]], p:[[6.94,43.549],[6.99,43.554],[7.03,43.559],[7.078,43.566],[7.105,43.578],[7.120,43.590],[7.127,43.603],[7.132,43.618],[7.138,43.632],[7.143,43.643],[7.152,43.654],[7.166,43.660],[7.187,43.667],[7.215,43.672]]},
+ {id:"D2085", w:2.2, lbl:[[6.988,43.6765],[7.098,43.673]], p:[[6.937,43.652],[6.951,43.6605],[6.9715,43.6685],[6.99,43.672],[7.011,43.674],[7.03,43.669],[7.0475,43.6645],[7.07,43.666],[7.095,43.6685],[7.118,43.667],[7.135,43.6655],[7.148,43.664]]},
+ {id:"D2210", w:1.4, lbl:[[7.028,43.7135]], p:[[6.951,43.6605],[6.955,43.675],[6.958,43.688],[6.962,43.700],[6.990,43.7055],[7.02,43.710],[7.059,43.7145],[7.085,43.716],[7.112,43.7225]]},
+ {id:"", w:1.4, p:[[7.112,43.7225],[7.119,43.710],[7.1224,43.6975],[7.113,43.692],[7.1046,43.6867],[7.108,43.678],[7.117,43.670],[7.128,43.6655],[7.140,43.662],[7.148,43.664]]},
+ {id:"", w:1.4, p:[[7.124,43.658],[7.113,43.670],[7.1046,43.6867]]},
+ {id:"", w:1.4, p:[[7.124,43.658],[7.132,43.650],[7.140,43.6425]]},
+ {id:"D3", w:1.6, lbl:[[7.004,43.6495]], p:[[6.9715,43.6685],[6.98,43.657],[6.999,43.649],[7.009,43.6414],[7.015,43.634],[7.028,43.628],[7.046,43.622],[7.052,43.616],[7.062,43.610],[7.073,43.6035]]},
+ {id:"D4", w:1.4, lbl:[[7.056,43.6415]], p:[[7.130,43.617],[7.112,43.618],[7.0955,43.6285],[7.083,43.632],[7.068,43.636],[7.05,43.639],[7.03,43.641],[7.009,43.6414],[7.000,43.652],[6.9865,43.660],[6.983,43.666],[6.9715,43.6685]]},
+ {id:"D35", w:1.8, p:[[7.073,43.6035],[7.082,43.596],[7.092,43.588],[7.105,43.582],[7.122,43.579]]},
+ {id:"", w:1.1, p:[[7.046,43.622],[7.058,43.618],[7.069,43.616],[7.079,43.618],[7.089,43.624],[7.0955,43.6285]]},
+ {id:"D6185", w:2.2, lbl:[[6.9645,43.598]], p:[[6.955,43.549],[6.952,43.570],[6.955,43.590],[6.960,43.608],[6.963,43.616],[6.955,43.630],[6.945,43.640],[6.937,43.652]]},
+ {id:"", w:1.3, p:[[6.965,43.552],[6.982,43.573],[6.9955,43.588],[6.9955,43.6008],[6.99,43.610],[6.975,43.615]]},
+ {id:"", w:1.2, p:[[6.9955,43.6008],[7.010,43.607],[7.025,43.612],[7.040,43.617]]}
+];
+const EXITS = [[6.985,43.578,"42"],[7.073,43.6035,"44"],[7.133,43.652,"47"],[7.157,43.666,"48"]];
+const LOUP = [[7.141,43.637],[7.130,43.649],[7.124,43.658],[7.113,43.670],[7.1046,43.6867],[7.093,43.694],[7.075,43.700],[7.05,43.703],[7.02,43.705],[6.990,43.7055],[6.985,43.712],[6.988,43.720]];
+const RAIL = [
+ [[6.895,43.548],[6.94,43.5505],[6.985,43.5525],[7.0196,43.5527],[7.045,43.558],[7.0745,43.5662],[7.0985,43.5687],[7.113,43.576],[7.1195,43.5857],[7.124,43.600],[7.128,43.612],[7.1310,43.6230],[7.1388,43.6357],[7.1440,43.647],[7.1478,43.6597],[7.160,43.6605],[7.1725,43.6615],[7.181,43.6595],[7.1877,43.6575],[7.198,43.660],[7.2095,43.6672],[7.222,43.669],[7.235,43.670]],
+ [[7.0196,43.5527],[6.998,43.5500],[6.9835,43.5487],[6.9700,43.5560],[6.9645,43.5665],[6.9635,43.580],[6.9645,43.596],[6.9690,43.6120],[6.9685,43.6155],[6.958,43.632],[6.945,43.641],[6.9230,43.6485]]
+];
+const STATIONS = [
+ [7.0196,43.5527,"","Cannes — TGV + TER hub"],
+ [7.0745,43.5662,"","Golfe-Juan-Vallauris — TER"],
+ [7.0985,43.5687,"","Juan-les-Pins — TER"],
+ [7.1195,43.5857,"Antibes TGV","Antibes — TGV + TER every ~15 min"],
+ [7.1310,43.6230,"","Biot — TER"],
+ [7.1388,43.6357,"","Villeneuve-Loubet-plage — TER"],
+ [7.1478,43.6597,"","Cagnes-sur-Mer — TER ~4/h; park-and-ride from Roquefort (17 min)"],
+ [7.1725,43.6615,"","Cros-de-Cagnes — TER"],
+ [7.1877,43.6575,"","Saint-Laurent-du-Var — TER"],
+ [7.2095,43.6672,"Nice–aéroport","Nice Grand Arénas / St-Augustin — TER + tram"],
+ [6.9685,43.6155,"","Mouans-Sartoux — TER Cannes↔Grasse ~2/h"],
+ [6.9230,43.6485,"","Grasse — TER terminus"]
+];
+const pts = a => a.map(p => px(p[0]).toFixed(1) + "," + py(p[1]).toFixed(1)).join(" ");
+function drawMap(){
+  svg.innerHTML = "";
+  const coast = GEO.coast.filter(p => p[0] > -25 && p[0] < 1030);
+  const cstr = coast.map(p => p.join(",")).join(" ");
+  el("polygon", { points: cstr + " 1030,900 -25,900", fill: "var(--sea)" }, svg);
+  el("polyline", { points: cstr, fill: "none", stroke: "var(--sea-line)", "stroke-width": 1.5 }, svg);
+  const seaLbl = el("text", { x: px(7.05), y: py(43.528), class: "m-lbl-sm", "font-style": "italic" }, svg);
+  seaLbl.textContent = "Mediterranean Sea";
+  GEO.communes.forEach(c => c.r.forEach(r =>
+    el("polygon", { points: r.map(p => p.join(",")).join(" "), fill: "none", stroke: "var(--grid)", "stroke-width": 1, opacity: 0.8 }, svg)));
+  el("polyline", { points: pts(LOUP), fill: "none", stroke: "var(--sea-line)", "stroke-width": 1.2, opacity: 0.65 }, svg);
+  const rl = el("text", { x: px(7.062), y: py(43.7075), class: "m-lbl-sm", "font-style": "italic" }, svg);
+  rl.textContent = "le Loup";
+  ROADS.forEach(r => {
+    el("polyline", { points: pts(r.p), class: "m-road", "stroke-width": r.w }, svg);
+    (r.lbl || []).forEach(L => { const t = el("text", { x: px(L[0]), y: py(L[1]), class: "m-lbl-sm" }, svg); t.textContent = r.id; });
+  });
+  RAIL.forEach(rp => {
+    el("polyline", { points: pts(rp), fill: "none", stroke: "var(--rail)", "stroke-width": 2 }, svg);
+    el("polyline", { points: pts(rp), fill: "none", stroke: "var(--surface)", "stroke-width": 0.9, "stroke-dasharray": "5 5" }, svg);
+  });
+  STATIONS.forEach(([lo, la, lbl, tipTxt]) => {
+    const g = el("g", { style: "cursor:default" }, svg);
+    el("rect", { x: px(lo) - 3.2, y: py(la) - 3.2, width: 6.4, height: 6.4, fill: "var(--surface)", stroke: "var(--rail)", "stroke-width": 1.4 }, g);
+    if (lbl) {
+      const off = { "Antibes TGV": [20, 8], "Nice–aéroport": [-7, -6, "end"] }[lbl] || [7, -6];
+      const t = el("text", { x: px(lo) + off[0], y: py(la) + off[1], class: "m-lbl-sm", "text-anchor": off[2] || "start" }, g);
+      t.textContent = lbl;
+    }
+    const parts = tipTxt.split(" — ");
+    g.addEventListener("mousemove", ev => showTip(`<div class="t">${parts[0]}</div><div class="s">${parts[1] || ""}</div>`, ev));
+    g.addEventListener("mouseleave", hideTip);
+  });
+  EXITS.forEach(([lo, la, n]) => {
+    el("circle", { cx: px(lo), cy: py(la), r: 6, fill: "var(--surface)", stroke: "var(--muted)", "stroke-width": 1 }, svg);
+    const t = el("text", { x: px(lo), y: py(la) + 2.8, "text-anchor": "middle", "font-size": "8", fill: "var(--ink-2)" }, svg);
+    t.textContent = n;
+  });
+  const cx = px(7.0453), cy = py(43.6640);
+  el("ellipse", { cx, cy, rx: 9 * PXKM, ry: 9 * PYKM, class: "m-ring" }, svg);
+  const rt = el("text", { x: cx + 9 * PXKM * 0.72, y: cy - 9 * PYKM * 0.66, class: "m-lbl-sm" }, svg);
+  rt.textContent = "~15 min";
+  VILLAGES.forEach(v => {
+    el("circle", { cx: px(v.lon), cy: py(v.lat), r: v.city ? 4.2 : 3.2, fill: "var(--muted)" }, svg);
+    const anchorLeft = ["Grasse","Mouans-Sartoux","Opio","Châteauneuf-Grasse","Le Rouret"].includes(v.n);
+    const yoff = {"Valbonne":4,"Roquefort-les-Pins":16,"Villeneuve-Loubet":17,"Cagnes-sur-Mer":44,"Biot":13,"La Colle-sur-Loup":-7,"Saint-Paul-de-Vence":-7,"Mougins":-8,"Antibes":12,"Cannes":16,"Mouans-Sartoux":32}[v.n] ?? 4;
+    const anchorEnd = anchorLeft || v.n === "Valbonne";
+    const xoff = ({"Cagnes-sur-Mer":-5}[v.n] ?? 0) + (anchorEnd ? -7 : 7);
+    const lbl = el("text", { x: px(v.lon) + xoff, y: py(v.lat) + yoff, class: v.city ? "m-city" : "m-lbl", "text-anchor": anchorEnd ? "end" : "start" }, svg);
+    lbl.textContent = v.n;
+  });
+  const t2 = el("text", { x: 992, y: py(43.700), class: "m-city", "text-anchor": "end" }, svg); t2.textContent = "Nice →";
+  const cxc = px(7.0453), cyc = py(43.6640);
+  el("rect", { x: cxc - 6, y: cyc - 6, width: 12, height: 12, fill: "var(--ink)", stroke: "var(--surface)", "stroke-width": 2, transform: `rotate(45 ${cxc} ${cyc})` }, svg);
+  // activity pins
+  const layer = el("g", {}, svg);
+  PLACES.forEach(p => {
+    const g = el("g", { class: "pin", id: "pin-" + p.id }, layer);
+    const X = px(p.lon), Y = py(p.lat), cat = CAT[p.c];
+    el("circle", { cx: X, cy: Y, r: 14, fill: "transparent" }, g);
+    if (cat.shape === "tri") {
+      el("polygon", { class: "core", points: `${X},${Y-7} ${X-6.5},${Y+5} ${X+6.5},${Y+5}`, fill: cat.color }, g);
+    } else if (cat.shape === "sq") {
+      el("rect", { class: "core", x: X - 4.5, y: Y - 4.5, width: 9, height: 9, fill: cat.color }, g);
+    } else {
+      el("circle", { class: "core", cx: X, cy: Y, r: 7.5, fill: cat.color }, g);
+      const t = el("text", { class: "glyph", x: X, y: Y + 3, "text-anchor": "middle", fill: cat.ink ? "#0b0b0b" : "#ffffff" }, g);
+      t.textContent = cat.g;
+    }
+    g.addEventListener("mousemove", ev => showTip(
+      `<div class="t">${esc(p.n)}</div><div class="s">${cat.label} · ${esc(p.com)} · ${esc(p.ages)}</div><div>${esc(p.det)}</div><div class="s">${esc(p.cost)} · ~${p.d} min${p.verify ? " · verify locally" : ""}</div>`, ev));
+    g.addEventListener("mouseleave", hideTip);
+    g.addEventListener("click", () => focusPlace(p.id));
+  });
+  const sx = px(6.905), sy = MAP.h - 18;
+  el("line", { x1: sx, y1: sy, x2: sx + 5 * PXKM, y2: sy, stroke: "var(--ink-2)", "stroke-width": 2 }, svg);
+  const skt = el("text", { x: sx, y: sy - 6, class: "m-lbl-sm" }, svg); skt.textContent = "5 km";
+}
+function focusPlace(id){
+  document.querySelectorAll("#tbody tr").forEach(r => r.classList.toggle("hl", r.dataset.id === id));
+  const row = document.querySelector(`#tbody tr[data-id="${id}"]`);
+  if (row) row.scrollIntoView({ behavior: "smooth", block: "center" });
+  document.querySelectorAll(".pin").forEach(p => p.classList.toggle("hot", p.id === "pin-" + id));
+}
+/* ================= TABLE / LEGEND / TILES ================= */
+function render(){
+  const tb = $("#tbody");
+  tb.innerHTML = "";
+  let shown = 0;
+  [...PLACES].sort((a, b) => a.d - b.d).forEach(p => {
+    const vis = visible(p);
+    const pin = document.getElementById("pin-" + p.id);
+    if (pin) pin.classList.toggle("dim", !vis);
+    if (!vis) return;
+    shown++;
+    const tr = document.createElement("tr");
+    tr.dataset.id = p.id;
+    tr.innerHTML = `
+      <td><span class="tdot" style="background:${CAT[p.c].color}"></span><span class="snm">${esc(p.n)}</span>${p.verify ? '<span class="badge">verify</span>' : ""}<div class="det">${esc(p.det)}${p.url ? ` — <a href="${p.url}" target="_blank" rel="noopener">site ↗</a>` : ""}</div></td>
+      <td>${CAT[p.c].label}</td>
+      <td>${esc(p.com)}</td>
+      <td class="num">${esc(p.ages)}</td>
+      <td>${esc(p.cost)}</td>
+      <td class="num" style="color:var(--ink-2)">${p.d} min</td>`;
+    tr.onclick = () => focusPlace(p.id);
+    tb.appendChild(tr);
+  });
+  $("#f-count").textContent = `showing ${shown} of ${PLACES.length}`;
+}
+(function(){
+  const lg = $("#legend");
+  Object.values(CAT).forEach(v => {
+    const s = document.createElement("span");
+    s.className = "key";
+    const mark = v.shape === "tri"
+      ? `<span style="width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:11px solid ${v.color};display:inline-block"></span>`
+      : v.shape === "sq"
+      ? `<span style="width:9px;height:9px;background:${v.color};display:inline-block"></span>`
+      : `<span class="sw" style="background:${v.color};color:${v.ink ? "#0b0b0b" : "#fff"};font-size:8px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px">${v.g}</span>`;
+    s.innerHTML = `${mark} ${v.label}`;
+    lg.appendChild(s);
+  });
+  const extra = document.createElement("span");
+  extra.className = "key";
+  extra.innerHTML = `<span style="display:inline-block;width:20px;height:2px;background:var(--rail)"></span> Railway · <span style="display:inline-block;width:8px;height:8px;background:var(--surface);border:1.4px solid var(--rail)"></span> station`;
+  lg.appendChild(extra);
+  const free = PLACES.filter(p => /free/i.test(p.cost)).length;
+  $("#tiles").innerHTML = [
+    { lbl: "Places & clubs mapped", val: String(PLACES.length), note: "9 colour-coded categories" },
+    { lbl: "Free open-access spots", val: String(free), note: "parks, beaches, skateparks, playgrounds" },
+    { lbl: "In the village itself", val: String(PLACES.filter(p => p.com === "Roquefort-les-Pins").length), note: "foot, judo, music, skate, playground ≤ 5 min" },
+    { lbl: "Sign-up window", val: "Early Sept", note: "Forum des Associations — free trials all month" }
+  ].map(t => `<div class="tile"><div class="lbl">${t.lbl}</div><div class="val">${t.val}</div><div class="note">${t.note}</div></div>`).join("");
+})();
+drawMap();
+render();
+</script>
+</body>
+</html>
